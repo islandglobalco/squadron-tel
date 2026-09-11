@@ -1,0 +1,16 @@
+{
+  "functions": {
+    "api/voice.js": {"maxDuration": 10},
+    "api/gather.js": {"maxDuration": 10},
+    "api/chat.js": {"maxDuration": 15},
+    "api/signup.js": {"maxDuration": 10}
+  },
+  "routes": [
+    {"src": "/deploy", "dest": "/deploy.html"},
+    {"src": "/api/voice", "dest": "/api/voice.js"},
+    {"src": "/api/gather", "dest": "/api/gather.js"},
+    {"src": "/api/chat", "dest": "/api/chat.js"},
+    {"src": "/api/signup", "dest": "/api/signup.js"},
+    {"src": "/(.*)", "dest": "/$1"}
+  ]
+}
