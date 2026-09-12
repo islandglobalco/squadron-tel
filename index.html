@@ -1,0 +1,2272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Squadron — AI Support Agents, Deployed in Minutes</title>
+<meta name="description" content="AI voice and chat agents with real personality. Deploy a full support team in minutes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;0,900;1,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#07102B;--navy-mid:#0E1A3F;--navy-light:#162252;
+  --signal:#CEEB00;--signal-dim:rgba(206,235,0,0.12);--signal-glow:rgba(206,235,0,0.35);
+  --white:#fff;--off-white:#F4F4F0;--slate:#8B95B8;--muted:#5D6A94;
+  --green:#22D95A;--red:#FF5F57;--amber:#FEBC2E;
+  --shadow-sm:0 2px 8px rgba(0,0,0,0.3);
+  --shadow-md:0 8px 32px rgba(0,0,0,0.45);
+  --shadow-lg:0 20px 60px rgba(0,0,0,0.6);
+  --shadow-signal:0 0 30px rgba(206,235,0,0.25),0 0 60px rgba(206,235,0,0.1);
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--navy);color:var(--white);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:rgba(7,16,43,0.92);
+  backdrop-filter:blur(32px) saturate(1.8);
+  -webkit-backdrop-filter:blur(32px) saturate(1.8);
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;height:64px;
+  box-shadow:0 1px 0 rgba(206,235,0,0.08),var(--shadow-sm);
+}
+.nav-logo{
+  display:flex;align-items:center;text-decoration:none;
+  position:relative;cursor:pointer;
+  overflow:hidden;
+  border-radius:4px;
+}
+.nav-logo-svg{
+  height:26px;width:auto;overflow:visible;
+  display:block;
+}
+.logo-letter{
+  transform-box:fill-box;
+  transform-origin:50% 100%;
+  opacity:1;
+  transition:none;
+}
+/* confetti canvas */
+#confettiCanvas{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:9999;
+}
+.logo-glisten{
+  position:absolute;top:0;left:-100%;width:50%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(206,235,0,0.6),rgba(255,255,255,0.4),transparent);
+  pointer-events:none;
+  opacity:0;
+}
+.nav-logo:hover .logo-glisten{
+  animation:glistenSweep 0.45s ease-out 0.52s both;
+}
+@keyframes glistenSweep{
+  0%{left:-50%;opacity:1;}
+  100%{left:150%;opacity:1;}
+}
+
+.nav-links{display:flex;align-items:center;gap:32px;list-style:none;}
+.nav-links a{
+  color:var(--slate);text-decoration:none;
+  font-size:13px;font-weight:500;letter-spacing:0.03em;
+  transition:color 0.2s,text-shadow 0.2s;
+  position:relative;
+}
+.nav-links a:hover{color:var(--white);text-shadow:0 0 20px rgba(255,255,255,0.3);}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;
+  background:var(--signal);transform:scaleX(0);transition:transform 0.2s ease;
+}
+.nav-links a:hover::after{transform:scaleX(1);}
+
+.nav-cta{
+  background:linear-gradient(135deg,#CEEB00 0%,#b8d400 100%);
+  color:var(--navy);
+  font-weight:700;font-size:12px;
+  padding:10px 22px;border:none;cursor:pointer;
+  letter-spacing:0.08em;text-transform:uppercase;
+  text-decoration:none;display:inline-block;
+  transition:all 0.2s ease;
+  box-shadow:0 4px 16px rgba(206,235,0,0.3);
+  position:relative;overflow:hidden;
+}
+.nav-cta::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);
+  transition:left 0.4s ease;
+}
+.nav-cta:hover{
+  opacity:0.95;transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(206,235,0,0.5);
+}
+.nav-cta:hover::before{left:100%;}
+.nav-cta:active{transform:translateY(0) scale(0.97);}
+
+/* HERO */
+.hero{
+  min-height:100vh;
+  padding:130px 48px 80px;
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:center;
+  position:relative;overflow:hidden;
+  background:radial-gradient(ellipse 120% 60% at 60% 50%,rgba(14,26,63,0.8) 0%,var(--navy) 70%);
+}
+.hero::before{
+  content:'';position:absolute;top:-200px;right:-100px;
+  width:900px;height:900px;
+  background:radial-gradient(ellipse,rgba(206,235,0,0.07) 0%,transparent 65%);
+  pointer-events:none;
+  animation:ambientPulse 6s ease-in-out infinite alternate;
+}
+.hero::after{
+  content:'';position:absolute;bottom:-100px;left:-100px;
+  width:600px;height:600px;
+  background:radial-gradient(ellipse,rgba(34,217,90,0.04) 0%,transparent 70%);
+  pointer-events:none;
+}
+@keyframes ambientPulse{
+  0%{transform:scale(1);opacity:0.7;}
+  100%{transform:scale(1.15);opacity:1;}
+}
+.hero-inner{
+  display:grid;grid-template-columns:1fr 1fr;gap:64px;
+  align-items:center;max-width:1400px;width:100%;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(34,217,90,0.1);border:1px solid rgba(34,217,90,0.25);
+  border-radius:100px;padding:6px 14px;margin-bottom:28px;
+  box-shadow:0 0 20px rgba(34,217,90,0.1);
+}
+.hero-badge-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--green);
+  animation:pulse 2s ease-in-out infinite;
+  box-shadow:0 0 8px var(--green);
+}
+.hero-badge span{font-size:11px;font-weight:600;color:var(--green);letter-spacing:0.05em;text-transform:uppercase;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.6;transform:scale(1.3);}}
+
+.hero-h1{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(52px,6vw,88px);font-weight:900;line-height:0.93;
+  letter-spacing:-0.01em;text-transform:uppercase;margin-bottom:28px;
+  text-shadow:0 4px 40px rgba(206,235,0,0.08);
+}
+.hero-h1 em{color:var(--signal);font-style:normal;text-shadow:0 0 40px rgba(206,235,0,0.4);}
+.hero-sub{
+  font-size:18px;line-height:1.6;color:rgba(255,255,255,0.65);
+  max-width:460px;margin-bottom:44px;font-weight:400;
+}
+.hero-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:52px;}
+
+/* BUTTONS */
+.btn-primary{
+  background:linear-gradient(180deg,#DEFF00 0%,#CEEB00 45%,#aac800 100%);
+  color:var(--navy);font-family:'Inter',sans-serif;
+  font-weight:700;font-size:14px;
+  padding:15px 36px;border:none;cursor:pointer;
+  border-radius:999px;
+  letter-spacing:0.06em;text-transform:uppercase;
+  text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+  transition:all 0.2s cubic-bezier(0.16,1,0.3,1);
+  box-shadow:
+    0 6px 0 #8aaa00,
+    0 8px 20px rgba(206,235,0,0.4),
+    0 1px 0 rgba(255,255,255,0.35) inset;
+  position:relative;overflow:hidden;
+  transform:translateY(-3px);
+}
+.btn-primary::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent);
+  transition:left 0.4s ease;
+  border-radius:999px;
+}
+.btn-primary:hover{
+  transform:translateY(-5px);
+  box-shadow:
+    0 8px 0 #8aaa00,
+    0 14px 32px rgba(206,235,0,0.55),
+    0 1px 0 rgba(255,255,255,0.4) inset;
+}
+.btn-primary:hover::before{left:100%;}
+.btn-primary:active{
+  transform:translateY(-1px);
+  box-shadow:0 2px 0 #8aaa00,0 4px 12px rgba(206,235,0,0.3),0 1px 0 rgba(255,255,255,0.2) inset;
+}
+
+.btn-ghost{
+  color:var(--white);background:rgba(255,255,255,0.04);
+  font-size:14px;font-weight:500;
+  padding:15px 32px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.2);
+  text-decoration:none;letter-spacing:0.02em;
+  transition:all 0.2s ease;
+  position:relative;overflow:hidden;
+  box-shadow:0 4px 16px rgba(0,0,0,0.25),inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.btn-ghost:hover{
+  border-color:rgba(255,255,255,0.4);
+  background:rgba(255,255,255,0.09);
+  transform:translateY(-2px);
+  box-shadow:0 8px 28px rgba(0,0,0,0.35),inset 0 1px 0 rgba(255,255,255,0.12);
+}
+.btn-ghost:active{transform:translateY(0);}
+
+.hero-live-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:13px;color:rgba(255,255,255,0.6);
+}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;box-shadow:0 0 8px var(--green);}
+
+/* TERMINAL - Hollywood Level */
+.terminal{
+  background:#0D1117;
+  border:1px solid rgba(255,255,255,0.09);
+  border-radius:14px;overflow:hidden;
+  box-shadow:
+    0 50px 140px rgba(0,0,0,0.7),
+    0 0 0 1px rgba(255,255,255,0.04),
+    0 0 80px rgba(34,217,90,0.04),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;line-height:1.7;
+  position:relative;
+}
+.hero-terminal{
+  animation:termBorderPulse 4s ease-in-out infinite;
+}
+@keyframes termBorderPulse{
+  0%,100%{border-color:rgba(255,255,255,0.09);box-shadow:0 50px 140px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.04),0 0 80px rgba(34,217,90,0.04),inset 0 1px 0 rgba(255,255,255,0.06);}
+  50%{border-color:rgba(34,217,90,0.35);box-shadow:0 50px 140px rgba(0,0,0,0.7),0 0 0 1px rgba(34,217,90,0.1),0 0 120px rgba(34,217,90,0.12),inset 0 1px 0 rgba(255,255,255,0.06);}
+}
+.terminal::before{
+  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(0,0,0,0) 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);
+  pointer-events:none;z-index:1;border-radius:14px;
+}
+.terminal-bar{
+  background:linear-gradient(180deg,#1E2430 0%,#1A1F2E 100%);
+  padding:13px 16px;
+  display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  box-shadow:0 1px 0 rgba(0,0,0,0.3);
+}
+.t-dot{width:12px;height:12px;border-radius:50%;}
+.t-dot.red{background:#FF5F57;box-shadow:0 0 8px rgba(255,95,87,0.5);}
+.t-dot.amber{background:#FEBC2E;box-shadow:0 0 8px rgba(254,188,46,0.4);}
+.t-dot.green{background:#28C840;box-shadow:0 0 8px rgba(40,200,64,0.5);}
+.terminal-title{flex:1;text-align:center;font-size:11px;color:rgba(255,255,255,0.3);letter-spacing:0.05em;font-family:'Inter',sans-serif;}
+.terminal-body{padding:28px 32px;position:relative;z-index:2;min-height:260px;}
+.hero-terminal .terminal-body{padding:28px 32px;}
+.t-comment{color:rgba(255,255,255,0.28);}
+.t-cmd{color:#8BC7FF;}
+.t-url{color:#C3E88D;}
+.t-key{color:#BB80B3;}
+.t-val{color:#F78C6C;}
+.t-str{color:#C3E88D;}
+.t-success{color:#22D95A;}
+.t-muted{color:rgba(255,255,255,0.32);}
+.t-label{color:var(--signal);font-weight:600;}
+.terminal-body pre{white-space:pre-wrap;word-break:break-all;}
+
+/* Typewriter elements */
+.t-line{display:block;opacity:0;}
+.t-line.visible{opacity:1;}
+.t-cursor{
+  display:inline-block;width:2px;height:1em;vertical-align:text-bottom;
+  background:var(--green);margin-left:1px;
+  animation:blink 1s step-end infinite;
+  box-shadow:0 0 6px var(--green);
+}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+.t-success-box{
+  background:rgba(34,217,90,0.08);
+  border:1px solid rgba(34,217,90,0.2);
+  border-radius:8px;padding:16px 20px;margin-top:20px;
+  opacity:0;transform:translateY(8px);
+  transition:all 0.5s cubic-bezier(0.16,1,0.3,1);
+  box-shadow:0 0 30px rgba(34,217,90,0.06),inset 0 1px 0 rgba(34,217,90,0.1);
+}
+.t-success-box.visible{opacity:1;transform:translateY(0);}
+.t-success-label{font-size:11px;letter-spacing:0.1em;color:var(--green);font-weight:700;margin-bottom:6px;font-family:'Inter',sans-serif;text-transform:uppercase;}
+
+/* LOGOS BAR */
+.logos-bar{
+  background:rgba(255,255,255,0.025);
+  border-top:1px solid rgba(255,255,255,0.05);
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  padding:28px 48px;
+  display:flex;align-items:center;justify-content:center;gap:0;
+}
+.logos-label{font-size:10px;font-weight:700;letter-spacing:0.2em;color:rgba(255,255,255,0.2);text-transform:uppercase;margin-right:44px;white-space:nowrap;}
+.logos-list{display:flex;align-items:center;gap:52px;}
+.logo-name{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:16px;letter-spacing:0.1em;color:rgba(255,255,255,0.18);text-transform:uppercase;transition:color 0.2s;}
+.logo-name:hover{color:rgba(255,255,255,0.4);}
+
+/* SQUAD SECTION */
+.squad-section{
+  background:linear-gradient(180deg,var(--navy-mid) 0%,#0A1232 100%);
+  padding:120px 0 0;
+}
+.squad-header{
+  padding:0 48px;margin-bottom:64px;
+  max-width:1400px;margin-left:auto;margin-right:auto;
+}
+.section-label{font-size:10px;font-weight:700;letter-spacing:0.2em;color:var(--signal);text-transform:uppercase;margin-bottom:16px;}
+.section-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(40px,5vw,68px);font-weight:900;line-height:0.95;
+  text-transform:uppercase;margin-bottom:20px;
+}
+.section-sub{font-size:18px;line-height:1.65;color:rgba(255,255,255,0.5);max-width:520px;font-weight:400;margin-bottom:64px;}
+
+/* PORTRAIT GRID */
+.portrait-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:2px;}
+.portrait-card{
+  position:relative;overflow:hidden;aspect-ratio:3/4;cursor:pointer;
+  background:#080e20;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,0.04);
+  transition:box-shadow 0.4s ease;
+}
+.portrait-card:hover{box-shadow:0 0 0 2px rgba(206,235,0,0.4),0 20px 60px rgba(0,0,0,0.6);}
+.portrait-card img,.portrait-card video{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94),filter 0.4s ease;
+  filter:sepia(0.2) contrast(1.08) brightness(0.9);
+}
+.portrait-card:hover img,.portrait-card:hover video{
+  transform:scale(1.07);filter:sepia(0) contrast(1.15) brightness(1.02);
+}
+.portrait-overlay{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:56px 16px 18px;
+  background:linear-gradient(to top,rgba(7,16,43,0.98) 0%,rgba(7,16,43,0.7) 50%,transparent 100%);
+  transition:padding-bottom 0.3s ease;
+}
+.portrait-card:hover .portrait-overlay{padding-bottom:24px;}
+.portrait-name{
+  font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;
+  text-transform:uppercase;letter-spacing:0.08em;color:var(--white);line-height:1;margin-bottom:3px;
+  text-shadow:0 2px 8px rgba(0,0,0,0.5);
+}
+.portrait-role{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--signal);text-transform:uppercase;opacity:0.9;}
+.portrait-live-badge{
+  position:absolute;top:10px;right:10px;
+  background:var(--signal);color:var(--navy);
+  font-size:8px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;
+  padding:3px 7px;font-family:'Inter',sans-serif;line-height:1.4;
+  box-shadow:0 2px 8px rgba(206,235,0,0.4);
+}
+
+/* Voice preview button */
+.voice-btn{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:48px;height:48px;border-radius:50%;
+  background:rgba(7,16,43,0.85);border:2px solid rgba(206,235,0,0.6);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.3s ease;
+  opacity:0;
+  backdrop-filter:blur(8px);
+  box-shadow:0 4px 20px rgba(0,0,0,0.5);
+}
+.portrait-card:hover .voice-btn{opacity:1;}
+.voice-btn:hover{
+  background:rgba(206,235,0,0.15);border-color:var(--signal);
+  transform:translate(-50%,-50%) scale(1.1);
+  box-shadow:0 0 20px rgba(206,235,0,0.3),0 4px 20px rgba(0,0,0,0.5);
+}
+.voice-btn svg{width:18px;height:18px;fill:var(--signal);}
+.voice-btn.playing svg{display:none;}
+.voice-btn.playing::before{
+  content:'';width:14px;height:14px;
+  border:2px solid var(--signal);border-radius:2px;
+}
+.voice-waveform{
+  position:absolute;bottom:52px;left:0;right:0;
+  height:24px;display:flex;align-items:center;justify-content:center;gap:2px;
+  opacity:0;transition:opacity 0.3s;
+}
+.voice-waveform.active{opacity:1;}
+.wave-bar{
+  width:2px;background:var(--signal);border-radius:1px;
+  animation:wavePulse 0.6s ease-in-out infinite;
+}
+.wave-bar:nth-child(1){height:4px;animation-delay:0s;}
+.wave-bar:nth-child(2){height:12px;animation-delay:0.1s;}
+.wave-bar:nth-child(3){height:20px;animation-delay:0.2s;}
+.wave-bar:nth-child(4){height:14px;animation-delay:0.05s;}
+.wave-bar:nth-child(5){height:8px;animation-delay:0.15s;}
+.wave-bar:nth-child(6){height:18px;animation-delay:0.25s;}
+.wave-bar:nth-child(7){height:10px;animation-delay:0.1s;}
+@keyframes wavePulse{0%,100%{transform:scaleY(0.5);}50%{transform:scaleY(1);}}
+
+/* HOW SECTION */
+.how-section{background:var(--signal);padding:120px 48px;position:relative;overflow:hidden;}
+.how-section::before{
+  content:'';position:absolute;top:-200px;right:-200px;
+  width:600px;height:600px;
+  background:radial-gradient(ellipse,rgba(255,255,255,0.15) 0%,transparent 70%);
+  pointer-events:none;
+}
+.how-inner{max-width:1400px;margin:0 auto;}
+.how-title{
+  font-family:'Barlow Condensed',sans-serif;font-size:clamp(40px,5vw,72px);
+  font-weight:900;line-height:0.92;text-transform:uppercase;color:var(--navy);margin-bottom:12px;
+}
+.how-sub{font-size:18px;color:rgba(7,16,43,0.65);margin-bottom:72px;font-weight:400;}
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+.step-card{
+  background:rgba(7,16,43,0.07);padding:44px 36px 40px;
+  transition:all 0.3s ease;
+  box-shadow:inset 0 0 0 1px rgba(7,16,43,0.1);
+}
+.step-card:hover{background:rgba(7,16,43,0.12);transform:translateY(-2px);box-shadow:0 8px 30px rgba(7,16,43,0.15),inset 0 0 0 1px rgba(7,16,43,0.15);}
+.step-num{font-family:'Barlow Condensed',sans-serif;font-size:72px;font-weight:900;color:rgba(7,16,43,0.12);line-height:1;margin-bottom:20px;}
+.step-title{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:800;text-transform:uppercase;color:var(--navy);letter-spacing:0.03em;margin-bottom:12px;}
+.step-desc{font-size:14px;line-height:1.65;color:rgba(7,16,43,0.65);margin-bottom:20px;}
+.step-points{list-style:none;margin-bottom:24px;}
+.step-points li{font-size:13px;color:rgba(7,16,43,0.7);padding:5px 0;border-bottom:1px solid rgba(7,16,43,0.1);display:flex;align-items:center;gap:8px;}
+.step-points li::before{content:'—';color:rgba(7,16,43,0.35);}
+.step-time{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:0.08em;color:rgba(7,16,43,0.5);text-transform:uppercase;}
+
+/* PRICING */
+.pricing-section{padding:120px 48px;}
+.pricing-inner{max-width:1400px;margin:0 auto;}
+.pricing-header{text-align:center;margin-bottom:64px;}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;align-items:start;}
+.price-card{
+  background:#0B1228;padding:44px 36px 40px;position:relative;overflow:hidden;
+  transition:all 0.3s ease;
+  box-shadow:var(--shadow-md),inset 0 0 0 1px rgba(255,255,255,0.05);
+}
+.price-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg),inset 0 0 0 1px rgba(255,255,255,0.1);}
+.price-card.featured{
+  background:var(--signal);color:var(--navy);
+  box-shadow:var(--shadow-signal),var(--shadow-lg);
+}
+.price-card.featured:hover{box-shadow:0 0 50px rgba(206,235,0,0.4),0 0 100px rgba(206,235,0,0.15),var(--shadow-lg);}
+.price-plan{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;}
+.price-card.featured .price-plan{color:var(--navy);}
+.price-amount{font-family:'Barlow Condensed',sans-serif;font-size:72px;font-weight:900;line-height:1;margin-bottom:4px;}
+.price-card.featured .price-amount{color:var(--navy);}
+.price-period{font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:32px;}
+.price-card.featured .price-period{color:rgba(7,16,43,0.5);}
+.price-divider{height:1px;background:rgba(255,255,255,0.07);margin-bottom:24px;}
+.price-card.featured .price-divider{background:rgba(7,16,43,0.15);}
+.price-features{list-style:none;margin-bottom:36px;}
+.price-features li{font-size:13.5px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;gap:10px;color:rgba(255,255,255,0.7);}
+.price-card.featured .price-features li{color:rgba(7,16,43,0.8);border-color:rgba(7,16,43,0.1);}
+.price-features li::before{content:'✓';color:var(--signal);font-weight:700;}
+.price-card.featured .price-features li::before{color:var(--navy);}
+.price-btn{
+  display:block;text-align:center;padding:16px;font-weight:700;font-size:13px;
+  letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;cursor:pointer;
+  border:none;width:100%;font-family:'Inter',sans-serif;
+  transition:all 0.2s cubic-bezier(0.16,1,0.3,1);
+  position:relative;overflow:hidden;
+  border-radius:999px;
+}
+.price-btn:hover{transform:translateY(-2px);}
+.price-btn:active{transform:translateY(0) scale(0.97);}
+.price-btn-outline{background:rgba(255,255,255,0.04);color:var(--white);border:1px solid rgba(255,255,255,0.2);border-radius:999px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.08);}
+.price-btn-outline:hover{border-color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.05);box-shadow:0 8px 24px rgba(0,0,0,0.3);}
+.price-btn-solid{background:linear-gradient(180deg,#162252 0%,#0E1A3F 100%);color:var(--signal);border-radius:999px;box-shadow:0 4px 0 #07102B,0 6px 16px rgba(7,16,43,0.5);transform:translateY(-2px);}
+.price-btn-solid:hover{box-shadow:0 6px 0 #07102B,0 10px 28px rgba(7,16,43,0.6);transform:translateY(-4px);}
+.price-btn-ghost{background:transparent;color:var(--navy);border:2px solid rgba(7,16,43,0.35);border-radius:999px;}
+.price-btn-ghost:hover{background:rgba(7,16,43,0.07);border-color:rgba(7,16,43,0.6);}
+
+/* API SECTION */
+.api-section{padding:120px 48px;}
+.api-inner{max-width:1400px;margin:0 auto;}
+.api-grid{display:grid;grid-template-columns:280px 1fr;gap:40px;}
+.api-nav{position:sticky;top:100px;}
+.api-nav-title{font-size:10px;font-weight:700;letter-spacing:0.2em;color:var(--slate);text-transform:uppercase;margin-bottom:20px;}
+.api-nav-items{list-style:none;}
+.api-nav-items a{display:block;padding:8px 0;font-size:13px;color:rgba(255,255,255,0.4);text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.06);transition:color 0.2s;}
+.api-nav-items a:hover{color:var(--white);}
+.method{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;padding:3px 8px;border-radius:3px;letter-spacing:0.05em;}
+.method.post{background:rgba(75,158,255,0.2);color:#4B9EFF;}
+.method.get{background:rgba(34,217,90,0.2);color:var(--green);}
+.api-path{font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(255,255,255,0.5);}
+.api-endpoint{display:inline-flex;align-items:center;gap:8px;margin-bottom:6px;}
+.api-endpoint-desc{font-size:14px;color:rgba(255,255,255,0.4);margin-bottom:20px;}
+.api-block{margin-bottom:72px;}
+.api-block-title{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:800;text-transform:uppercase;letter-spacing:0.03em;margin-bottom:8px;color:var(--signal);}
+.api-block-desc{font-size:15px;color:rgba(255,255,255,0.5);margin-bottom:24px;}
+
+/* CTA */
+.cta-strip{
+  background:linear-gradient(135deg,#CEEB00 0%,#d4f000 50%,#c4e000 100%);
+  padding:90px 48px;text-align:center;position:relative;overflow:hidden;
+}
+.cta-strip::before{
+  content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);
+  width:800px;height:400px;
+  background:radial-gradient(ellipse,rgba(255,255,255,0.25) 0%,transparent 70%);
+  pointer-events:none;
+}
+.cta-title{
+  font-family:'Barlow Condensed',sans-serif;font-size:clamp(40px,5vw,72px);
+  font-weight:900;text-transform:uppercase;line-height:0.92;
+  color:var(--navy);margin-bottom:24px;position:relative;
+}
+.cta-sub{font-size:18px;color:rgba(7,16,43,0.6);margin-bottom:44px;position:relative;}
+.cta-btns{display:flex;align-items:center;justify-content:center;gap:16px;position:relative;}
+
+/* FOOTER */
+footer{
+  background:#030818;
+  border-top:1px solid rgba(255,255,255,0.06);
+  padding:52px 48px;
+  display:grid;grid-template-columns:1fr auto;align-items:center;gap:32px;
+  box-shadow:0 -1px 0 rgba(206,235,0,0.05);
+}
+.footer-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;letter-spacing:0.06em;color:var(--white);text-decoration:none;text-transform:uppercase;margin-bottom:8px;display:block;}
+.footer-copy{font-size:12px;color:rgba(255,255,255,0.22);}
+.footer-links{display:flex;gap:28px;}
+.footer-links a{font-size:12px;color:rgba(255,255,255,0.28);text-decoration:none;transition:color 0.2s;}
+.footer-links a:hover{color:rgba(255,255,255,0.65);}
+
+/* RESPONSIVE */
+@media(max-width:1200px){.portrait-grid{grid-template-columns:repeat(4,1fr);}}
+@media(max-width:900px){
+  nav{padding:0 24px;}
+  .nav-links{display:none;}
+  .hero{padding:110px 24px 60px;}
+  .hero-inner{grid-template-columns:1fr;gap:40px;}
+  .pricing-grid,.steps-grid{grid-template-columns:1fr;}
+  .api-grid{grid-template-columns:1fr;}
+  .api-nav{position:static;display:none;}
+  .how-section,.pricing-section,.api-section{padding:80px 24px;}
+  .logos-bar{padding:24px;flex-direction:column;gap:16px;}
+  footer{grid-template-columns:1fr;padding:40px 24px;}
+  .squad-header{padding:0 24px;}
+  .portrait-grid{grid-template-columns:repeat(3,1fr);}
+}
+@media(max-width:480px){
+  .portrait-grid{grid-template-columns:repeat(2,1fr);}
+  .portrait-name{font-size:22px;}
+}
+
+/* METRICS STRIP */
+.metrics-strip{
+  background:rgba(255,255,255,0.03);
+  border-top:1px solid rgba(255,255,255,0.07);
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  padding:40px 48px;
+}
+.metrics-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;gap:0;flex-wrap:wrap;}
+.metric-item{
+  flex:1;min-width:140px;padding:0 32px;
+  border-right:1px solid rgba(255,255,255,0.08);
+  text-align:center;
+}
+.metric-item:first-child{padding-left:0;}
+.metric-item:last-child{border-right:none;}
+.metric-num{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(36px,4vw,56px);font-weight:900;
+  color:var(--signal);line-height:1;
+  margin-bottom:6px;
+}
+.metric-label{font-size:12px;color:rgba(255,255,255,0.4);letter-spacing:0.06em;text-transform:uppercase;font-weight:600;}
+
+/* TESTIMONIALS */
+.testimonials-section{padding:120px 48px;overflow:hidden;}
+.testimonials-inner{max-width:1400px;margin:0 auto;}
+.testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+.testi-card{
+  padding:36px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:0;
+  position:relative;
+}
+.testi-quote{
+  font-size:16px;line-height:1.65;color:rgba(255,255,255,0.8);
+  margin-bottom:24px;font-style:italic;
+}
+.testi-quote::before{content:'"';font-size:56px;color:var(--signal);opacity:0.4;font-style:normal;line-height:0;display:block;margin-bottom:16px;margin-top:8px;}
+.testi-author{display:flex;align-items:center;gap:12px;}
+.testi-avatar{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.testi-name{font-size:14px;font-weight:700;color:#fff;}
+.testi-role{font-size:12px;color:rgba(255,255,255,0.4);}
+.testi-stars{display:flex;gap:3px;margin-bottom:16px;}
+.testi-star{color:var(--signal);font-size:14px;}
+
+/* COMPARISON TABLE */
+.compare-section{background:rgba(255,255,255,0.02);padding:120px 48px;border-top:1px solid rgba(255,255,255,0.06);}
+.compare-inner{max-width:1000px;margin:0 auto;}
+.compare-table{width:100%;border-collapse:collapse;margin-top:56px;}
+.compare-table th{
+  padding:16px 24px;text-align:left;
+  font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;
+  color:rgba(255,255,255,0.35);border-bottom:1px solid rgba(255,255,255,0.1);
+}
+.compare-table th:not(:first-child){text-align:center;}
+.compare-table td{
+  padding:16px 24px;border-bottom:1px solid rgba(255,255,255,0.05);
+  font-size:14px;color:rgba(255,255,255,0.75);
+}
+.compare-table td:not(:first-child){text-align:center;}
+.compare-table tr:hover td{background:rgba(255,255,255,0.02);}
+.compare-col-squadron{color:var(--signal)!important;font-weight:700;}
+.check-yes{color:var(--green);font-size:18px;}
+.check-no{color:rgba(255,255,255,0.2);font-size:18px;}
+.compare-highlight{color:var(--signal);font-weight:700;font-size:15px;}
+
+/* ROI CALCULATOR */
+.roi-section{padding:120px 48px;background:var(--navy);}
+.roi-inner{max-width:1000px;margin:0 auto;}
+.roi-card{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:20px;padding:56px;margin-top:56px;
+}
+.roi-row{display:flex;align-items:center;gap:32px;margin-bottom:40px;flex-wrap:wrap;}
+.roi-label{font-size:14px;color:rgba(255,255,255,0.6);width:260px;flex-shrink:0;font-weight:500;}
+.roi-slider{flex:1;min-width:200px;-webkit-appearance:none;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;outline:none;}
+.roi-slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--signal);cursor:pointer;border:3px solid var(--navy);box-shadow:0 0 0 2px var(--signal);}
+.roi-val{font-size:20px;font-weight:800;color:var(--signal);width:80px;text-align:right;flex-shrink:0;}
+.roi-output{
+  background:rgba(206,235,0,0.08);border:1px solid rgba(206,235,0,0.2);
+  border-radius:16px;padding:40px;text-align:center;
+}
+.roi-saving{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(56px,7vw,96px);font-weight:900;color:var(--signal);line-height:1;
+}
+.roi-saving-label{font-size:14px;color:rgba(255,255,255,0.5);margin-top:8px;margin-bottom:32px;}
+.roi-breakdown{display:flex;gap:32px;justify-content:center;flex-wrap:wrap;}
+.roi-item{text-align:center;}
+.roi-item-num{font-size:28px;font-weight:800;color:#fff;}
+.roi-item-lbl{font-size:11px;color:rgba(255,255,255,0.4);letter-spacing:0.08em;text-transform:uppercase;margin-top:4px;}
+
+/* FAQ */
+.faq-section{padding:120px 48px;}
+.faq-inner{max-width:800px;margin:0 auto;}
+.faq-list{margin-top:64px;}
+.faq-item{border-bottom:1px solid rgba(255,255,255,0.08);}
+.faq-q{
+  padding:24px 0;font-size:17px;font-weight:700;color:#fff;
+  cursor:pointer;display:flex;justify-content:space-between;align-items:center;
+  gap:16px;list-style:none;
+  transition:color 0.2s;
+}
+.faq-q:hover{color:var(--signal);}
+.faq-q::marker{display:none;}
+.faq-chevron{font-size:20px;color:rgba(255,255,255,0.3);transition:transform 0.3s,color 0.2s;flex-shrink:0;}
+details[open] .faq-chevron{transform:rotate(45deg);color:var(--signal);}
+details[open] .faq-q{color:var(--signal);}
+.faq-a{
+  padding:0 0 24px;font-size:15px;line-height:1.7;
+  color:rgba(255,255,255,0.6);
+}
+
+/* EMAIL CAPTURE IN CTA */
+.cta-form{display:flex;gap:12px;max-width:480px;margin:32px auto 0;flex-wrap:wrap;}
+.cta-email{
+  flex:1;min-width:220px;padding:16px 24px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:999px;color:#fff;font-size:15px;outline:none;
+  transition:border-color 0.2s;
+}
+.cta-email::placeholder{color:rgba(255,255,255,0.3);}
+.cta-email:focus{border-color:var(--signal);}
+
+@media(max-width:768px){
+  .metrics-strip{padding:32px 20px;}
+  .metric-item{min-width:100px;padding:0 16px;}
+  .metric-num{font-size:28px;}
+  .testimonials-grid,.compare-table,.compare-section{overflow-x:auto;}
+  .testimonials-grid{grid-template-columns:1fr;}
+  .roi-card{padding:32px 20px;}
+  .roi-row{flex-direction:column;gap:12px;}
+  .roi-label{width:auto;}
+}
+
+
+/* ── LIVE CHAT WIDGET ─────────────────────────────────────────────────────── */
+#sqChatBtn{
+  position:fixed;bottom:28px;right:28px;z-index:8000;
+  width:60px;height:60px;border-radius:50%;
+  background:linear-gradient(145deg,#DEFF00,#CEEB00);
+  border:none;cursor:pointer;box-shadow:0 4px 20px rgba(206,235,0,0.5),0 6px 0 #8aaa00;
+  display:flex;align-items:center;justify-content:center;font-size:26px;
+  transform:translateY(-3px);transition:all 0.2s;
+}
+#sqChatBtn:hover{transform:translateY(-6px);box-shadow:0 8px 30px rgba(206,235,0,0.6),0 8px 0 #8aaa00;}
+#sqChatBtn .sq-badge{
+  position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;
+  background:var(--green);border:2px solid #07102b;
+  animation:pulse 2s infinite;
+}
+#sqChatWindow{
+  position:fixed;bottom:104px;right:28px;z-index:8001;
+  width:360px;height:500px;
+  background:#0d1530;border:1px solid rgba(255,255,255,0.12);
+  border-radius:20px;box-shadow:0 40px 80px rgba(0,0,0,0.7);
+  display:flex;flex-direction:column;overflow:hidden;
+  transform:scale(0.8) translateY(40px);opacity:0;pointer-events:none;
+  transition:all 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+#sqChatWindow.open{transform:scale(1) translateY(0);opacity:1;pointer-events:all;}
+.sqchat-header{
+  background:rgba(206,235,0,0.1);border-bottom:1px solid rgba(255,255,255,0.08);
+  padding:16px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0;
+}
+.sqchat-avatar{width:36px;height:36px;border-radius:50%;background:var(--signal);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.sqchat-name{font-weight:700;color:#fff;font-size:14px;}
+.sqchat-status{font-size:11px;color:var(--green);display:flex;align-items:center;gap:5px;}
+.sqchat-close{margin-left:auto;background:none;border:none;color:rgba(255,255,255,0.3);font-size:18px;cursor:pointer;padding:4px;}
+#sqChatMessages{
+  flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.1) transparent;
+}
+.sqchat-msg{max-width:85%;animation:msgIn 0.25s ease;}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.sqchat-msg.agent{align-self:flex-start;}
+.sqchat-msg.user{align-self:flex-end;}
+.sqchat-bubble{
+  padding:10px 14px;border-radius:16px;font-size:13px;line-height:1.55;
+}
+.sqchat-msg.agent .sqchat-bubble{
+  background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.9);
+  border-bottom-left-radius:4px;
+}
+.sqchat-msg.user .sqchat-bubble{
+  background:linear-gradient(135deg,#DEFF00,#CEEB00);color:#07102b;font-weight:600;
+  border-bottom-right-radius:4px;
+}
+.sqchat-typing{display:flex;gap:4px;padding:12px 14px;}
+.sqchat-typing span{width:6px;height:6px;background:rgba(255,255,255,0.4);border-radius:50%;animation:typingDot 1.2s infinite;}
+.sqchat-typing span:nth-child(2){animation-delay:0.2s;}
+.sqchat-typing span:nth-child(3){animation-delay:0.4s;}
+@keyframes typingDot{0%,80%,100%{transform:scale(0.6);opacity:0.4;}40%{transform:scale(1);opacity:1;}}
+.sqchat-footer{
+  padding:12px;border-top:1px solid rgba(255,255,255,0.07);flex-shrink:0;
+  display:flex;gap:8px;
+}
+#sqChatInput{
+  flex:1;padding:10px 14px;background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);border-radius:999px;
+  color:#fff;font-size:13px;outline:none;transition:border-color 0.2s;
+  font-family:inherit;
+}
+#sqChatInput:focus{border-color:rgba(206,235,0,0.4);}
+#sqChatInput::placeholder{color:rgba(255,255,255,0.25);}
+#sqChatSend{
+  width:38px;height:38px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#DEFF00,#CEEB00);
+  border:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;
+  transition:transform 0.15s;
+}
+#sqChatSend:hover{transform:scale(1.1);}
+@media(max-width:480px){
+  #sqChatWindow{width:calc(100vw - 16px);right:8px;bottom:90px;}
+  #sqChatBtn{right:16px;bottom:16px;}
+}
+
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" id="navLogo" href="/">
+    <svg class="nav-logo-svg" viewBox="0 -430 2278 492" xmlns="http://www.w3.org/2000/svg" aria-label="Squadron">
+      <g transform="translate(0,0)" data-letter="S" data-idx="0"><g class="logo-letter">
+        <path d="M 6 -371.28125 L 75 -429.65625 L 199 -429.65625 L 268 -371.28125 L 268.5 -304.921875 L 167.5 -304.921875 L 167.5 -349.015625 L 106.5 -349.015625 L 106.5 -259.5625 L 268 -259.984375 L 270 -57.953125 L 201 0.421875 L 77 0.421875 L 8 -57.953125 L 7.5 -124.3125 L 108.5 -124.3125 L 108.5 -80.21875 L 169.5 -80.21875 L 169.5 -169.6875 L 148.5 -169.6875 L 148.5 -169.265625 L 8 -169.265625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(286,0)" data-letter="Q" data-idx="1"><g class="logo-letter">
+        <path d="M 200 0.84375 L 187.5 0.84375 L 187.5 63.421875 L 87 63.421875 L 87 0.84375 L 74.5 0.84375 L 5.5 -57.546875 L 5.5 -370.015625 L 74.5 -428.40625 L 198 -428.40625 L 268 -369.1875 L 268 -56.703125 Z M 106 -347.765625 L 106 -82.3125 L 167.5 -82.3125 L 167.5 -346.921875 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(572,0)" data-letter="U" data-idx="2"><g class="logo-letter">
+        <path d="M 6.5 -428.40625 L 108 -428.40625 L 108 -83.15625 L 169 -83.15625 L 169 -352.796875 L 169.5 -352.796875 L 169.5 -429.234375 L 269.5 -429.234375 L 269.5 -58.375 L 200.5 0 L 76.5 0 L 7.5 -58.375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(858,0)" data-letter="A" data-idx="3"><g class="logo-letter">
+        <path d="M 107.5 0 L 7 0 L 7 -199.078125 L 6.5 -199.078125 L 6.5 -372.546875 L 75.5 -430.921875 L 199.5 -430.921875 L 268.5 -372.546875 L 268.5 -325.078125 L 269.5 0 L 169.5 0 L 168.5 -172.203125 L 107.5 -172.203125 Z M 107 -257.046875 L 168 -257.046875 L 168 -347.765625 L 107 -347.765625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1144,0)" data-letter="D" data-idx="4"><g class="logo-letter">
+        <path d="M 269.5 -55.859375 L 200.5 0.84375 L 30 0.421875 L 30 0 L 7.5 0 L 6.5 -429.65625 L 199.5 -429.65625 L 268.5 -371.28125 Z M 108 -83.578125 L 169 -83.578125 L 168 -359.9375 L 107 -359.9375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1430,0)" data-letter="R" data-idx="5"><g class="logo-letter">
+        <path d="M 108 0.421875 L 7.5 0.421875 L 7 -430.5 L 200 -430.5 L 269 -372.125 L 269 -324.65625 L 270 -233.515625 L 268.5 -233.09375 L 269 -230.15625 L 250 -214.203125 L 250.5 -214.203125 L 269.5 -198.234375 L 269 -195.296875 L 270.5 -194.875 L 270 0.421875 L 170 0.421875 L 169 -171.78125 L 108 -171.78125 Z M 107.5 -256.625 L 168.5 -256.625 L 168.5 -347.34375 L 107.5 -347.34375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1716,0)" data-letter="O" data-idx="6"><g class="logo-letter">
+        <path d="M 202 0.84375 L 76.5 0.84375 L 7.5 -57.546875 L 6.5 -372.546875 L 75.5 -430.921875 L 199 -430.921875 L 269 -371.703125 L 270 -56.703125 Z M 107 -350.28125 L 108 -82.3125 L 169.5 -82.3125 L 168.5 -349.4375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(2002,0)" data-letter="N" data-idx="7"><g class="logo-letter">
+        <path d="M 109 0.421875 L 8.5 0.421875 L 8.5 -198.65625 L 8 -198.65625 L 7 -430.5 L 108.5 -430.5 L 169.5 -263.34375 L 169.5 -430.5 L 270 -430.5 L 270 -324.65625 L 271 0.421875 L 170 0.421875 L 108.5 -162.546875 Z" fill="white"/>
+      </g></g>
+    </svg>
+    <div class="logo-glisten"></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#squad">The Squad</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#api">Docs</a></li>
+    <li><a href="mailto:info@squadron.tel">Support</a></li>
+  </ul>
+  <a href="/deploy" class="nav-cta">Deploy Free →</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <div class="hero-badge">
+        <div class="hero-badge-dot"></div>
+        <span>Live on production · 24 agents active</span>
+      </div>
+      <h1 class="hero-h1">Launch a voice<br>support team<br><em>in minutes.</em></h1>
+      <p class="hero-sub">AI voice and chat agents with real personality. Your customers will actually look forward to calling.</p>
+      <div class="hero-actions">
+        <a href="/deploy" class="btn-primary" data-sound="click">Deploy Free →</a>
+        <a href="#" class="btn-ghost" data-sound="whoosh" id="speakLiveBtn" onclick="openVoiceDemo(event)">Speak with a live agent</a>
+      </div>
+      <div class="hero-live-btn" id="alexLiveBtn" onclick="openVoiceDemo(event)" style="cursor:pointer;">
+        <span class="live-dot"></span>
+        <span>Talk to Alex Live &nbsp;·&nbsp; No signup · Low latency</span>
+      </div>
+    </div>
+    <div>
+      <div class="terminal hero-terminal" id="heroTerminal">
+        <div class="terminal-bar">
+          <div class="t-dot red"></div><div class="t-dot amber"></div><div class="t-dot green"></div>
+          <div class="terminal-title">terminal</div>
+        </div>
+        <div class="terminal-body" id="terminalBody">
+          <pre id="terminalOutput"></pre>
+          <div class="t-success-box" id="successBox">
+            <div class="t-success-label">✓ AGENT LIVE</div>
+            <pre id="successOutput"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="metrics-strip">
+  <div class="metrics-inner">
+    <div class="metric-item">
+      <div class="metric-num">0.4s</div>
+      <div class="metric-label">Avg response time</div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-num">98%</div>
+      <div class="metric-label">CSAT score</div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-num">24/7</div>
+      <div class="metric-label">Zero downtime</div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-num">$2.40</div>
+      <div class="metric-label">Per hour vs $18 human</div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-num">1B+</div>
+      <div class="metric-label">Concurrent calls</div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-num">5 min</div>
+      <div class="metric-label">Time to deploy</div>
+    </div>
+  </div>
+</div>
+
+<div class="logos-bar">
+  <span class="logos-label">Trusted by early teams at</span>
+  <div class="logos-list">
+    <span class="logo-name">Fieldline</span>
+    <span class="logo-name">Driftware</span>
+    <span class="logo-name">Northpine</span>
+    <span class="logo-name">Sovran</span>
+    <span class="logo-name">Crestmark</span>
+  </div>
+</div>
+
+<section class="squad-section" id="squad">
+  <div class="squad-header">
+    <div class="section-label">Meet your squad</div>
+    <h2 class="section-title">24 agents.<br>One team.</h2>
+    <p class="section-sub">Each agent has a distinct voice, personality, and specialty. Mix and match for your support stack.</p>
+  </div>
+  <div class="portrait-grid" id="portraitGrid">
+
+    <!-- LUNA - animated -->
+    <div class="portrait-card" data-agent="0" data-name="Luna">
+      <video autoplay loop muted playsinline><source src="https://cdn.midjourney.com/video/14364e4e-2e53-45d9-98d6-6730b0e3258b/0.mp4" type="video/mp4"><img src="https://cdn.midjourney.com/99aae468-d1e6-4494-a7b2-35b80472ebed/0_0.png" alt="Luna" loading="lazy"></video>
+      <div class="portrait-overlay"><div class="portrait-name">Luna</div><div class="portrait-role">Midnight Escalations</div></div>
+      <div class="portrait-live-badge">Animated</div>
+      <button class="voice-btn" onclick="previewVoice(0,this)" aria-label="Preview Luna voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- WREN -->
+    <div class="portrait-card" data-agent="1" data-name="Wren">
+      <img src="https://cdn.midjourney.com/6f194acd-806e-47a3-a36e-adf434106937/0_0.png" alt="Wren" loading="lazy">
+      <div class="portrait-overlay"><div class="portrait-name">Wren</div><div class="portrait-role">Live Chat</div></div>
+      <button class="voice-btn" onclick="previewVoice(1,this)" aria-label="Preview Wren voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- VERA -->
+    <div class="portrait-card" data-agent="2" data-name="Vera">
+      <img src="https://cdn.midjourney.com/15f7b038-b8c0-4366-bad3-d48df37dded4/0_0.png" alt="Vera" loading="lazy">
+      <div class="portrait-overlay"><div class="portrait-name">Vera</div><div class="portrait-role">Returns &amp; Refunds</div></div>
+      <button class="voice-btn" onclick="previewVoice(2,this)" aria-label="Preview Vera voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- ATLAS -->
+    <div class="portrait-card" data-agent="3" data-name="Atlas">
+      <img src="https://cdn.midjourney.com/f1e87d13-e2ef-4832-8af4-ca17611e296c/0_0.png" alt="Atlas" loading="lazy">
+      <div class="portrait-overlay"><div class="portrait-name">Atlas</div><div class="portrait-role">Technical Depth</div></div>
+      <button class="voice-btn" onclick="previewVoice(3,this)" aria-label="Preview Atlas voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- ECHO -->
+    <div class="portrait-card" data-agent="4" data-name="Echo">
+      <img src="https://cdn.midjourney.com/c00c635d-69b4-4e40-bee5-a9cf0c6e1d1a/0_0.png" alt="Echo" loading="lazy">
+      <div class="portrait-overlay"><div class="portrait-name">Echo</div><div class="portrait-role">FAQ Rapid-Fire</div></div>
+      <button class="voice-btn" onclick="previewVoice(4,this)" aria-label="Preview Echo voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- LYRA -->
+    <div class="portrait-card" data-agent="5" data-name="Lyra">
+      <img src="https://cdn.midjourney.com/30415098-3861-4398-8385-76dde6bc4f62/0_0.png" alt="Lyra" loading="lazy">
+      <div class="portrait-overlay"><div class="portrait-name">Lyra</div><div class="portrait-role">Onboarding Flow</div></div>
+      <button class="voice-btn" onclick="previewVoice(5,this)" aria-label="Preview Lyra voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- REX - animated -->
+    <div class="portrait-card" data-agent="6" data-name="Rex">
+      <video autoplay loop muted playsinline><source src="https://cdn.midjourney.com/video/d9906b53-9a82-4df5-894a-52212813a8a8/0.mp4" type="video/mp4"><img src="https://cdn.midjourney.com/8a8692ed-a25f-4504-b891-aaa69bbaa1d7/0_0.png" alt="Rex" loading="lazy"></video>
+      <div class="portrait-overlay"><div class="portrait-name">Rex</div><div class="portrait-role">Tier 1 Triage</div></div>
+      <div class="portrait-live-badge">Animated</div>
+      <button class="voice-btn" onclick="previewVoice(6,this)" aria-label="Preview Rex voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- IRIS -->
+    <div class="portrait-card" data-agent="7" data-name="Iris">
+      <img src="https://cdn.midjourney.com/dadccaca-9d6b-4427-a851-3b01f5f83f2e/0_0.png" alt="Iris" loading="lazy">
+      <div class="portrait-overlay"><div class="portrait-name">Iris</div><div class="portrait-role">Account Recovery</div></div>
+      <button class="voice-btn" onclick="previewVoice(7,this)" aria-label="Preview Iris voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- LEO -->
+    <div class="portrait-card" data-agent="8" data-name="Leo">
+      <img src="https://cdn.midjourney.com/30fa7e56-8e91-4862-a833-b4bf0918b649/0_0.png" alt="Leo" loading="lazy">
+      <div class="portrait-overlay"><div class="portrait-name">Leo</div><div class="portrait-role">Billing &amp; Payments</div></div>
+      <button class="voice-btn" onclick="previewVoice(8,this)" aria-label="Preview Leo voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- NOVA -->
+    <div class="portrait-card" data-agent="9" data-name="Nova">
+      <img src="https://cdn.midjourney.com/f977c933-a600-4c5f-96fd-3dcfb1a5a67c/0_0.png" alt="Nova" loading="lazy">
+      <div class="portrait-overlay"><div class="portrait-name">Nova</div><div class="portrait-role">Product Education</div></div>
+      <button class="voice-btn" onclick="previewVoice(9,this)" aria-label="Preview Nova voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- CRUZ -->
+    <div class="portrait-card" data-agent="10" data-name="Cruz">
+      <img src="https://cdn.midjourney.com/c7a06d7c-1377-46a5-8a91-ecc4775bfba5/0_0.png" alt="Cruz" loading="lazy">
+      <div class="portrait-overlay"><div class="portrait-name">Cruz</div><div class="portrait-role">Outbound Follow-up</div></div>
+      <button class="voice-btn" onclick="previewVoice(10,this)" aria-label="Preview Cruz voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- JADE -->
+    <div class="portrait-card" data-agent="11" data-name="Jade">
+      <img src="https://cdn.midjourney.com/c53b068f-4bad-4eea-b767-615c1e1ea9d7/0_0.png" alt="Jade" loading="lazy">
+      <div class="portrait-overlay"><div class="portrait-name">Jade</div><div class="portrait-role">Enterprise Tier</div></div>
+      <button class="voice-btn" onclick="previewVoice(11,this)" aria-label="Preview Jade voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- ORION -->
+    <div class="portrait-card" data-agent="12" data-name="Orion">
+      <img src="https://cdn.midjourney.com/1d0f1df1-7b21-4243-ba56-e21a3145d197/0_0.png" alt="Orion" loading="lazy">
+      <div class="portrait-overlay"><div class="portrait-name">Orion</div><div class="portrait-role">Scheduling &amp; Booking</div></div>
+      <button class="voice-btn" onclick="previewVoice(12,this)" aria-label="Preview Orion voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- SAGE -->
+    <div class="portrait-card" data-agent="13" data-name="Sage">
+      <img src="https://cdn.midjourney.com/36f56290-b109-458a-a515-0fa5e140d123/0_0.png" alt="Sage" loading="lazy">
+      <div class="portrait-overlay"><div class="portrait-name">Sage</div><div class="portrait-role">Knowledge Base</div></div>
+      <button class="voice-btn" onclick="previewVoice(13,this)" aria-label="Preview Sage voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- RIVER -->
+    <div class="portrait-card" data-agent="14" data-name="River">
+      <img src="https://cdn.midjourney.com/22683970-8045-4b87-a235-35848114b322/0_0.png" alt="River" loading="lazy">
+      <div class="portrait-overlay"><div class="portrait-name">River</div><div class="portrait-role">Multi-language</div></div>
+      <button class="voice-btn" onclick="previewVoice(14,this)" aria-label="Preview River voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- FELIX -->
+    <div class="portrait-card" data-agent="15" data-name="Felix">
+      <img src="https://cdn.midjourney.com/30144315-735d-4ab8-aa8f-d72582284f4d/0_0.png" alt="Felix" loading="lazy">
+      <div class="portrait-overlay"><div class="portrait-name">Felix</div><div class="portrait-role">Sentiment Recovery</div></div>
+      <button class="voice-btn" onclick="previewVoice(15,this)" aria-label="Preview Felix voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- ZOE -->
+    <div class="portrait-card" data-agent="16" data-name="Zoe">
+      <img src="https://cdn.midjourney.com/4977a62d-52e5-4caa-8dff-dbb536dcb279/0_0.png" alt="Zoe" loading="lazy">
+      <div class="portrait-overlay"><div class="portrait-name">Zoe</div><div class="portrait-role">Upsell &amp; Retention</div></div>
+      <button class="voice-btn" onclick="previewVoice(16,this)" aria-label="Preview Zoe voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- MARCUS -->
+    <div class="portrait-card" data-agent="17" data-name="Marcus">
+      <img src="https://cdn.midjourney.com/e03440c4-d348-453b-9861-a39a5ecac951/0_0.png" alt="Marcus" loading="lazy">
+      <div class="portrait-overlay"><div class="portrait-name">Marcus</div><div class="portrait-role">Complex Disputes</div></div>
+      <button class="voice-btn" onclick="previewVoice(17,this)" aria-label="Preview Marcus voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- BLAZE -->
+    <div class="portrait-card" data-agent="18" data-name="Blaze">
+      <img src="https://cdn.midjourney.com/8bea5820-3283-46cc-8cf3-5ac157abfb71/0_0.png" alt="Blaze" loading="lazy">
+      <div class="portrait-overlay"><div class="portrait-name">Blaze</div><div class="portrait-role">High-Volume Spikes</div></div>
+      <button class="voice-btn" onclick="previewVoice(18,this)" aria-label="Preview Blaze voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- KAI -->
+    <div class="portrait-card" data-agent="19" data-name="Kai">
+      <img src="https://cdn.midjourney.com/9cb586e9-3200-4965-81d9-e69d498ef22c/0_0.png" alt="Kai" loading="lazy">
+      <div class="portrait-overlay"><div class="portrait-name">Kai</div><div class="portrait-role">After-Hours Cover</div></div>
+      <button class="voice-btn" onclick="previewVoice(19,this)" aria-label="Preview Kai voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- PRIYA -->
+    <div class="portrait-card" data-agent="20" data-name="Priya">
+      <img src="https://cdn.midjourney.com/2bd157cc-cc18-471b-99eb-5245f3b2e7ea/0_0.png" alt="Priya" loading="lazy">
+      <div class="portrait-overlay"><div class="portrait-name">Priya</div><div class="portrait-role">VIP Concierge</div></div>
+      <button class="voice-btn" onclick="previewVoice(20,this)" aria-label="Preview Priya voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- ALEX -->
+    <div class="portrait-card" data-agent="21" data-name="Alex">
+      <img src="https://cdn.midjourney.com/99aae468-d1e6-4494-a7b2-35b80472ebed/0_0.png" alt="Alex" loading="lazy">
+      <div class="portrait-overlay"><div class="portrait-name">Alex</div><div class="portrait-role">The Problem-Solver</div></div>
+      <button class="voice-btn" onclick="previewVoice(21,this)" aria-label="Preview Alex voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- MAYA -->
+    <div class="portrait-card" data-agent="22" data-name="Maya">
+      <img src="https://cdn.midjourney.com/6f194acd-806e-47a3-a36e-adf434106937/0_0.png" alt="Maya" loading="lazy">
+      <div class="portrait-overlay"><div class="portrait-name">Maya</div><div class="portrait-role">The Energizer</div></div>
+      <button class="voice-btn" onclick="previewVoice(22,this)" aria-label="Preview Maya voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- SAM -->
+    <div class="portrait-card" data-agent="23" data-name="Sam">
+      <img src="https://cdn.midjourney.com/15f7b038-b8c0-4366-bad3-d48df37dded4/0_0.png" alt="Sam" loading="lazy">
+      <div class="portrait-overlay"><div class="portrait-name">Sam</div><div class="portrait-role">The Expert</div></div>
+      <button class="voice-btn" onclick="previewVoice(23,this)" aria-label="Preview Sam voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+  </div><!-- /portrait-grid -->
+</section>
+
+<section class="testimonials-section">
+  <div class="testimonials-inner">
+    <p class="section-label">What teams are saying</p>
+    <h2 class="section-title">Early adopters love it.</h2>
+    <div class="testimonials-grid">
+      <div class="testi-card">
+        <div class="testi-stars">
+          <span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span>
+        </div>
+        <div class="testi-quote">We cut our support headcount by 60% in the first month. Our CSAT actually went up. Customers don't notice and honestly don't care — they just get answers instantly.</div>
+        <div class="testi-author">
+          <div class="testi-avatar">🛒</div>
+          <div>
+            <div class="testi-name">Marcus T.</div>
+            <div class="testi-role">Head of CX · Fieldline Commerce</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">
+          <span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span>
+        </div>
+        <div class="testi-quote">Five minutes to set up, and it handled 800 calls our first weekend. Alex took the tricky ones. Maya handled returns. We literally went to the beach.</div>
+        <div class="testi-author">
+          <div class="testi-avatar">🏠</div>
+          <div>
+            <div class="testi-name">Priya K.</div>
+            <div class="testi-role">Founder · Sovran Property Group</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">
+          <span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span>
+        </div>
+        <div class="testi-quote">I was skeptical. Then I called our own number and couldn't tell it was AI. The voice is that good. We're on the $299 plan and it's paying for itself 10x every month.</div>
+        <div class="testi-author">
+          <div class="testi-avatar">💊</div>
+          <div>
+            <div class="testi-name">James W.</div>
+            <div class="testi-role">COO · Northpine Health</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="how-section" id="how">
+  <div class="how-inner">
+    <p class="section-label" style="color:rgba(7,16,43,0.4)">How it works</p>
+    <h2 class="how-title">From zero to live<br>in five minutes.</h2>
+    <p class="how-sub">No infrastructure. No engineering sprint. Just a working support agent answering real calls.</p>
+    <div class="steps-grid">
+      <div class="step-card"><div class="step-num">01</div><div class="step-title">Create your account</div><p class="step-desc">Sign up with your email. Pick a plan, enter payment. Your phone number is assigned instantly.</p><ul class="step-points"><li>Email + password — no OAuth friction</li><li>Scout, Commander, or Command HQ</li><li>Credits deposited immediately</li></ul><span class="step-time">⏱ ~2 min</span></div>
+      <div class="step-card"><div class="step-num">02</div><div class="step-title">Train your squad</div><p class="step-desc">Upload your docs, FAQs, or link your helpdesk. Choose personalities. Zero code required.</p><ul class="step-points"><li>Paste FAQs or upload PDF/URL</li><li>Choose from 24 agents — or mix them</li><li>Set escalation rules in the dashboard</li></ul><span class="step-time">⏱ ~5–15 min</span></div>
+      <div class="step-card"><div class="step-num">03</div><div class="step-title">Ship it</div><p class="step-desc">One script tag for chat. Your number is already live. Voice calls route the moment you confirm.</p><ul class="step-points"><li>Copy-paste one line of HTML</li><li>Phone calls route automatically</li><li>Real-time dashboard from day one</li></ul><span class="step-time">⏱ &lt;1 min</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="roi-section">
+  <div class="roi-inner">
+    <p class="section-label" style="color:rgba(206,235,0,0.6)">ROI Calculator</p>
+    <h2 class="section-title" style="color:#fff;">See your savings<br>in seconds.</h2>
+    <div class="roi-card">
+      <div class="roi-row">
+        <div class="roi-label">Monthly support calls</div>
+        <input class="roi-slider" type="range" min="100" max="10000" step="100" value="2000" id="roiCalls" oninput="calcROI()">
+        <div class="roi-val" id="roiCallsVal">2,000</div>
+      </div>
+      <div class="roi-row">
+        <div class="roi-label">Avg call duration (minutes)</div>
+        <input class="roi-slider" type="range" min="1" max="20" step="1" value="5" id="roiDuration" oninput="calcROI()">
+        <div class="roi-val" id="roiDurationVal">5 min</div>
+      </div>
+      <div class="roi-row">
+        <div class="roi-label">Human agent hourly rate</div>
+        <input class="roi-slider" type="range" min="12" max="50" step="1" value="22" id="roiRate" oninput="calcROI()">
+        <div class="roi-val" id="roiRateVal">$22/hr</div>
+      </div>
+      <div class="roi-output">
+        <div class="roi-saving" id="roiSaving">$8,250</div>
+        <div class="roi-saving-label">monthly savings vs a human team</div>
+        <div class="roi-breakdown">
+          <div class="roi-item">
+            <div class="roi-item-num" id="roiHumanCost">$9,167</div>
+            <div class="roi-item-lbl">Human team cost</div>
+          </div>
+          <div class="roi-item">
+            <div class="roi-item-num" id="roiSquadCost">$917</div>
+            <div class="roi-item-lbl">Squadron cost</div>
+          </div>
+          <div class="roi-item">
+            <div class="roi-item-num" id="roiPercent">90%</div>
+            <div class="roi-item-lbl">Cost reduction</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="compare-section">
+  <div class="compare-inner">
+    <p class="section-label">The numbers</p>
+    <h2 class="section-title">Why teams switch<br>to Squadron.</h2>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>What you care about</th>
+          <th style="color:#fff;">Human Team</th>
+          <th class="compare-col-squadron">Squadron ↗</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Cost per hour</td><td>$18–35</td><td class="compare-highlight">$2.40</td></tr>
+        <tr><td>Time to hire + train</td><td>4–12 weeks</td><td class="compare-highlight">5 minutes</td></tr>
+        <tr><td>Available hours</td><td>8–10 hrs/day</td><td class="compare-highlight">24/7/365</td></tr>
+        <tr><td>Simultaneous calls</td><td>1 per agent</td><td class="compare-highlight">Unlimited</td></tr>
+        <tr><td>Consistent quality</td><td><span class="check-no">✕</span></td><td><span class="check-yes">✓</span></td></tr>
+        <tr><td>Instant scale (seasonal spikes)</td><td><span class="check-no">✕</span></td><td><span class="check-yes">✓</span></td></tr>
+        <tr><td>Every call transcribed</td><td><span class="check-no">✕</span></td><td><span class="check-yes">✓</span></td></tr>
+        <tr><td>Zero sick days or turnover</td><td><span class="check-no">✕</span></td><td><span class="check-yes">✓</span></td></tr>
+        <tr><td>CSAT tracking per agent</td><td><span class="check-no">✕</span></td><td><span class="check-yes">✓</span></td></tr>
+        <tr><td>Seamless human escalation</td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="pricing-section" id="pricing">
+  <div class="pricing-inner">
+    <div class="pricing-header">
+      <p class="section-label">Pricing</p>
+      <h2 class="section-title">Pick your squad size.</h2>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-plan">Scout</div><div class="price-amount">$99</div>
+        <div class="price-period">/ month · billed monthly</div>
+        <div class="price-divider"></div>
+        <ul class="price-features"><li>250 voice minutes included</li><li>1,000 chat conversations</li><li>Up to 3 agents</li><li>1 phone number</li><li>Dashboard + analytics</li><li>Email support</li></ul>
+        <a href="/deploy?plan=scout" class="price-btn price-btn-outline" data-sound="click">Deploy Scout →</a>
+      </div>
+      <div class="price-card featured">
+        <div class="price-plan">Commander</div><div class="price-amount">$299</div>
+        <div class="price-period">/ month · billed monthly</div>
+        <div class="price-divider"></div>
+        <ul class="price-features"><li>1,000 voice minutes included</li><li>Unlimited chat conversations</li><li>Up to 12 agents</li><li>3 phone numbers</li><li>Webhooks + API access</li><li>Priority support</li></ul>
+        <a href="/deploy?plan=commander" class="price-btn price-btn-solid" data-sound="click">Deploy Commander →</a>
+      </div>
+      <div class="price-card">
+        <div class="price-plan">Command HQ</div><div class="price-amount">$799</div>
+        <div class="price-period">/ month · billed monthly</div>
+        <div class="price-divider"></div>
+        <ul class="price-features"><li>Unlimited voice minutes</li><li>Unlimited chat conversations</li><li>All 24 agents</li><li>Unlimited phone numbers</li><li>Custom integrations via API</li><li>SLA + dedicated CSM</li><li>White-label available</li></ul>
+        <a href="mailto:info@squadron.tel" class="price-btn price-btn-outline" data-sound="click">Contact Sales →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div style="background:#040A1C;border-top:1px solid rgba(255,255,255,0.05)">
+<section class="api-section" id="api">
+  <div class="api-inner">
+    <p class="section-label">API Reference</p>
+    <h2 class="section-title" style="margin-bottom:64px">Scale up to 1 billion support calls simultaneously.</h2>
+    <div class="api-grid">
+      <div class="api-nav">
+        <div class="api-nav-title">Sections</div>
+        <ul class="api-nav-items">
+          <li><a href="#auth">Authentication</a></li><li><a href="#voice-agent">Voice Agent</a></li>
+          <li><a href="#chat-widget">Chat Widget</a></li><li><a href="#webhooks">Webhooks</a></li>
+          <li><a href="#configuration">Configuration</a></li><li><a href="#errors">Errors</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="api-block" id="voice-agent">
+          <div class="api-block-title">Voice Agent</div>
+          <div class="api-block-desc">Deploy a live voice agent to a phone number in a single API call.</div>
+          <div class="api-endpoint"><span class="method post">POST</span><span class="api-path">/v1/agents/deploy</span></div>
+          <div class="api-endpoint-desc">Deploy an agent to a phone number</div>
+          <div class="terminal"><div class="terminal-bar"><div class="t-dot red"></div><div class="t-dot amber"></div><div class="t-dot green"></div><div class="terminal-title">voice agent · deploy</div></div><div class="terminal-body"><pre><span class="t-cmd">curl</span> <span class="t-muted">-X POST</span> <span class="t-url">https://api.squadron.tel/v1/agents/deploy</span> \
+  <span class="t-muted">-H</span> <span class="t-str">"Authorization: Bearer sq_live_..."</span> \
+  <span class="t-muted">-d</span> <span class="t-str">'{ "agent":"alex","phone":"+15550001234" }'</span>
+
+<span class="t-comment"># Response</span>
+<span class="t-muted">{</span><span class="t-key">"agent_id"</span><span class="t-muted">:</span><span class="t-str">"agt_9xKmPq2r"</span><span class="t-muted">,</span><span class="t-key">"status"</span><span class="t-muted">:</span><span class="t-str">"live"</span><span class="t-muted">}</span></pre></div></div>
+          <div style="margin-top:20px">
+          <div class="api-endpoint"><span class="method post">POST</span><span class="api-path">/v1/calls/outbound</span></div>
+          <div class="api-endpoint-desc">Initiate an outbound call</div>
+          <div class="api-endpoint"><span class="method get">GET</span><span class="api-path">/v1/calls/{id}</span></div>
+          <div class="api-endpoint-desc">Retrieve call transcript + metadata</div>
+          </div>
+        </div>
+        <div class="api-block" id="chat-widget">
+          <div class="api-block-title">Chat Widget</div>
+          <div class="api-block-desc">One script tag. No build step, no dependencies.</div>
+          <div class="terminal"><div class="terminal-bar"><div class="t-dot red"></div><div class="t-dot amber"></div><div class="t-dot green"></div><div class="terminal-title">chat widget · embed</div></div><div class="terminal-body"><pre><span class="t-comment">&lt;!-- Drop before &lt;/body&gt; --&gt;</span>
+<span class="t-muted">&lt;</span><span class="t-cmd">script</span>
+  <span class="t-key">src</span><span class="t-muted">=</span><span class="t-str">"https://cdn.squadron.tel/widget.js"</span>
+  <span class="t-key">data-key</span><span class="t-muted">=</span><span class="t-str">"sq_live_..."</span>
+  <span class="t-key">data-agent</span><span class="t-muted">=</span><span class="t-str">"maya"</span>
+<span class="t-muted">&gt;&lt;/</span><span class="t-cmd">script</span><span class="t-muted">&gt;</span></pre></div></div>
+        </div>
+        <div class="api-block" id="webhooks">
+          <div class="api-block-title">Webhooks</div>
+          <div class="api-block-desc">Receive real-time events as calls and chats complete.</div>
+          <div class="terminal"><div class="terminal-bar"><div class="t-dot red"></div><div class="t-dot amber"></div><div class="t-dot green"></div><div class="terminal-title">webhook · call.completed</div></div><div class="terminal-body"><pre><span class="t-comment"># call.completed payload</span>
+<span class="t-muted">{</span>
+  <span class="t-key">"event"</span><span class="t-muted">:</span> <span class="t-str">"call.completed"</span><span class="t-muted">,</span>
+  <span class="t-key">"agent"</span><span class="t-muted">:</span> <span class="t-str">"alex"</span><span class="t-muted">,</span>
+  <span class="t-key">"duration_s"</span><span class="t-muted">:</span> <span class="t-val">187</span><span class="t-muted">,</span>
+  <span class="t-key">"csat_score"</span><span class="t-muted">:</span> <span class="t-val">5</span>
+<span class="t-muted">}</span></pre></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<section class="faq-section">
+  <div class="faq-inner">
+    <p class="section-label">FAQ</p>
+    <h2 class="section-title">Still have<br>questions?</h2>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary class="faq-q">Can customers tell it's AI? <span class="faq-chevron">+</span></summary>
+        <p class="faq-a">Most can't. Our agents are trained on natural speech patterns with realistic pacing, filler words, and personality. In our internal testing, fewer than 8% of callers ask if they're speaking with a bot — and when they do, the agent answers honestly and offers to transfer to a human if needed.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">What if the agent doesn't know the answer? <span class="faq-chevron">+</span></summary>
+        <p class="faq-a">The agent escalates. You define escalation rules in the dashboard — by topic, intent, or sentiment. When something falls outside the knowledge base, the call transfers to a live rep with full context already in the handoff note. No customer left hanging.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">How long does training take? <span class="faq-chevron">+</span></summary>
+        <p class="faq-a">You can paste in FAQs, upload PDFs, or link your helpdesk in about five minutes. The agent is trained on that content instantly. For large knowledge bases (1,000+ articles), a full sync takes under an hour. No engineering required at any step.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">What phone system do you integrate with? <span class="faq-chevron">+</span></summary>
+        <p class="faq-a">Squadron is powered by Twilio under the hood, so it works with your existing phone setup via SIP forwarding, or you can use one of our provisioned numbers. We also integrate with Salesforce, HubSpot, Zendesk, Intercom, and Zapier out of the box.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">Is there a free trial? <span class="faq-chevron">+</span></summary>
+        <p class="faq-a">The Scout plan ships with 250 free minutes — enough to handle real calls and see the quality for yourself. No credit card required to start. You'll hear the difference in the first call.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">What's the latency like on voice calls? <span class="faq-chevron">+</span></summary>
+        <p class="faq-a">Response latency averages 400ms from end of speech to first word of reply — indistinguishable from a normal conversational pause. We run on edge infrastructure close to your callers. There's no perceptible AI delay.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">How is pricing calculated? <span class="faq-chevron">+</span></summary>
+        <p class="faq-a">Monthly flat rate per plan, plus usage-based overage on voice minutes at $0.04/min if you exceed your plan's included minutes. Chat conversations are unlimited on Commander and above. No per-seat fees, no per-agent fees.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="cta-strip">
+  <h2 class="cta-title">Ready to deploy<br>your squad?</h2>
+  <p class="cta-sub">No infrastructure. No engineering sprint. Live in five minutes.</p>
+  <form class="cta-form" onsubmit="ctaSubmit(event)">
+    <input class="cta-email" type="email" placeholder="your@company.com" required id="ctaEmail" autocomplete="email"/>
+    <button type="submit" class="btn-primary" style="background:var(--navy);color:var(--signal);box-shadow:0 4px 20px rgba(7,16,43,0.4);" data-sound="click">Deploy Free →</button>
+  </form>
+  <div style="text-align:center;margin-top:16px;">
+    <a href="#" onclick="openVoiceDemo(event)" style="color:rgba(7,16,43,0.5);font-size:13px;font-weight:600;text-decoration:none;letter-spacing:0.03em;">or speak with Alex first →</a>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <a href="/" class="footer-logo">Squadron</a>
+    <div class="footer-copy">© 2024 Squadron. All rights reserved.</div>
+  </div>
+  <div class="footer-links">
+    <a href="/privacy">Privacy</a><a href="/terms">Terms</a>
+    <a href="mailto:info@squadron.tel">Support</a><a href="mailto:hello@squadron.tel">hello@squadron.tel</a>
+  </div>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════
+// AUDIO ENGINE
+// ═══════════════════════════════════════════════
+let audioCtx = null;
+function getAudio(){
+  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state==='suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+// Reverb impulse response generator
+function makeReverb(ctx, duration=1.5, decay=2.5){
+  const sr = ctx.sampleRate;
+  const len = sr * duration;
+  const buf = ctx.createBuffer(2, len, sr);
+  for(let c=0;c<2;c++){
+    const d=buf.getChannelData(c);
+    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,decay);
+  }
+  const conv=ctx.createConvolver();
+  conv.buffer=buf;
+  return conv;
+}
+
+// Sword unsheath sound
+function playSword(){
+  try{
+    const ctx=getAudio();
+    const now=ctx.currentTime;
+    const master=ctx.createGain(); master.gain.value=0.4;
+    const reverb=makeReverb(ctx,2,3);
+    reverb.connect(master); master.connect(ctx.destination);
+    const dry=ctx.createGain(); dry.gain.value=0.6; dry.connect(master);
+
+    // Metallic scrape: white noise + highpass
+    const buf=ctx.createBuffer(1,ctx.sampleRate*0.6,ctx.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,1.5)*Math.pow(i/d.length*4,0.3);
+    const src=ctx.createBufferSource(); src.buffer=buf;
+    const hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=2000;
+    const hp2=ctx.createBiquadFilter(); hp2.type='peaking'; hp2.frequency.value=5000; hp2.gain.value=8;
+    src.connect(hp); hp.connect(hp2); hp2.connect(dry); hp2.connect(reverb);
+
+    // Shimmer ring: high pitched oscillator sweep
+    const osc=ctx.createOscillator(); osc.type='sine';
+    osc.frequency.setValueAtTime(4000,now);
+    osc.frequency.exponentialRampToValueAtTime(8000,now+0.15);
+    osc.frequency.exponentialRampToValueAtTime(6000,now+0.6);
+    const oscGain=ctx.createGain();
+    oscGain.gain.setValueAtTime(0.08,now);
+    oscGain.gain.exponentialRampToValueAtTime(0.001,now+0.8);
+    osc.connect(oscGain); oscGain.connect(reverb);
+
+    src.start(now); src.stop(now+0.6);
+    osc.start(now); osc.stop(now+0.8);
+  }catch(e){}
+}
+
+// Button click sound
+function playClick(){
+  try{
+    const ctx=getAudio(); const now=ctx.currentTime;
+    const osc=ctx.createOscillator(); osc.type='square';
+    osc.frequency.setValueAtTime(800,now);
+    osc.frequency.exponentialRampToValueAtTime(200,now+0.08);
+    const g=ctx.createGain();
+    g.gain.setValueAtTime(0.15,now); g.gain.exponentialRampToValueAtTime(0.001,now+0.1);
+    osc.connect(g); g.connect(ctx.destination);
+    osc.start(now); osc.stop(now+0.1);
+  }catch(e){}
+}
+
+// Whoosh sound
+function playWhoosh(){
+  try{
+    const ctx=getAudio(); const now=ctx.currentTime;
+    const buf=ctx.createBuffer(1,ctx.sampleRate*0.25,ctx.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(i/d.length,0.5)*Math.pow(1-i/d.length,2);
+    const src=ctx.createBufferSource(); src.buffer=buf;
+    const bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=800; bp.Q.value=2;
+    const g=ctx.createGain(); g.gain.value=0.15;
+    src.connect(bp); bp.connect(g); g.connect(ctx.destination);
+    src.start(now); src.stop(now+0.25);
+  }catch(e){}
+}
+
+// Chime sound (portrait hover)
+function playChime(){
+  try{
+    const ctx=getAudio(); const now=ctx.currentTime;
+    [880,1320,1760].forEach((f,i)=>{
+      const osc=ctx.createOscillator(); osc.type='sine';
+      osc.frequency.value=f;
+      const g=ctx.createGain();
+      g.gain.setValueAtTime(0,now+i*0.03);
+      g.gain.linearRampToValueAtTime(0.06,now+i*0.03+0.01);
+      g.gain.exponentialRampToValueAtTime(0.001,now+i*0.03+0.5);
+      osc.connect(g); g.connect(ctx.destination);
+      osc.start(now+i*0.03); osc.stop(now+i*0.03+0.6);
+    });
+  }catch(e){}
+}
+
+// Keyboard click (terminal typing)
+function playKeyClick(vol=0.03){
+  try{
+    const ctx=getAudio(); const now=ctx.currentTime;
+    const buf=ctx.createBuffer(1,ctx.sampleRate*0.025,ctx.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,3);
+    const src=ctx.createBufferSource(); src.buffer=buf;
+    const hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=3000;
+    const g=ctx.createGain(); g.gain.value=vol;
+    src.connect(hp); hp.connect(g); g.connect(ctx.destination);
+    src.start(now); src.stop(now+0.025);
+  }catch(e){}
+}
+
+// ═══════════════════════════════════════════════
+// VOICE PREVIEW (synthesized speech-like audio)
+// ═══════════════════════════════════════════════
+// Each agent: [baseFreq (Hz), tempo, formantFreq, personality (0=calm,1=energetic)]
+const VOICE_PROFILES=[
+  [180,1.0,900,0.3],  // 0 Luna - low, calm
+  [230,1.2,1100,0.6], // 1 Wren - bright
+  [200,0.9,950,0.4],  // 2 Vera - smooth
+  [150,0.8,800,0.2],  // 3 Atlas - deep
+  [260,1.4,1200,0.9], // 4 Echo - fast/bright
+  [210,1.1,1050,0.5], // 5 Lyra - melodic
+  [140,0.85,750,0.3], // 6 Rex - low authority
+  [220,1.0,1000,0.4], // 7 Iris - clear
+  [160,0.9,850,0.3],  // 8 Leo - steady
+  [240,1.3,1150,0.7], // 9 Nova - upbeat
+  [170,1.0,900,0.45], // 10 Cruz
+  [215,1.1,1080,0.5], // 11 Jade
+  [155,0.85,820,0.25],// 12 Orion
+  [195,0.95,980,0.4], // 13 Sage
+  [225,1.1,1100,0.6], // 14 River
+  [185,1.0,950,0.4],  // 15 Felix
+  [250,1.35,1200,0.8],// 16 Zoe
+  [145,0.8,780,0.2],  // 17 Marcus
+  [270,1.4,1250,0.9], // 18 Blaze
+  [205,1.05,1020,0.5],// 19 Kai
+  [190,1.0,980,0.45], // 20 Priya
+  [175,0.95,900,0.4], // 21 Alex
+  [245,1.3,1180,0.75],// 22 Maya
+  [160,0.9,850,0.35], // 23 Sam
+];
+
+let currentVoiceSource=null;
+let currentVoiceBtn=null;
+
+function stopVoice(){
+  if(currentVoiceSource){try{currentVoiceSource.stop();}catch(e){} currentVoiceSource=null;}
+  if(currentVoiceBtn){
+    currentVoiceBtn.classList.remove('playing');
+    const wf=currentVoiceBtn.parentElement.querySelector('.voice-waveform');
+    if(wf) wf.classList.remove('active');
+    currentVoiceBtn=null;
+  }
+}
+
+function previewVoice(agentIdx, btn){
+  if(currentVoiceBtn===btn){stopVoice();return;}
+  stopVoice();
+  try{
+    const ctx=getAudio();
+    const [baseFreq,tempo,formant,energy]=VOICE_PROFILES[agentIdx]||[180,1,900,0.4];
+    const duration=8;
+    const now=ctx.currentTime;
+
+    const master=ctx.createGain(); master.gain.setValueAtTime(0,now); master.gain.linearRampToValueAtTime(0.4,now+0.08);
+    master.connect(ctx.destination);
+
+    // Single sawtooth oscillator — speech fundamental
+    const osc=ctx.createOscillator();
+    osc.type='sawtooth';
+    osc.frequency.value=baseFreq;
+    // Add subtle pitch variation (natural speech contour)
+    for(let i=0;i<duration*2;i++){
+      const t=now+i*0.5;
+      const pitchVar=baseFreq*(1+(Math.random()-0.5)*0.06);
+      osc.frequency.setValueAtTime(pitchVar, t);
+    }
+
+    // Formant bandpass — shapes sawtooth into voice timbre
+    const form=ctx.createBiquadFilter();
+    form.type='bandpass'; form.frequency.value=formant; form.Q.value=4;
+
+    // Second formant
+    const form2=ctx.createBiquadFilter();
+    form2.type='bandpass'; form2.frequency.value=formant*1.8; form2.Q.value=6;
+
+    const formMix=ctx.createGain(); formMix.gain.value=0.6;
+    const form2Mix=ctx.createGain(); form2Mix.gain.value=0.4;
+
+    osc.connect(form); form.connect(formMix); formMix.connect(master);
+    osc.connect(form2); form2.connect(form2Mix); form2Mix.connect(master);
+
+    // Amplitude-modulate at syllable rate to simulate talking rhythm
+    const syllableRate=tempo*3.2;
+    const modOsc=ctx.createOscillator();
+    modOsc.type='sine'; modOsc.frequency.value=syllableRate;
+    const modGain=ctx.createGain(); modGain.gain.value=0.45;
+    const modShift=ctx.createGain(); modShift.gain.value=0.55;
+    // combine: 0.55 + 0.45*sin = oscillates 0.1 to 1.0
+    modOsc.connect(modGain);
+    const modMerge=ctx.createGain(); modMerge.gain.value=1;
+    modGain.connect(modMerge); 
+    // Apply modulation via a secondary gain shaping trick
+    const ampEnv=ctx.createGain(); ampEnv.gain.value=1;
+
+    // Irregular amplitude bumps for natural speech
+    const lfoOsc=ctx.createOscillator();
+    lfoOsc.type='square'; lfoOsc.frequency.value=syllableRate*1.3;
+    const lfoGain=ctx.createGain(); lfoGain.gain.value=0.3;
+    lfoOsc.connect(lfoGain);
+    // Breath: occasional volume dips
+    for(let i=0;i<duration*syllableRate;i++){
+      const t=now+(i/syllableRate);
+      const v=0.5+Math.random()*0.5*(1+energy);
+      master.gain.setValueAtTime(v*0.4, t);
+    }
+
+    // Fade out
+    master.gain.setValueAtTime(0.4, now+duration-0.3);
+    master.gain.linearRampToValueAtTime(0, now+duration);
+
+    osc.start(now); osc.stop(now+duration);
+    modOsc.start(now); modOsc.stop(now+duration);
+    lfoOsc.start(now); lfoOsc.stop(now+duration);
+
+    const timer=setTimeout(()=>{stopVoice();}, duration*1000+200);
+    currentVoiceSource={osc,modOsc,lfoOsc,stop:()=>{
+      try{osc.stop();modOsc.stop();lfoOsc.stop();}catch(e){}
+      clearTimeout(timer);
+    }};
+    currentVoiceBtn=btn;
+    btn.classList.add('playing');
+    const wf=btn.parentElement.querySelector('.voice-waveform');
+    if(wf) wf.classList.add('active');
+
+    playChime();
+  }catch(e){console.error('Voice preview error',e);}
+}
+
+// ═══════════════════════════════════════════════
+// LOGO SWORD SOUND ON HOVER
+// ═══════════════════════════════════════════════
+const navLogo=document.getElementById('navLogo');
+let swordCooldown=false;
+navLogo.addEventListener('mouseenter',()=>{
+  if(!swordCooldown){playSword();swordCooldown=true;setTimeout(()=>swordCooldown=false,1200);}
+});
+
+// ═══════════════════════════════════════════════
+// BUTTON SOUNDS
+// ═══════════════════════════════════════════════
+document.querySelectorAll('[data-sound]').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{
+    if(el.dataset.sound==='whoosh') playWhoosh();
+  });
+  el.addEventListener('click',()=>playClick());
+});
+
+// ═══════════════════════════════════════════════
+// PORTRAIT CARD HOVER SOUNDS
+// ═══════════════════════════════════════════════
+document.querySelectorAll('.portrait-card').forEach(card=>{
+  let cardCooldown=false;
+  card.addEventListener('mouseenter',()=>{
+    if(!cardCooldown){playChime();cardCooldown=true;setTimeout(()=>cardCooldown=false,600);}
+  });
+});
+
+// ═══════════════════════════════════════════════
+// HOLLYWOOD TERMINAL ANIMATION
+// ═══════════════════════════════════════════════
+const terminalOutput=document.getElementById('terminalOutput');
+const successBox=document.getElementById('successBox');
+const successOutput=document.getElementById('successOutput');
+
+// Terminal content: array of {type, text, delay, spanClass}
+const TERMINAL_LINES=[
+  {raw:true, html:'<span class="t-comment"># Deploy in 3 lines</span>', delay:600},
+  {raw:true, html:'<span class="t-cmd">curl</span> <span class="t-muted">-X POST</span> \\', delay:80},
+  {raw:true, html:'  <span class="t-url">api.squadron.tel/v1/agents/deploy</span> \\', delay:60},
+  {raw:true, html:'  <span class="t-muted">-H</span> <span class="t-str">"Authorization: Bearer sq_live_..."</span> \\', delay:60},
+  {raw:true, html:"  <span class='t-muted'>-d</span> <span class='t-str'>'</span><span class='t-val'>{</span>", delay:60},
+  {raw:true, html:"    <span class='t-key'>\"agent\"</span><span class='t-str'>: </span><span class='t-str'>\"alex\"</span><span class='t-val'>,</span>", delay:55},
+  {raw:true, html:"    <span class='t-key'>\"phone\"</span><span class='t-str'>: </span><span class='t-str'>\"+15550001234\"</span><span class='t-val'>,</span>", delay:55},
+  {raw:true, html:"    <span class='t-key'>\"greeting\"</span><span class='t-str'>: </span><span class='t-str'>\"Hi, thanks for calling!\"</span><span class='t-val'>,</span>", delay:55},
+  {raw:true, html:"    <span class='t-key'>\"knowledge_url\"</span><span class='t-str'>: </span><span class='t-str'>\"https://help.acme.com\"</span><span class='t-val'>,</span>", delay:55},
+  {raw:true, html:"    <span class='t-key'>\"escalate_to\"</span><span class='t-str'>: </span><span class='t-str'>\"+15559876543\"</span>", delay:55},
+  {raw:true, html:"  <span class='t-val'>}</span><span class='t-str'>'</span>", delay:55},
+  {pause:900},
+];
+
+const SUCCESS_LINES=[
+  {raw:true, html:"<span class='t-muted'>{</span><span class='t-key'>\"agent_id\"</span><span class='t-muted'>:</span><span class='t-str'>\"agt_9xKmPq2r\"</span><span class='t-muted'>,</span>", delay:60},
+  {raw:true, html:" <span class='t-key'>\"status\"</span><span class='t-muted'>:</span><span class='t-str'>\"live\"</span><span class='t-muted'>,</span>", delay:60},
+  {raw:true, html:" <span class='t-key'>\"phone\"</span><span class='t-muted'>:</span><span class='t-str'>\"+15550001234\"</span><span class='t-muted'>,</span>", delay:60},
+  {raw:true, html:" <span class='t-key'>\"live_at\"</span><span class='t-muted'>:</span><span class='t-val'>1712345678</span><span class='t-muted'>}</span>", delay:60},
+];
+
+// Terminal boot: startup flicker
+function terminalBoot(){
+  const body=document.querySelector('.hero-terminal .terminal-body');
+  body.style.opacity='0';
+  setTimeout(()=>{body.style.transition='opacity 0.1s';body.style.opacity='0.7';},80);
+  setTimeout(()=>{body.style.opacity='0.2';},160);
+  setTimeout(()=>{body.style.opacity='1';body.style.transition='';},240);
+  setTimeout(()=>{body.style.opacity='0.8';},300);
+  setTimeout(()=>{body.style.opacity='1';startTerminal();},380);
+}
+
+// Cursor element
+let cursorEl=null;
+function ensureCursor(){
+  if(!cursorEl){cursorEl=document.createElement('span');cursorEl.className='t-cursor';}
+  return cursorEl;
+}
+
+// Type a line character by character with syntax spans
+async function typeLine(lineEl, htmlContent, charDelay=2){
+  // Parse HTML to get visible text and tags
+  const temp=document.createElement('div'); temp.innerHTML=htmlContent;
+  const nodes=Array.from(temp.childNodes);
+  lineEl.innerHTML='';
+
+  for(const node of nodes){
+    if(node.nodeType===3){
+      // Text node: type char by char
+      const text=node.textContent;
+      for(const ch of text){
+        lineEl.appendChild(document.createTextNode(ch));
+        
+        await sleep(charDelay+Math.random()*charDelay*0.3);
+      }
+    } else {
+      // Element node: clone and type its text
+      const span=document.createElement(node.tagName);
+      span.className=node.className;
+      lineEl.appendChild(span);
+      const text=node.textContent;
+      for(const ch of text){
+        span.appendChild(document.createTextNode(ch));
+        
+        await sleep(charDelay+Math.random()*charDelay*0.3);
+      }
+    }
+  }
+}
+
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+async function startTerminal(){
+  terminalOutput.innerHTML='';
+  successBox.classList.remove('visible');
+
+  // Add cursor
+  const cur=ensureCursor();
+  terminalOutput.appendChild(cur);
+
+  // Initial pause - cursor blinking
+  await sleep(800);
+
+  // Type each line
+  for(const line of TERMINAL_LINES){
+    if(line.pause){
+      await sleep(line.pause);
+      continue;
+    }
+    // Remove cursor
+    if(cur.parentNode) cur.parentNode.removeChild(cur);
+    // New line element
+    const lineEl=document.createElement('span');
+    lineEl.style.display='block';
+    terminalOutput.appendChild(lineEl);
+
+    if(line.raw){
+      await typeLine(lineEl, line.html, line.delay||2);
+    }
+
+    // Add cursor after line
+    terminalOutput.appendChild(cur);
+    await sleep(40);
+  }
+
+  // Remove cursor
+  if(cur.parentNode) cur.parentNode.removeChild(cur);
+
+  // Show "connecting..." with ellipsis
+  const connecting=document.createElement('span');
+  connecting.style.display='block';
+  connecting.style.color='rgba(255,255,255,0.3)';
+  connecting.style.marginTop='4px';
+  terminalOutput.appendChild(connecting);
+
+  for(let i=0;i<3;i++){
+    connecting.textContent='  Connecting'+'.'.repeat(i+1);
+    await sleep(350);
+  }
+  connecting.textContent='  Connecting to api.squadron.tel...';
+  await sleep(500);
+  connecting.textContent='  ✓ Connected';
+  connecting.style.color='var(--green)';
+  await sleep(600);
+  connecting.remove();
+
+  // Show success box
+  successBox.classList.add('visible');
+  await sleep(100);
+
+  // Type success lines
+  successOutput.innerHTML='';
+  for(const line of SUCCESS_LINES){
+    const lineEl=document.createElement('span');
+    lineEl.style.display='block';
+    successOutput.appendChild(lineEl);
+    await typeLine(lineEl,line.html,line.delay||4);
+    await sleep(40);
+  }
+
+  // Play success chime
+  playChime();
+
+  // Loop after pause
+  await sleep(5000);
+  terminalBoot();
+}
+
+// Start terminal on load
+window.addEventListener('load',()=>{
+  setTimeout(terminalBoot,800);
+});
+
+// Stop voice when clicking outside
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.portrait-card')) stopVoice();
+});
+</script>
+
+<!-- ── LIVE CHAT WIDGET ────────────────────────────────────────── -->
+<button id="sqChatBtn" onclick="sqToggleChat()" aria-label="Chat with Alex">
+  💬
+  <div class="sq-badge"></div>
+</button>
+
+<div id="sqChatWindow">
+  <div class="sqchat-header">
+    <div class="sqchat-avatar">⚡</div>
+    <div>
+      <div class="sqchat-name">Alex · Squadron AI</div>
+      <div class="sqchat-status">
+        <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);"></span>
+        Online now
+      </div>
+    </div>
+    <button class="sqchat-close" onclick="sqToggleChat()">✕</button>
+  </div>
+  <div id="sqChatMessages"></div>
+  <div class="sqchat-footer">
+    <input id="sqChatInput" type="text" placeholder="Ask Alex anything…" 
+      onkeydown="if(event.key==='Enter')sqSendMsg()"/>
+    <button id="sqChatSend" onclick="sqSendMsg()">➤</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  let sqOpen=false, sqSession=null, sqTyping=false;
+  const msgs=document.getElementById('sqChatMessages');
+
+  function sqAddMsg(text,role){
+    const wrap=document.createElement('div');
+    wrap.className='sqchat-msg '+(role==='agent'?'agent':'user');
+    const bubble=document.createElement('div');
+    bubble.className='sqchat-bubble';
+    // render **bold** markdown
+    bubble.innerHTML=text.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+    wrap.appendChild(bubble);
+    msgs.appendChild(wrap);
+    msgs.scrollTop=msgs.scrollHeight;
+    return wrap;
+  }
+
+  function sqShowTyping(){
+    const wrap=document.createElement('div');
+    wrap.className='sqchat-msg agent'; wrap.id='sqTypingIndicator';
+    wrap.innerHTML='<div class="sqchat-typing"><span></span><span></span><span></span></div>';
+    msgs.appendChild(wrap);
+    msgs.scrollTop=msgs.scrollHeight;
+  }
+
+  function sqHideTyping(){
+    const el=document.getElementById('sqTypingIndicator');
+    if(el) el.remove();
+  }
+
+  window.sqToggleChat=function(){
+    sqOpen=!sqOpen;
+    document.getElementById('sqChatWindow').classList.toggle('open',sqOpen);
+    if(sqOpen && msgs.children.length===0) sqGreet();
+  };
+
+  function sqGreet(){
+    sqShowTyping();
+    setTimeout(()=>{
+      sqHideTyping();
+      sqAddMsg("Hey! I'm **Alex**, your Squadron AI assistant. Ask me about pricing, setup, agents, or anything else about Squadron. What's on your mind?",'agent');
+    },800);
+  }
+
+  window.sqSendMsg=function(){
+    const inp=document.getElementById('sqChatInput');
+    const text=inp.value.trim();
+    if(!text||sqTyping) return;
+    inp.value='';
+    sqAddMsg(text,'user');
+    sqTyping=true;
+    sqShowTyping();
+
+    fetch('/api/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({message:text, sessionId:sqSession})
+    })
+    .then(r=>r.json())
+    .then(d=>{
+      sqSession=d.sessionId;
+      sqHideTyping();
+      sqTyping=false;
+      sqAddMsg(d.reply||'Thanks for your message! Our team will follow up shortly.','agent');
+    })
+    .catch(()=>{
+      sqHideTyping();
+      sqTyping=false;
+      sqAddMsg('Thanks! Our team will get back to you shortly at info@squadron.tel','agent');
+    });
+  };
+})();
+</script>
+
+<!-- Confetti canvas -->
+<canvas id="confettiCanvas" hidden></canvas>
+
+<!-- Voice Demo Modal -->
+<div id="voiceModal" style="
+  display:none;position:fixed;inset:0;z-index:10000;
+  background:rgba(7,16,43,0.92);backdrop-filter:blur(12px);
+  align-items:center;justify-content:center;
+">
+  <div style="
+    background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);
+    border-radius:24px;padding:40px;max-width:480px;width:90%;
+    position:relative;box-shadow:0 40px 80px rgba(0,0,0,0.6);
+  ">
+    <button onclick="closeVoiceDemo()" style="
+      position:absolute;top:16px;right:16px;background:none;border:none;
+      color:rgba(255,255,255,0.4);font-size:20px;cursor:pointer;line-height:1;
+    ">✕</button>
+
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+      <div style="
+        width:48px;height:48px;border-radius:50%;overflow:hidden;
+        border:2px solid var(--signal);flex-shrink:0;
+      ">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' fill='%230D1F5E'/%3E%3Ccircle cx='24' cy='20' r='10' fill='%23DEFF00'/%3E%3Cellipse cx='24' cy='38' rx='14' ry='10' fill='%23DEFF00'/%3E%3C/svg%3E" width="48" height="48" alt="Alex"/>
+      </div>
+      <div>
+        <div style="color:#fff;font-weight:700;font-size:16px;">Alex</div>
+        <div style="color:var(--green);font-size:12px;display:flex;align-items:center;gap:6px;">
+          <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;"></span>
+          Live · Ready to help
+        </div>
+      </div>
+    </div>
+
+    <div id="voiceTranscript" style="
+      min-height:120px;max-height:220px;overflow-y:auto;
+      background:rgba(0,0,0,0.3);border-radius:12px;padding:16px;
+      font-family:'JetBrains Mono',monospace;font-size:13px;
+      color:rgba(255,255,255,0.8);line-height:1.6;margin-bottom:20px;
+    ">
+      <div id="transcriptLines">
+        <div style="color:var(--signal);">Alex: Hey! I'm Alex from Squadron support. What can I help you with today?</div>
+      </div>
+    </div>
+
+    <div id="voiceStatus" style="
+      text-align:center;font-size:12px;color:rgba(255,255,255,0.4);
+      margin-bottom:16px;min-height:20px;
+    "></div>
+
+    <div style="display:flex;gap:12px;">
+      <button id="voiceMicBtn" onclick="toggleMic()" style="
+        flex:1;padding:14px;border-radius:999px;border:2px solid var(--signal);
+        background:transparent;color:var(--signal);font-weight:700;font-size:14px;
+        cursor:pointer;transition:all 0.2s;letter-spacing:0.04em;
+      ">🎙 Hold to Speak</button>
+      <button onclick="alexSpeak()" style="
+        padding:14px 20px;border-radius:999px;
+        background:linear-gradient(180deg,#DEFF00 0%,#CEEB00 100%);
+        color:#07102b;font-weight:700;font-size:14px;border:none;
+        cursor:pointer;white-space:nowrap;
+      ">Type Instead →</button>
+    </div>
+
+    <div id="typeInput" style="display:none;margin-top:12px;display:none;">
+      <div style="display:flex;gap:8px;">
+        <input id="msgInput" type="text" placeholder="Type your question..." 
+          style="flex:1;padding:12px 16px;border-radius:999px;border:1px solid rgba(255,255,255,0.15);
+          background:rgba(255,255,255,0.06);color:#fff;font-size:14px;outline:none;"
+          onkeydown="if(event.key==='Enter')sendTyped()"/>
+        <button onclick="sendTyped()" style="
+          padding:12px 20px;border-radius:999px;
+          background:linear-gradient(180deg,#DEFF00,#CEEB00);
+          color:#07102b;font-weight:700;border:none;cursor:pointer;
+        ">Send</button>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:16px;font-size:11px;color:rgba(255,255,255,0.25);">
+      Demo · Powered by Web Speech API · No data stored
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONFETTI ──────────────────────────────────────────────────────────────────
+(function(){
+  const COLORS=['#DEFF00','#FFD700','#FFF0A0','#CEEB00','#ffffff','#aac800','#ffe066'];
+  let particles=[], raf=null, canvas, ctx, running=false;
+
+  function initCanvas(){
+    canvas=document.getElementById('confettiCanvas');
+    ctx=canvas.getContext('2d');
+  }
+
+  function resize(){
+    canvas.width=window.innerWidth;
+    canvas.height=window.innerHeight;
+  }
+
+  function spawn(count){
+    for(let i=0;i<count;i++){
+      const col=COLORS[Math.floor(Math.random()*COLORS.length)];
+      particles.push({
+        x: Math.random()*window.innerWidth,
+        y: -20 - Math.random()*200,
+        w: 6+Math.random()*8,
+        h: 3+Math.random()*5,
+        r: Math.random()*Math.PI*2,
+        vx: (Math.random()-0.5)*3,
+        vy: 2+Math.random()*4,
+        vr: (Math.random()-0.5)*0.15,
+        color: col,
+        alpha: 0.8+Math.random()*0.2,
+        shimmer: Math.random()*Math.PI*2,
+        shimmerSpeed: 0.05+Math.random()*0.08,
+        life: 1.0,
+        decay: 0.004+Math.random()*0.003
+      });
+    }
+  }
+
+  function frame(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    let alive=false;
+    for(const p of particles){
+      p.x+=p.vx; p.y+=p.vy; p.r+=p.vr;
+      p.shimmer+=p.shimmerSpeed;
+      p.vy+=0.06; // gravity
+      p.vx*=0.995;
+      if(p.y<canvas.height+30) alive=true;
+      const shimAlpha=p.alpha*(0.7+0.3*Math.sin(p.shimmer));
+      ctx.save();
+      ctx.globalAlpha=shimAlpha;
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.r);
+      ctx.fillStyle=p.color;
+      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+      // shimmer highlight
+      ctx.fillStyle='rgba(255,255,255,0.6)';
+      ctx.fillRect(-p.w/2,-p.h/2,p.w*0.3,p.h);
+      ctx.restore();
+    }
+    particles=particles.filter(p=>p.y<canvas.height+40);
+    if(particles.length>0||alive){ raf=requestAnimationFrame(frame); }
+    else{ running=false; canvas.hidden=true; }
+  }
+
+  window.triggerConfetti=function(){
+    if(!canvas) initCanvas();
+    canvas.hidden=false;
+    resize();
+    spawn(160);
+    // spawn a second wave
+    setTimeout(()=>spawn(100),300);
+    if(!running){ running=true; raf=requestAnimationFrame(frame); }
+  };
+
+  window.addEventListener('resize',()=>{ if(!canvas||canvas.hidden) return; resize(); });
+
+  document.addEventListener('DOMContentLoaded',()=>{
+    const logo=document.getElementById('navLogo');
+    if(logo) logo.addEventListener('mouseenter',window.triggerConfetti);
+  });
+})();
+
+// ── VOICE DEMO ────────────────────────────────────────────────────────────────
+let recognition=null, synth=window.speechSynthesis, alexVoice=null, micActive=false;
+
+const ALEX_RESPONSES={
+  default: [
+    "Great question! Squadron agents are trained on your exact knowledge base — so they handle anything your human team can.",
+    "Setup takes about five minutes. You connect your docs, pick a voice, and you're live. That's it.",
+    "Most customers can't tell the difference from a human agent. That's kind of the point.",
+    "We handle calls, chats, and SMS all in one platform. One squad, every channel.",
+    "Pricing starts at $99 a month and scales with usage — way less than hiring even one part-time rep.",
+  ],
+  greeting: "Hey! Great to have you here. What would you like to know about Squadron?",
+  pricing: "Our starter plan is $99 per month for up to 5 agents. Enterprise plans scale to thousands. No per-minute call charges.",
+  setup: "Getting live takes about five minutes. You upload your docs, configure a voice, hit deploy. We handle infrastructure, routing, everything.",
+  support: "Squadron agents handle tier-1 support, appointment booking, lead qualification, order tracking — anything repetitive that eats your team's time.",
+  voice: "Each agent has a distinct voice and personality. You can preview them all on the pricing page. Alex here is our flagship.",
+  human: "Yep — if a customer gets upset or asks for a human, the agent seamlessly transfers the call. Zero friction.",
+};
+
+function pickResponse(text){
+  const t=text.toLowerCase();
+  if(/price|cost|plan|subscription|pay/.test(t)) return ALEX_RESPONSES.pricing;
+  if(/setup|start|deploy|install|integrate/.test(t)) return ALEX_RESPONSES.setup;
+  if(/support|help|ticket|complaint|refund/.test(t)) return ALEX_RESPONSES.support;
+  if(/voice|sound|speak|talk|language/.test(t)) return ALEX_RESPONSES.voice;
+  if(/human|real|transfer|escalate|person/.test(t)) return ALEX_RESPONSES.human;
+  return ALEX_RESPONSES.default[Math.floor(Math.random()*ALEX_RESPONSES.default.length)];
+}
+
+function loadVoice(){
+  if(alexVoice) return;
+  const voices=synth.getVoices();
+  alexVoice=voices.find(v=>v.lang.startsWith('en')&&/samantha|karen|moira|victoria|zira|hazel|female/i.test(v.name))
+    || voices.find(v=>v.lang.startsWith('en'))
+    || voices[0];
+}
+
+function alexSpeak(text){
+  if(!text){
+    // toggle type input
+    const ti=document.getElementById('typeInput');
+    ti.style.display=ti.style.display==='none'?'flex':'none';
+    return;
+  }
+  loadVoice();
+  synth.cancel();
+  const utt=new SpeechSynthesisUtterance(text);
+  utt.voice=alexVoice;
+  utt.rate=1.05; utt.pitch=1.05; utt.volume=1;
+  synth.speak(utt);
+}
+
+function addLine(speaker, text, color){
+  const div=document.createElement('div');
+  div.style.marginBottom='8px';
+  div.innerHTML=`<span style="color:${color||'rgba(255,255,255,0.5)'};font-weight:600;">${speaker}:</span> ${text}`;
+  document.getElementById('transcriptLines').appendChild(div);
+  document.getElementById('voiceTranscript').scrollTop=9999;
+}
+
+function respondToUser(userText){
+  addLine('You',userText,'rgba(255,255,255,0.8)');
+  const resp=pickResponse(userText);
+  setTimeout(()=>{
+    addLine('Alex',resp,'var(--signal)');
+    alexSpeak(resp);
+  },600);
+}
+
+function sendTyped(){
+  const inp=document.getElementById('msgInput');
+  const text=inp.value.trim();
+  if(!text) return;
+  inp.value='';
+  respondToUser(text);
+}
+
+let micBtnMode='hold'; // 'hold' or 'toggle'
+function toggleMic(){
+  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){
+    // fallback: show type input
+    document.getElementById('voiceStatus').textContent='Voice recognition not supported — use text below.';
+    document.getElementById('typeInput').style.display='flex';
+    return;
+  }
+  if(micActive){ stopMic(); return; }
+  startMic();
+}
+
+function startMic(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  recognition=new SR();
+  recognition.lang='en-US'; recognition.continuous=false; recognition.interimResults=true;
+  recognition.onstart=()=>{
+    micActive=true;
+    document.getElementById('voiceMicBtn').textContent='🔴 Listening...';
+    document.getElementById('voiceMicBtn').style.background='rgba(255,50,50,0.15)';
+    document.getElementById('voiceStatus').textContent='Speak now...';
+  };
+  recognition.onresult=e=>{
+    const t=Array.from(e.results).map(r=>r[0].transcript).join('');
+    document.getElementById('voiceStatus').textContent=t;
+    if(e.results[e.results.length-1].isFinal){
+      recognition.stop();
+      respondToUser(t);
+    }
+  };
+  recognition.onend=()=>{ stopMic(); };
+  recognition.onerror=e=>{
+    document.getElementById('voiceStatus').textContent='Mic error: '+e.error+'. Try text below.';
+    document.getElementById('typeInput').style.display='flex';
+    stopMic();
+  };
+  recognition.start();
+}
+
+function stopMic(){
+  if(recognition){try{recognition.stop();}catch(e){}}
+  recognition=null; micActive=false;
+  const btn=document.getElementById('voiceMicBtn');
+  if(btn){ btn.textContent='🎙 Hold to Speak'; btn.style.background='transparent'; }
+  document.getElementById('voiceStatus').textContent='';
+}
+
+function openVoiceDemo(e){
+  if(e) e.preventDefault();
+  const modal=document.getElementById('voiceModal');
+  modal.style.display='flex';
+  loadVoice();
+  setTimeout(()=>alexSpeak(ALEX_RESPONSES.greeting),400);
+}
+
+function closeVoiceDemo(){
+  synth.cancel(); stopMic();
+  document.getElementById('voiceModal').style.display='none';
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') closeVoiceDemo();
+});
+
+// ROI Calculator
+function fmt(n){return n>=1000?'$'+Math.round(n).toLocaleString():'$'+Math.round(n);}
+function calcROI(){
+  const calls=+document.getElementById('roiCalls').value;
+  const dur=+document.getElementById('roiDuration').value;
+  const rate=+document.getElementById('roiRate').value;
+  const hrs=calls*dur/60;
+  const humanCost=hrs*rate;
+  // Squadron: ~$0.04/min voice + $99 base
+  const sqCost=Math.max(99,calls*dur*0.04+99);
+  const saving=Math.max(0,humanCost-sqCost);
+  const pct=humanCost>0?Math.round(saving/humanCost*100):0;
+  document.getElementById('roiCallsVal').textContent=calls.toLocaleString();
+  document.getElementById('roiDurationVal').textContent=dur+' min';
+  document.getElementById('roiRateVal').textContent='$'+rate+'/hr';
+  document.getElementById('roiSaving').textContent=fmt(saving);
+  document.getElementById('roiHumanCost').textContent=fmt(humanCost);
+  document.getElementById('roiSquadCost').textContent=fmt(sqCost);
+  document.getElementById('roiPercent').textContent=pct+'%';
+}
+window.addEventListener('load',calcROI);
+
+// CTA email capture
+function ctaSubmit(e){
+  e.preventDefault();
+  const email=document.getElementById('ctaEmail').value;
+  // Store locally and redirect
+  try{localStorage.setItem('squadronEmail',email);}catch(ex){}
+  window.location.href='/deploy?email='+encodeURIComponent(email);
+}
+
+</script>
+
+</body>
+</html>
