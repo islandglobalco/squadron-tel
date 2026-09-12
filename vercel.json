@@ -3,14 +3,17 @@
     "api/voice.js": {"maxDuration": 10},
     "api/gather.js": {"maxDuration": 10},
     "api/chat.js": {"maxDuration": 15},
-    "api/signup.js": {"maxDuration": 10}
+    "api/signup.js": {"maxDuration": 10},
+    "api/tts.js": {"maxDuration": 15}
   },
   "routes": [
+    {"src": "/", "dest": "/index.html"},
     {"src": "/deploy", "dest": "/deploy.html"},
     {"src": "/api/voice", "dest": "/api/voice.js"},
     {"src": "/api/gather", "dest": "/api/gather.js"},
     {"src": "/api/chat", "dest": "/api/chat.js"},
     {"src": "/api/signup", "dest": "/api/signup.js"},
+    {"src": "/api/tts", "dest": "/api/tts.js"},
     {"src": "/(.*)", "dest": "/$1"}
   ]
 }
