@@ -4,7 +4,8 @@
     "api/gather.js": {"maxDuration": 10},
     "api/chat.js": {"maxDuration": 15},
     "api/signup.js": {"maxDuration": 10},
-    "api/tts.js": {"maxDuration": 15}
+    "api/tts.js": {"maxDuration": 30},
+    "api/session.js": {"maxDuration": 30}
   },
   "routes": [
     {"src": "/", "dest": "/index.html"},
@@ -14,6 +15,7 @@
     {"src": "/api/chat", "dest": "/api/chat.js"},
     {"src": "/api/signup", "dest": "/api/signup.js"},
     {"src": "/api/tts", "dest": "/api/tts.js"},
+    {"src": "/api/session", "dest": "/api/session.js"},
     {"src": "/(.*)", "dest": "/$1"}
   ]
 }

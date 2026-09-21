@@ -526,7 +526,8 @@ footer{
   display:grid;grid-template-columns:1fr auto;align-items:center;gap:32px;
   box-shadow:0 -1px 0 rgba(206,235,0,0.05);
 }
-.footer-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;letter-spacing:0.06em;color:var(--white);text-decoration:none;text-transform:uppercase;margin-bottom:8px;display:block;}
+.footer-logo{display:inline-block;text-decoration:none;margin-bottom:12px;line-height:0;}
+.footer-logo-svg{height:26px;width:auto;display:block;overflow:visible;}
 .footer-copy{font-size:12px;color:rgba(255,255,255,0.22);}
 .footer-links{display:flex;gap:28px;}
 .footer-links a{font-size:12px;color:rgba(255,255,255,0.28);text-decoration:none;transition:color 0.2s;}
@@ -1372,7 +1373,32 @@ details[open] .faq-q{color:var(--signal);}
 
 <footer>
   <div>
-    <a href="/" class="footer-logo">Squadron</a>
+    <a href="/" class="footer-logo" aria-label="Squadron"><svg class="footer-logo-svg" viewBox="0 -430 2278 492" xmlns="http://www.w3.org/2000/svg" aria-label="Squadron">
+      <g transform="translate(0,0)" data-letter="S" data-idx="0"><g class="logo-letter">
+        <path d="M 6 -371.28125 L 75 -429.65625 L 199 -429.65625 L 268 -371.28125 L 268.5 -304.921875 L 167.5 -304.921875 L 167.5 -349.015625 L 106.5 -349.015625 L 106.5 -259.5625 L 268 -259.984375 L 270 -57.953125 L 201 0.421875 L 77 0.421875 L 8 -57.953125 L 7.5 -124.3125 L 108.5 -124.3125 L 108.5 -80.21875 L 169.5 -80.21875 L 169.5 -169.6875 L 148.5 -169.6875 L 148.5 -169.265625 L 8 -169.265625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(286,0)" data-letter="Q" data-idx="1"><g class="logo-letter">
+        <path d="M 200 0.84375 L 187.5 0.84375 L 187.5 63.421875 L 87 63.421875 L 87 0.84375 L 74.5 0.84375 L 5.5 -57.546875 L 5.5 -370.015625 L 74.5 -428.40625 L 198 -428.40625 L 268 -369.1875 L 268 -56.703125 Z M 106 -347.765625 L 106 -82.3125 L 167.5 -82.3125 L 167.5 -346.921875 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(572,0)" data-letter="U" data-idx="2"><g class="logo-letter">
+        <path d="M 6.5 -428.40625 L 108 -428.40625 L 108 -83.15625 L 169 -83.15625 L 169 -352.796875 L 169.5 -352.796875 L 169.5 -429.234375 L 269.5 -429.234375 L 269.5 -58.375 L 200.5 0 L 76.5 0 L 7.5 -58.375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(858,0)" data-letter="A" data-idx="3"><g class="logo-letter">
+        <path d="M 107.5 0 L 7 0 L 7 -199.078125 L 6.5 -199.078125 L 6.5 -372.546875 L 75.5 -430.921875 L 199.5 -430.921875 L 268.5 -372.546875 L 268.5 -325.078125 L 269.5 0 L 169.5 0 L 168.5 -172.203125 L 107.5 -172.203125 Z M 107 -257.046875 L 168 -257.046875 L 168 -347.765625 L 107 -347.765625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1144,0)" data-letter="D" data-idx="4"><g class="logo-letter">
+        <path d="M 269.5 -55.859375 L 200.5 0.84375 L 30 0.421875 L 30 0 L 7.5 0 L 6.5 -429.65625 L 199.5 -429.65625 L 268.5 -371.28125 Z M 108 -83.578125 L 169 -83.578125 L 168 -359.9375 L 107 -359.9375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1430,0)" data-letter="R" data-idx="5"><g class="logo-letter">
+        <path d="M 108 0.421875 L 7.5 0.421875 L 7 -430.5 L 200 -430.5 L 269 -372.125 L 269 -324.65625 L 270 -233.515625 L 268.5 -233.09375 L 269 -230.15625 L 250 -214.203125 L 250.5 -214.203125 L 269.5 -198.234375 L 269 -195.296875 L 270.5 -194.875 L 270 0.421875 L 170 0.421875 L 169 -171.78125 L 108 -171.78125 Z M 107.5 -256.625 L 168.5 -256.625 L 168.5 -347.34375 L 107.5 -347.34375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1716,0)" data-letter="O" data-idx="6"><g class="logo-letter">
+        <path d="M 202 0.84375 L 76.5 0.84375 L 7.5 -57.546875 L 6.5 -372.546875 L 75.5 -430.921875 L 199 -430.921875 L 269 -371.703125 L 270 -56.703125 Z M 107 -350.28125 L 108 -82.3125 L 169.5 -82.3125 L 168.5 -349.4375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(2002,0)" data-letter="N" data-idx="7"><g class="logo-letter">
+        <path d="M 109 0.421875 L 8.5 0.421875 L 8.5 -198.65625 L 8 -198.65625 L 7 -430.5 L 108.5 -430.5 L 169.5 -263.34375 L 169.5 -430.5 L 270 -430.5 L 270 -324.65625 L 271 0.421875 L 170 0.421875 L 108.5 -162.546875 Z" fill="white"/>
+      </g></g>
+    </svg></a>
     <div class="footer-copy">© 2024 Squadron. All rights reserved.</div>
   </div>
   <div class="footer-links">
@@ -1534,9 +1560,11 @@ const VOICE_PROFILES=[
 
 let currentVoiceSource=null;
 let currentVoiceBtn=null;
+const TTS_VERSION='gpt4o-mini-tts-1';
+const ttsCache={};
 
 function stopVoice(){
-  if(currentVoiceSource){try{currentVoiceSource.stop();}catch(e){} currentVoiceSource=null;}
+  if(currentVoiceSource){try{currentVoiceSource.pause();currentVoiceSource.currentTime=0;}catch(e){} currentVoiceSource=null;}
   if(currentVoiceBtn){
     currentVoiceBtn.classList.remove('playing');
     const wf=currentVoiceBtn.parentElement.querySelector('.voice-waveform');
@@ -1545,88 +1573,28 @@ function stopVoice(){
   }
 }
 
+// Real OpenAI voice (gpt-4o-mini-tts via /api/tts), cached at the edge per agent.
 function previewVoice(agentIdx, btn){
   if(currentVoiceBtn===btn){stopVoice();return;}
   stopVoice();
-  try{
-    const ctx=getAudio();
-    const [baseFreq,tempo,formant,energy]=VOICE_PROFILES[agentIdx]||[180,1,900,0.4];
-    const duration=8;
-    const now=ctx.currentTime;
-
-    const master=ctx.createGain(); master.gain.setValueAtTime(0,now); master.gain.linearRampToValueAtTime(0.4,now+0.08);
-    master.connect(ctx.destination);
-
-    // Single sawtooth oscillator — speech fundamental
-    const osc=ctx.createOscillator();
-    osc.type='sawtooth';
-    osc.frequency.value=baseFreq;
-    // Add subtle pitch variation (natural speech contour)
-    for(let i=0;i<duration*2;i++){
-      const t=now+i*0.5;
-      const pitchVar=baseFreq*(1+(Math.random()-0.5)*0.06);
-      osc.frequency.setValueAtTime(pitchVar, t);
-    }
-
-    // Formant bandpass — shapes sawtooth into voice timbre
-    const form=ctx.createBiquadFilter();
-    form.type='bandpass'; form.frequency.value=formant; form.Q.value=4;
-
-    // Second formant
-    const form2=ctx.createBiquadFilter();
-    form2.type='bandpass'; form2.frequency.value=formant*1.8; form2.Q.value=6;
-
-    const formMix=ctx.createGain(); formMix.gain.value=0.6;
-    const form2Mix=ctx.createGain(); form2Mix.gain.value=0.4;
-
-    osc.connect(form); form.connect(formMix); formMix.connect(master);
-    osc.connect(form2); form2.connect(form2Mix); form2Mix.connect(master);
-
-    // Amplitude-modulate at syllable rate to simulate talking rhythm
-    const syllableRate=tempo*3.2;
-    const modOsc=ctx.createOscillator();
-    modOsc.type='sine'; modOsc.frequency.value=syllableRate;
-    const modGain=ctx.createGain(); modGain.gain.value=0.45;
-    const modShift=ctx.createGain(); modShift.gain.value=0.55;
-    // combine: 0.55 + 0.45*sin = oscillates 0.1 to 1.0
-    modOsc.connect(modGain);
-    const modMerge=ctx.createGain(); modMerge.gain.value=1;
-    modGain.connect(modMerge); 
-    // Apply modulation via a secondary gain shaping trick
-    const ampEnv=ctx.createGain(); ampEnv.gain.value=1;
-
-    // Irregular amplitude bumps for natural speech
-    const lfoOsc=ctx.createOscillator();
-    lfoOsc.type='square'; lfoOsc.frequency.value=syllableRate*1.3;
-    const lfoGain=ctx.createGain(); lfoGain.gain.value=0.3;
-    lfoOsc.connect(lfoGain);
-    // Breath: occasional volume dips
-    for(let i=0;i<duration*syllableRate;i++){
-      const t=now+(i/syllableRate);
-      const v=0.5+Math.random()*0.5*(1+energy);
-      master.gain.setValueAtTime(v*0.4, t);
-    }
-
-    // Fade out
-    master.gain.setValueAtTime(0.4, now+duration-0.3);
-    master.gain.linearRampToValueAtTime(0, now+duration);
-
-    osc.start(now); osc.stop(now+duration);
-    modOsc.start(now); modOsc.stop(now+duration);
-    lfoOsc.start(now); lfoOsc.stop(now+duration);
-
-    const timer=setTimeout(()=>{stopVoice();}, duration*1000+200);
-    currentVoiceSource={osc,modOsc,lfoOsc,stop:()=>{
-      try{osc.stop();modOsc.stop();lfoOsc.stop();}catch(e){}
-      clearTimeout(timer);
-    }};
-    currentVoiceBtn=btn;
-    btn.classList.add('playing');
-    const wf=btn.parentElement.querySelector('.voice-waveform');
-    if(wf) wf.classList.add('active');
-
-    playChime();
-  }catch(e){console.error('Voice preview error',e);}
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+  const audio=ttsCache[agentIdx]||new Audio('/api/tts?agent='+agentIdx+'&v='+TTS_VERSION);
+  audio.preload='auto';
+  ttsCache[agentIdx]=audio;
+  currentVoiceSource=audio;
+  currentVoiceBtn=btn;
+  btn.classList.add('playing');
+  const wf=btn.parentElement.querySelector('.voice-waveform');
+  if(wf) wf.classList.add('active');
+  audio.onended=()=>{ if(currentVoiceSource===audio) stopVoice(); };
+  audio.onerror=()=>{
+    delete ttsCache[agentIdx];
+    if(currentVoiceSource===audio) stopVoice();
+    console.error('Voice preview failed to load for agent',agentIdx);
+  };
+  audio.currentTime=0;
+  const p=audio.play();
+  if(p&&p.catch) p.catch(err=>{ if(currentVoiceSource===audio) stopVoice(); console.error('Voice preview play error',err); });
 }
 
 // ═══════════════════════════════════════════════
@@ -1957,7 +1925,7 @@ document.addEventListener('click',e=>{
         <div style="color:#fff;font-weight:700;font-size:16px;">Alex</div>
         <div style="color:var(--green);font-size:12px;display:flex;align-items:center;gap:6px;">
           <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;"></span>
-          Live · Ready to help
+          <span id="voiceEngineTag">Live · OpenAI voice</span>
         </div>
       </div>
     </div>
@@ -1969,7 +1937,6 @@ document.addEventListener('click',e=>{
       color:rgba(255,255,255,0.8);line-height:1.6;margin-bottom:20px;
     ">
       <div id="transcriptLines">
-        <div style="color:var(--signal);">Alex: Hey! I'm Alex from Squadron support. What can I help you with today?</div>
       </div>
     </div>
 
@@ -1983,7 +1950,7 @@ document.addEventListener('click',e=>{
         flex:1;padding:14px;border-radius:999px;border:2px solid var(--signal);
         background:transparent;color:var(--signal);font-weight:700;font-size:14px;
         cursor:pointer;transition:all 0.2s;letter-spacing:0.04em;
-      ">🎙 Hold to Speak</button>
+      ">🎙 Start Talking</button>
       <button onclick="alexSpeak()" style="
         padding:14px 20px;border-radius:999px;
         background:linear-gradient(180deg,#DEFF00 0%,#CEEB00 100%);
@@ -2007,7 +1974,7 @@ document.addEventListener('click',e=>{
     </div>
 
     <div style="text-align:center;margin-top:16px;font-size:11px;color:rgba(255,255,255,0.25);">
-      Demo · Powered by Web Speech API · No data stored
+      Live demo · Real-time OpenAI voice · No data stored
     </div>
   </div>
 </div>
@@ -2094,73 +2061,134 @@ document.addEventListener('click',e=>{
   });
 })();
 
-// ── VOICE DEMO ────────────────────────────────────────────────────────────────
-let recognition=null, synth=window.speechSynthesis, alexVoice=null, micActive=false;
+// ── VOICE DEMO — live OpenAI voice over WebRTC (gpt-live-1, fallback gpt-realtime-2.1) ──
+let rtc=null, rtcDc=null, rtcMic=null, rtcAudio=null, rtcEngine=null, rtcMuted=false, rtcConnecting=false;
+let liveAlexLine=null, liveUserLine=null, rtcQueue=[];
 
-const ALEX_RESPONSES={
-  default: [
-    "Great question! Squadron agents are trained on your exact knowledge base — so they handle anything your human team can.",
-    "Setup takes about five minutes. You connect your docs, pick a voice, and you're live. That's it.",
-    "Most customers can't tell the difference from a human agent. That's kind of the point.",
-    "We handle calls, chats, and SMS all in one platform. One squad, every channel.",
-    "Pricing starts at $99 a month and scales with usage — way less than hiring even one part-time rep.",
-  ],
-  greeting: "Hey! Great to have you here. What would you like to know about Squadron?",
-  pricing: "Our starter plan is $99 per month for up to 5 agents. Enterprise plans scale to thousands. No per-minute call charges.",
-  setup: "Getting live takes about five minutes. You upload your docs, configure a voice, hit deploy. We handle infrastructure, routing, everything.",
-  support: "Squadron agents handle tier-1 support, appointment booking, lead qualification, order tracking — anything repetitive that eats your team's time.",
-  voice: "Each agent has a distinct voice and personality. You can preview them all on the pricing page. Alex here is our flagship.",
-  human: "Yep — if a customer gets upset or asks for a human, the agent seamlessly transfers the call. Zero friction.",
-};
-
-function pickResponse(text){
-  const t=text.toLowerCase();
-  if(/price|cost|plan|subscription|pay/.test(t)) return ALEX_RESPONSES.pricing;
-  if(/setup|start|deploy|install|integrate/.test(t)) return ALEX_RESPONSES.setup;
-  if(/support|help|ticket|complaint|refund/.test(t)) return ALEX_RESPONSES.support;
-  if(/voice|sound|speak|talk|language/.test(t)) return ALEX_RESPONSES.voice;
-  if(/human|real|transfer|escalate|person/.test(t)) return ALEX_RESPONSES.human;
-  return ALEX_RESPONSES.default[Math.floor(Math.random()*ALEX_RESPONSES.default.length)];
-}
-
-function loadVoice(){
-  if(alexVoice) return;
-  const voices=synth.getVoices();
-  alexVoice=voices.find(v=>v.lang.startsWith('en')&&/samantha|karen|moira|victoria|zira|hazel|female/i.test(v.name))
-    || voices.find(v=>v.lang.startsWith('en'))
-    || voices[0];
-}
-
-function alexSpeak(text){
-  if(!text){
-    // toggle type input
-    const ti=document.getElementById('typeInput');
-    ti.style.display=ti.style.display==='none'?'flex':'none';
-    return;
-  }
-  loadVoice();
-  synth.cancel();
-  const utt=new SpeechSynthesisUtterance(text);
-  utt.voice=alexVoice;
-  utt.rate=1.05; utt.pitch=1.05; utt.volume=1;
-  synth.speak(utt);
-}
+function vStatus(t){ const el=document.getElementById('voiceStatus'); if(el) el.textContent=t||''; }
+function escHtml(t){ return String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
 function addLine(speaker, text, color){
   const div=document.createElement('div');
   div.style.marginBottom='8px';
-  div.innerHTML=`<span style="color:${color||'rgba(255,255,255,0.5)'};font-weight:600;">${speaker}:</span> ${text}`;
+  div.innerHTML=`<span style="color:${color||'rgba(255,255,255,0.5)'};font-weight:600;">${speaker}:</span> <span class="t">${escHtml(text)}</span>`;
   document.getElementById('transcriptLines').appendChild(div);
   document.getElementById('voiceTranscript').scrollTop=9999;
+  return div;
+}
+function appendTo(line, delta){
+  const t=line.querySelector('.t'); t.textContent+=delta;
+  document.getElementById('voiceTranscript').scrollTop=9999;
+}
+function alexDelta(delta){
+  if(!delta) return;
+  liveUserLine=null;
+  if(!liveAlexLine) liveAlexLine=addLine('Alex','', 'var(--signal)');
+  appendTo(liveAlexLine, delta);
+}
+function userDelta(delta){
+  if(!delta) return;
+  liveAlexLine=null;
+  if(!liveUserLine) liveUserLine=addLine('You','', 'rgba(255,255,255,0.8)');
+  appendTo(liveUserLine, delta);
 }
 
-function respondToUser(userText){
-  addLine('You',userText,'rgba(255,255,255,0.8)');
-  const resp=pickResponse(userText);
-  setTimeout(()=>{
-    addLine('Alex',resp,'var(--signal)');
-    alexSpeak(resp);
-  },600);
+function setMicBtn(){
+  const btn=document.getElementById('voiceMicBtn'); if(!btn) return;
+  if(rtcConnecting){ btn.textContent='Connecting…'; btn.style.background='transparent'; return; }
+  if(!rtc){ btn.textContent='🎙 Start Talking'; btn.style.background='transparent'; return; }
+  if(!rtcMic){ btn.textContent='🎙 Enable Mic'; btn.style.background='transparent'; return; }
+  btn.textContent=rtcMuted?'🔇 Muted — tap to talk':'🔴 Live — tap to mute';
+  btn.style.background=rtcMuted?'transparent':'rgba(255,50,50,0.15)';
+}
+
+function rtcSend(evt){
+  if(rtcDc && rtcDc.readyState==='open') rtcDc.send(JSON.stringify(evt));
+  else rtcQueue.push(evt);
+}
+
+function handleRtcEvent(e){
+  let ev; try{ ev=JSON.parse(e.data); }catch(_){ return; }
+  switch(ev.type){
+    // gpt-live-1
+    case 'session.started': vStatus('Connected · speak any time'); break;
+    case 'session.output_transcript.delta': alexDelta(ev.delta); break;
+    case 'session.input_transcript.delta': userDelta(ev.delta); break;
+    // gpt-realtime
+    case 'session.created': vStatus('Connected · speak any time'); rtcSend({type:'response.create'}); break;
+    case 'response.output_audio_transcript.delta': alexDelta(ev.delta); break;
+    case 'response.output_audio_transcript.done': liveAlexLine=null; break;
+    case 'conversation.item.input_audio_transcription.completed':
+      if(ev.transcript && ev.transcript.trim()){ liveAlexLine=null; liveUserLine=null; addLine('You',ev.transcript.trim(),'rgba(255,255,255,0.8)'); }
+      break;
+    case 'input_audio_buffer.speech_started': liveAlexLine=null; break;
+    case 'error': console.error('[voice]',ev); vStatus('Voice error: '+((ev.error&&ev.error.message)||'unknown')); break;
+  }
+}
+
+async function startLive(){
+  if(rtc||rtcConnecting) return;
+  rtcConnecting=true; setMicBtn(); vStatus('Connecting to Alex…');
+  try{
+    const pc=new RTCPeerConnection();
+    rtc=pc;
+    rtcAudio=document.getElementById('alexAudio')||Object.assign(document.createElement('audio'),{id:'alexAudio',autoplay:true});
+    if(!rtcAudio.isConnected){ rtcAudio.style.display='none'; document.body.appendChild(rtcAudio); }
+    pc.ontrack=ev=>{ rtcAudio.srcObject=ev.streams[0]; rtcAudio.play().catch(()=>{}); };
+    pc.onconnectionstatechange=()=>{ if(['failed','closed'].includes(pc.connectionState) && rtc===pc){ vStatus('Connection closed.'); stopLive(); } };
+    try{
+      rtcMic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+      rtcMic.getTracks().forEach(t=>pc.addTrack(t,rtcMic));
+    }catch(err){
+      rtcMic=null;
+      pc.addTransceiver('audio',{direction:'recvonly'});
+      document.getElementById('typeInput').style.display='flex';
+    }
+    const dc=pc.createDataChannel('oai-events');
+    rtcDc=dc;
+    dc.onmessage=handleRtcEvent;
+    dc.onopen=()=>{ const q=rtcQueue; rtcQueue=[]; q.forEach(rtcSend); };
+    const offer=await pc.createOffer();
+    await pc.setLocalDescription(offer);
+    const r=await fetch('/api/session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sdp:offer.sdp})});
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok||!data.sdp) throw new Error((data&&data.error)||('HTTP '+r.status));
+    if(rtc!==pc) return;
+    rtcEngine=data.engine;
+    await pc.setRemoteDescription({type:'answer',sdp:data.sdp});
+    const tag=document.getElementById('voiceEngineTag'); if(tag) tag.textContent='Live · OpenAI '+(data.model||'');
+    vStatus(rtcMic?'Connected · speak any time':'Mic unavailable · type below and Alex will answer out loud');
+  }catch(err){
+    console.error('[voice] start failed',err);
+    vStatus('Could not connect to the live agent. Please try again.');
+    stopLive();
+  }finally{
+    rtcConnecting=false; setMicBtn();
+  }
+}
+
+function stopLive(){
+  try{ if(rtcDc) rtcDc.close(); }catch(_){}
+  try{ if(rtc) rtc.close(); }catch(_){}
+  if(rtcMic) rtcMic.getTracks().forEach(t=>t.stop());
+  if(rtcAudio) rtcAudio.srcObject=null;
+  rtc=null; rtcDc=null; rtcMic=null; rtcEngine=null; rtcMuted=false; rtcQueue=[];
+  liveAlexLine=null; liveUserLine=null;
+  setMicBtn();
+}
+
+function toggleMic(){
+  if(!rtc){ startLive(); return; }
+  if(!rtcMic){ stopLive(); startLive(); return; }
+  rtcMuted=!rtcMuted;
+  rtcMic.getAudioTracks().forEach(t=>t.enabled=!rtcMuted);
+  setMicBtn();
+}
+
+function alexSpeak(){
+  const ti=document.getElementById('typeInput');
+  ti.style.display=ti.style.display==='flex'?'none':'flex';
+  if(ti.style.display==='flex') setTimeout(()=>document.getElementById('msgInput').focus(),50);
 }
 
 function sendTyped(){
@@ -2168,67 +2196,34 @@ function sendTyped(){
   const text=inp.value.trim();
   if(!text) return;
   inp.value='';
-  respondToUser(text);
-}
-
-let micBtnMode='hold'; // 'hold' or 'toggle'
-function toggleMic(){
-  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){
-    // fallback: show type input
-    document.getElementById('voiceStatus').textContent='Voice recognition not supported — use text below.';
-    document.getElementById('typeInput').style.display='flex';
-    return;
-  }
-  if(micActive){ stopMic(); return; }
-  startMic();
-}
-
-function startMic(){
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  recognition=new SR();
-  recognition.lang='en-US'; recognition.continuous=false; recognition.interimResults=true;
-  recognition.onstart=()=>{
-    micActive=true;
-    document.getElementById('voiceMicBtn').textContent='🔴 Listening...';
-    document.getElementById('voiceMicBtn').style.background='rgba(255,50,50,0.15)';
-    document.getElementById('voiceStatus').textContent='Speak now...';
-  };
-  recognition.onresult=e=>{
-    const t=Array.from(e.results).map(r=>r[0].transcript).join('');
-    document.getElementById('voiceStatus').textContent=t;
-    if(e.results[e.results.length-1].isFinal){
-      recognition.stop();
-      respondToUser(t);
+  liveAlexLine=null; liveUserLine=null;
+  addLine('You',text,'rgba(255,255,255,0.8)');
+  if(!rtc) startLive();
+  const send=()=>{
+    if(rtcEngine==='realtime'){
+      rtcSend({type:'conversation.item.create',item:{type:'message',role:'user',content:[{type:'input_text',text}]}});
+      rtcSend({type:'response.create'});
+    }else{
+      rtcSend({type:'response.item.create',item:{type:'message',role:'user',content:[{type:'text',text}]}});
     }
   };
-  recognition.onend=()=>{ stopMic(); };
-  recognition.onerror=e=>{
-    document.getElementById('voiceStatus').textContent='Mic error: '+e.error+'. Try text below.';
-    document.getElementById('typeInput').style.display='flex';
-    stopMic();
-  };
-  recognition.start();
-}
-
-function stopMic(){
-  if(recognition){try{recognition.stop();}catch(e){}}
-  recognition=null; micActive=false;
-  const btn=document.getElementById('voiceMicBtn');
-  if(btn){ btn.textContent='🎙 Hold to Speak'; btn.style.background='transparent'; }
-  document.getElementById('voiceStatus').textContent='';
+  if(rtcEngine) send();
+  else { const iv=setInterval(()=>{ if(rtcEngine){clearInterval(iv);send();} else if(!rtc&&!rtcConnecting){clearInterval(iv);} },150); }
 }
 
 function openVoiceDemo(e){
   if(e) e.preventDefault();
-  const modal=document.getElementById('voiceModal');
-  modal.style.display='flex';
-  loadVoice();
-  setTimeout(()=>alexSpeak(ALEX_RESPONSES.greeting),400);
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+  stopVoice();
+  document.getElementById('transcriptLines').innerHTML='';
+  document.getElementById('voiceModal').style.display='flex';
+  startLive();
 }
 
 function closeVoiceDemo(){
-  synth.cancel(); stopMic();
+  stopLive();
   document.getElementById('voiceModal').style.display='none';
+  vStatus('');
 }
 
 document.addEventListener('keydown',e=>{
