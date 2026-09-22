@@ -1,5 +1,6 @@
 // /api/tts.js — OpenAI TTS voice preview for Squadron AI agents
-// Uses gpt-4o-mini-tts (OpenAI's newest, steerable TTS) with per-agent voice + delivery direction
+// Uses gpt-4o-mini-tts (OpenAI's newest, steerable TTS) with per-agent voice + delivery direction.
+// Output is lossless WAV (24 kHz PCM) so previews never carry MP3 compression artifacts.
 
 const AGENTS = [
   { name: 'Luna', voice: 'coral', tone: 'Warm, welcoming and upbeat, like a friendly onboarding specialist smiling while she talks.', text: "Hi, I'm Luna. I specialize in customer onboarding — making sure every new user gets set up fast and feels supported from their very first interaction." },
@@ -53,8 +54,10 @@ export default async function handler(req, res) {
         model: 'gpt-4o-mini-tts',
         voice: agent.voice,
         input: agent.text,
-        instructions: `Voice direction: ${agent.tone} Natural, human, conversational pacing with real warmth; this is a short self-introduction for a customer-support product demo.`,
-        response_format: 'mp3',
+        instructions: `Voice direction: ${agent.tone} Natural, human, conversational pacing with real warmth; smooth, even delivery with steady pitch and no rushed or clipped words. This is a short self-introduction for a customer-support product demo.`,
+        // Lossless 24 kHz PCM — no codec artifacts; cached at the edge per agent.
+        response_format: 'wav',
+        speed: 1.0,
       }),
     });
 
@@ -67,7 +70,7 @@ export default async function handler(req, res) {
     }
 
     const buffer = await ttsRes.arrayBuffer();
-    res.setHeader('Content-Type', 'audio/mpeg');
+    res.setHeader('Content-Type', 'audio/wav');
     res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=31536000, immutable');
     res.setHeader('X-Agent-Name', agent.name);
     res.setHeader('X-Agent-Voice', agent.voice);
