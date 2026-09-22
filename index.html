@@ -1560,8 +1560,49 @@ const VOICE_PROFILES=[
 
 let currentVoiceSource=null;
 let currentVoiceBtn=null;
-const TTS_VERSION='gpt4o-mini-tts-1';
+const TTS_VERSION='gpt4o-mini-tts-2-wav';
 const ttsCache={};
+
+// ═══════════════════════════════════════════════
+// VOICE POLISH — one shared output chain for every agent voice
+// (24 previews + live Alex): rumble cut, presence lift, softened top
+// end, gentle compression to even out level jumps. Subtle by design.
+// ═══════════════════════════════════════════════
+let voiceChain=null;
+function getVoiceChain(){
+  if(voiceChain) return voiceChain;
+  const ctx=getAudio();
+  const input=ctx.createGain(); input.gain.value=1;
+  const hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=70; hp.Q.value=0.7;
+  const pres=ctx.createBiquadFilter(); pres.type='peaking'; pres.frequency.value=3200; pres.Q.value=0.9; pres.gain.value=1.5;
+  const air=ctx.createBiquadFilter(); air.type='highshelf'; air.frequency.value=9000; air.gain.value=-1.5;
+  const comp=ctx.createDynamicsCompressor();
+  comp.threshold.value=-20; comp.knee.value=14; comp.ratio.value=2.5; comp.attack.value=0.004; comp.release.value=0.18;
+  const out=ctx.createGain(); out.gain.value=1.12;
+  input.connect(hp); hp.connect(pres); pres.connect(air); air.connect(comp); comp.connect(out); out.connect(ctx.destination);
+  voiceChain={ctx,input};
+  return voiceChain;
+}
+// Route an <audio> element (voice preview) through the chain. Safe to call repeatedly.
+function polishElement(audio){
+  try{
+    if(audio._polished) return true;
+    const ch=getVoiceChain();
+    const src=ch.ctx.createMediaElementSource(audio);
+    src.connect(ch.input);
+    audio._polished=true;
+    return true;
+  }catch(e){ console.warn('[voice] polish unavailable for preview',e); return false; }
+}
+// Route a live WebRTC stream through the chain. Returns the source node or null.
+function polishStream(stream){
+  try{
+    const ch=getVoiceChain();
+    const src=ch.ctx.createMediaStreamSource(stream);
+    src.connect(ch.input);
+    return src;
+  }catch(e){ console.warn('[voice] polish unavailable for live stream',e); return null; }
+}
 
 function stopVoice(){
   if(currentVoiceSource){try{currentVoiceSource.pause();currentVoiceSource.currentTime=0;}catch(e){} currentVoiceSource=null;}
@@ -1581,6 +1622,7 @@ function previewVoice(agentIdx, btn){
   const audio=ttsCache[agentIdx]||new Audio('/api/tts?agent='+agentIdx+'&v='+TTS_VERSION);
   audio.preload='auto';
   ttsCache[agentIdx]=audio;
+  polishElement(audio);
   currentVoiceSource=audio;
   currentVoiceBtn=btn;
   btn.classList.add('playing');
@@ -2061,9 +2103,36 @@ document.addEventListener('click',e=>{
   });
 })();
 
-// ── VOICE DEMO — live OpenAI voice over WebRTC (gpt-live-1, fallback gpt-realtime-2.1) ──
+// ── VOICE DEMO — live OpenAI voice over WebRTC (gpt-realtime-2.1 via /api/session; gpt-live-1 opt-in) ──
 let rtc=null, rtcDc=null, rtcMic=null, rtcAudio=null, rtcEngine=null, rtcMuted=false, rtcConnecting=false;
-let liveAlexLine=null, liveUserLine=null, rtcQueue=[];
+let liveAlexLine=null, liveUserLine=null, rtcQueue=[], rtcPolish=null;
+
+// Opus tuning for the live call. Offer side = what we want to RECEIVE from Alex
+// (high bitrate, in-band FEC so lost packets are concealed instead of glitching);
+// answer side = what our encoder SENDS (cleaner mic audio for transcription).
+const OPUS_RECV={stereo:0,'sprop-stereo':0,useinbandfec:1,usedtx:0,maxaveragebitrate:128000,maxplaybackrate:48000};
+const OPUS_SEND={useinbandfec:1,usedtx:0,maxaveragebitrate:96000};
+const JITTER_TARGET_MS=120; // receiver playout buffer — absorbs network jitter before it reaches the ear
+const CAN_POLISH_LIVE=/Chrome\//.test(navigator.userAgent)&&!/Edg\/|OPR\//.test(navigator.userAgent)&&!!window.AudioContext;
+
+function tuneOpus(sdp, params){
+  const m=sdp.match(/a=rtpmap:(\d+) opus\/48000\/2/i); if(!m) return sdp;
+  const pt=m[1];
+  const line=Object.entries(params).map(([k,v])=>k+'='+v).join(';');
+  const re=new RegExp('a=fmtp:'+pt+' ([^\\r\\n]*)');
+  if(re.test(sdp)){
+    return sdp.replace(re,(_,existing)=>{
+      const kv={};
+      existing.split(';').forEach(p=>{ const i=p.indexOf('='); if(i>0) kv[p.slice(0,i).trim()]=p.slice(i+1).trim(); });
+      Object.assign(kv,params);
+      return 'a=fmtp:'+pt+' '+Object.entries(kv).map(([k,v])=>k+'='+v).join(';');
+    });
+  }
+  return sdp.replace('a=rtpmap:'+pt+' opus/48000/2','a=rtpmap:'+pt+' opus/48000/2\r\na=fmtp:'+pt+' '+line);
+}
+function setJitterBuffer(pc){
+  try{ pc.getReceivers().forEach(r=>{ if(r.track&&r.track.kind==='audio'&&'jitterBufferTarget' in r) r.jitterBufferTarget=JITTER_TARGET_MS; }); }catch(_){}
+}
 
 function vStatus(t){ const el=document.getElementById('voiceStatus'); if(el) el.textContent=t||''; }
 function escHtml(t){ return String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
@@ -2122,6 +2191,9 @@ function handleRtcEvent(e){
       if(ev.transcript && ev.transcript.trim()){ liveAlexLine=null; liveUserLine=null; addLine('You',ev.transcript.trim(),'rgba(255,255,255,0.8)'); }
       break;
     case 'input_audio_buffer.speech_started': liveAlexLine=null; break;
+    case 'response.done':
+      if(ev.response&&ev.response.status==='failed'){ console.error('[voice] response failed',ev.response); vStatus('Alex hit a snag — say that again.'); }
+      break;
     case 'error': console.error('[voice]',ev); vStatus('Voice error: '+((ev.error&&ev.error.message)||'unknown')); break;
   }
 }
@@ -2134,11 +2206,23 @@ async function startLive(){
     rtc=pc;
     rtcAudio=document.getElementById('alexAudio')||Object.assign(document.createElement('audio'),{id:'alexAudio',autoplay:true});
     if(!rtcAudio.isConnected){ rtcAudio.style.display='none'; document.body.appendChild(rtcAudio); }
-    pc.ontrack=ev=>{ rtcAudio.srcObject=ev.streams[0]; rtcAudio.play().catch(()=>{}); };
+    pc.ontrack=ev=>{
+      const stream=ev.streams[0];
+      try{ if(ev.receiver&&'jitterBufferTarget' in ev.receiver) ev.receiver.jitterBufferTarget=JITTER_TARGET_MS; }catch(_){}
+      rtcAudio.srcObject=stream;
+      // Chromium: the element must consume the remote stream for Web Audio to see it, so keep it attached but muted
+      // and play the polished signal through the shared chain instead. Other browsers play the element directly.
+      rtcPolish=CAN_POLISH_LIVE?polishStream(stream):null;
+      rtcAudio.muted=!!rtcPolish;
+      rtcAudio.play().catch(()=>{});
+    };
     pc.onconnectionstatechange=()=>{ if(['failed','closed'].includes(pc.connectionState) && rtc===pc){ vStatus('Connection closed.'); stopLive(); } };
     try{
-      rtcMic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
-      rtcMic.getTracks().forEach(t=>pc.addTrack(t,rtcMic));
+      rtcMic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true,channelCount:1,sampleRate:48000}});
+      rtcMic.getTracks().forEach(t=>{
+        const sender=pc.addTrack(t,rtcMic);
+        try{ const p=sender.getParameters(); if(!p.encodings||!p.encodings.length) p.encodings=[{}]; p.encodings[0].maxBitrate=96000; sender.setParameters(p).catch(()=>{}); }catch(_){}
+      });
     }catch(err){
       rtcMic=null;
       pc.addTransceiver('audio',{direction:'recvonly'});
@@ -2149,13 +2233,15 @@ async function startLive(){
     dc.onmessage=handleRtcEvent;
     dc.onopen=()=>{ const q=rtcQueue; rtcQueue=[]; q.forEach(rtcSend); };
     const offer=await pc.createOffer();
-    await pc.setLocalDescription(offer);
-    const r=await fetch('/api/session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sdp:offer.sdp})});
+    const tunedOffer={type:'offer',sdp:tuneOpus(offer.sdp,OPUS_RECV)};
+    await pc.setLocalDescription(tunedOffer);
+    const r=await fetch('/api/session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sdp:tunedOffer.sdp})});
     const data=await r.json().catch(()=>({}));
-    if(!r.ok||!data.sdp) throw new Error((data&&data.error)||('HTTP '+r.status));
+    if(!r.ok||!data.sdp) throw new Error((data&&data.error?data.error+(data.detail?' — '+[].concat(data.detail).join(' | '):''):null)||('HTTP '+r.status));
     if(rtc!==pc) return;
     rtcEngine=data.engine;
-    await pc.setRemoteDescription({type:'answer',sdp:data.sdp});
+    await pc.setRemoteDescription({type:'answer',sdp:tuneOpus(data.sdp,OPUS_SEND)});
+    setJitterBuffer(pc);
     const tag=document.getElementById('voiceEngineTag'); if(tag) tag.textContent='Live · OpenAI '+(data.model||'');
     vStatus(rtcMic?'Connected · speak any time':'Mic unavailable · type below and Alex will answer out loud');
   }catch(err){
@@ -2171,7 +2257,9 @@ function stopLive(){
   try{ if(rtcDc) rtcDc.close(); }catch(_){}
   try{ if(rtc) rtc.close(); }catch(_){}
   if(rtcMic) rtcMic.getTracks().forEach(t=>t.stop());
-  if(rtcAudio) rtcAudio.srcObject=null;
+  try{ if(rtcPolish) rtcPolish.disconnect(); }catch(_){}
+  rtcPolish=null;
+  if(rtcAudio){ rtcAudio.srcObject=null; rtcAudio.muted=false; }
   rtc=null; rtcDc=null; rtcMic=null; rtcEngine=null; rtcMuted=false; rtcQueue=[];
   liveAlexLine=null; liveUserLine=null;
   setMicBtn();
