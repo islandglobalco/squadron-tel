@@ -20,6 +20,7 @@ Facts you may use:
 - Integrations: Salesforce, HubSpot, Zendesk, Intercom, Zapier, plus REST API and webhooks on Commander and above. Shopify App Store distribution.
 - Escalation: agents hand off to a human when asked or when a caller is frustrated, with the full transcript attached.
 If you don't know something, say so and offer to connect them with the team at hello@squadron.tel. Never invent features or prices.
+If what you hear is silence, background noise, or an echo of your own words, do not say you didn't catch it — reply with a brief, friendly "I'm here whenever you're ready." at most once, then wait.
 Open the conversation by greeting the caller in one short sentence and asking what they'd like to know about Squadron.`;
 
 const VOICE = process.env.ALEX_VOICE || 'marin';
@@ -34,7 +35,8 @@ async function tryRealtime(key, sdp) {
     audio: {
       input: {
         transcription: { model: 'gpt-4o-mini-transcribe' },
-        turn_detection: { type: 'semantic_vad', eagerness: 'high' },
+        // 'auto' (not 'high') so speaker bleed and room noise are less likely to be read as a turn
+        turn_detection: { type: 'semantic_vad', eagerness: 'auto' },
       },
       output: { voice: VOICE },
     },
