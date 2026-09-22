@@ -2106,6 +2106,17 @@ document.addEventListener('click',e=>{
 // ── VOICE DEMO — live OpenAI voice over WebRTC (gpt-realtime-2.1 via /api/session; gpt-live-1 opt-in) ──
 let rtc=null, rtcDc=null, rtcMic=null, rtcAudio=null, rtcEngine=null, rtcMuted=false, rtcConnecting=false;
 let liveAlexLine=null, liveUserLine=null, rtcQueue=[], rtcPolish=null;
+// Mic ducking: while Alex is talking, the mic runs at −18 dB so speaker bleed of his own voice
+// stays below the server's turn detector, while a real interruption spoken near the mic still gets through.
+let micGain=null, micSrc=null, duckTimer=null;
+const DUCK_LEVEL=0.12, DUCK_RELEASE_MS=350;
+function duckMic(on){
+  if(!micGain) return;
+  clearTimeout(duckTimer);
+  const set=v=>{ try{ micGain.gain.setTargetAtTime(v, micGain.context.currentTime, on?0.015:0.04); }catch(_){ micGain.gain.value=v; } };
+  if(on){ set(DUCK_LEVEL); duckTimer=setTimeout(()=>set(1),8000); } // safety: never stay ducked if the stop event is missed
+  else duckTimer=setTimeout(()=>set(1),DUCK_RELEASE_MS);
+}
 
 // Opus tuning for the live call. Offer side = what we want to RECEIVE from Alex
 // (high bitrate, in-band FEC so lost packets are concealed instead of glitching);
@@ -2191,7 +2202,12 @@ function handleRtcEvent(e){
       if(ev.transcript && ev.transcript.trim()){ liveAlexLine=null; liveUserLine=null; addLine('You',ev.transcript.trim(),'rgba(255,255,255,0.8)'); }
       break;
     case 'input_audio_buffer.speech_started': liveAlexLine=null; break;
+    // WebRTC-only events: Alex's audio is actually playing → duck the mic; stopped/cleared → restore it
+    case 'output_audio_buffer.started': duckMic(true); break;
+    case 'output_audio_buffer.stopped':
+    case 'output_audio_buffer.cleared': duckMic(false); break;
     case 'response.done':
+      duckMic(false);
       if(ev.response&&ev.response.status==='failed'){ console.error('[voice] response failed',ev.response); vStatus('Alex hit a snag — say that again.'); }
       break;
     case 'error': console.error('[voice]',ev); vStatus('Voice error: '+((ev.error&&ev.error.message)||'unknown')); break;
@@ -2219,10 +2235,21 @@ async function startLive(){
     pc.onconnectionstatechange=()=>{ if(['failed','closed'].includes(pc.connectionState) && rtc===pc){ vStatus('Connection closed.'); stopLive(); } };
     try{
       rtcMic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true,channelCount:1,sampleRate:48000}});
-      rtcMic.getTracks().forEach(t=>{
-        const sender=pc.addTrack(t,rtcMic);
+      // Send the mic through a gain node so it can be ducked while Alex speaks. Falls back to the raw track.
+      let sendStream=rtcMic;
+      try{
+        const ctx=getAudio();
+        micSrc=ctx.createMediaStreamSource(rtcMic);
+        micGain=ctx.createGain(); micGain.gain.value=1;
+        const dest=ctx.createMediaStreamDestination();
+        micSrc.connect(micGain); micGain.connect(dest);
+        sendStream=dest.stream;
+      }catch(e){ console.warn('[voice] mic ducking unavailable',e); micGain=null; micSrc=null; }
+      sendStream.getAudioTracks().forEach(t=>{
+        const sender=pc.addTrack(t,sendStream);
         try{ const p=sender.getParameters(); if(!p.encodings||!p.encodings.length) p.encodings=[{}]; p.encodings[0].maxBitrate=96000; sender.setParameters(p).catch(()=>{}); }catch(_){}
       });
+      duckMic(true); // greeting is about to play; the mic opens fully once it ends
     }catch(err){
       rtcMic=null;
       pc.addTransceiver('audio',{direction:'recvonly'});
@@ -2258,7 +2285,8 @@ function stopLive(){
   try{ if(rtc) rtc.close(); }catch(_){}
   if(rtcMic) rtcMic.getTracks().forEach(t=>t.stop());
   try{ if(rtcPolish) rtcPolish.disconnect(); }catch(_){}
-  rtcPolish=null;
+  try{ if(micSrc) micSrc.disconnect(); if(micGain) micGain.disconnect(); }catch(_){}
+  clearTimeout(duckTimer); rtcPolish=null; micSrc=null; micGain=null;
   if(rtcAudio){ rtcAudio.srcObject=null; rtcAudio.muted=false; }
   rtc=null; rtcDc=null; rtcMic=null; rtcEngine=null; rtcMuted=false; rtcQueue=[];
   liveAlexLine=null; liveUserLine=null;
