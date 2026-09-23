@@ -160,6 +160,11 @@ nav{
   max-width:640px;margin-bottom:44px;font-weight:500;
 }
 .hero-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:52px;}
+.hero-form{display:flex;gap:12px;flex-wrap:wrap;max-width:760px;margin-bottom:18px;}
+.hero-url{flex:1;min-width:280px;font-family:'Inter',sans-serif;font-size:22px;font-weight:600;padding:18px 24px;border-radius:999px;border:2px solid rgba(255,255,255,0.28);background:rgba(255,255,255,0.08);color:#fff;outline:none;}
+.hero-url::placeholder{color:rgba(255,255,255,0.5);}
+.hero-url:focus{border-color:var(--signal);box-shadow:0 0 0 4px var(--signal-dim);}
+.hero-note{font-size:17px;font-weight:600;color:rgba(255,255,255,0.7);margin-bottom:36px;max-width:640px;line-height:1.5;}
 
 /* BUTTONS */
 .btn-primary{
@@ -815,7 +820,7 @@ details[open] .faq-q{color:var(--signal);}
     <li><a href="#pricing">Pricing</a></li>
     <li><a href="mailto:info@squadron.tel">Support</a></li>
   </ul>
-  <a href="/deploy" class="nav-cta">Deploy Free →</a>
+  <a href="/start" class="nav-cta">Build my team →</a>
 </nav>
 
 <section class="hero">
@@ -823,9 +828,11 @@ details[open] .faq-q{color:var(--signal);}
     <div class="hero-copy">
       <h1 class="hero-h1">Deploy a<br>customer-service team<br><em>in minutes.</em></h1>
       <p class="hero-sub">AI voice and chat agents with real personality. Your customers will actually look forward to calling.</p>
-      <div class="hero-actions">
-        <a href="/deploy" class="btn-primary" data-sound="click">Deploy Free →</a>
-      </div>
+      <form class="hero-form" onsubmit="heroSubmit(event)">
+        <input class="hero-url" type="url" id="heroUrl" placeholder="https://yourbusiness.com" autocomplete="url" required>
+        <button type="submit" class="btn-primary" data-sound="click">Build my team →</button>
+      </form>
+      <p class="hero-note">Enter your website, an App Store link, or your documents. 14-day trial with a real phone number. No card required.</p>
       <div class="hero-live-btn" id="alexLiveBtn" onclick="openVoiceDemo(event)" style="cursor:pointer;">
         <span class="live-dot"></span>
         <span>Talk to Alex live &nbsp;·&nbsp; No signup</span>
@@ -1065,21 +1072,21 @@ details[open] .faq-q{color:var(--signal);}
         <div class="price-period">/ month · billed monthly</div>
         <div class="price-divider"></div>
         <ul class="price-features"><li>The full team</li><li>250 voice minutes included</li><li>1,000 chat conversations included</li><li>1 phone number</li><li>Squadron HQ</li><li>Email support</li></ul>
-        <a href="/deploy?plan=scout" class="price-btn price-btn-outline" data-sound="click">Deploy Scout →</a>
+        <a href="/start" class="price-btn price-btn-outline" data-sound="click">Start with Scout →</a>
       </div>
       <div class="price-card featured">
         <div class="price-plan">Commander</div><div class="price-amount">$299</div>
         <div class="price-period">/ month · billed monthly</div>
         <div class="price-divider"></div>
         <ul class="price-features"><li>The full team</li><li>1,000 voice minutes included</li><li>Chat conversations included</li><li>3 phone numbers</li><li>Squadron HQ</li><li>Priority support</li></ul>
-        <a href="/deploy?plan=commander" class="price-btn price-btn-solid" data-sound="click">Deploy Commander →</a>
+        <a href="/start" class="price-btn price-btn-solid" data-sound="click">Start with Commander →</a>
       </div>
       <div class="price-card">
         <div class="price-plan">Command HQ</div><div class="price-amount">$799</div>
         <div class="price-period">/ month · billed monthly</div>
         <div class="price-divider"></div>
         <ul class="price-features"><li>The full team</li><li>The largest voice-minute allowance</li><li>The largest chat allowance</li><li>Multiple phone numbers</li><li>Squadron HQ</li><li>Priority support</li></ul>
-        <a href="/deploy?plan=hq" class="price-btn price-btn-outline" data-sound="click">Deploy Command HQ →</a>
+        <a href="/start" class="price-btn price-btn-outline" data-sound="click">Start with Command HQ →</a>
       </div>
         </div>
     <p class="section-sub" style="margin:40px auto 0;text-align:center;max-width:720px;font-size:20px;color:rgba(255,255,255,0.8);">When you reach your allowance, Squadron pauses and notifies you. You can add a one-click pack. There is no automatic upgrade.</p>
@@ -1123,8 +1130,8 @@ details[open] .faq-q{color:var(--signal);}
   <h2 class="cta-title">Ready to deploy<br>your squad?</h2>
   <p class="cta-sub">No infrastructure. No engineering sprint.</p>
   <form class="cta-form" onsubmit="ctaSubmit(event)">
-    <input class="cta-email" type="email" placeholder="your@company.com" required id="ctaEmail" autocomplete="email"/>
-    <button type="submit" class="btn-primary" style="background:var(--navy);color:var(--signal);box-shadow:0 4px 20px rgba(7,16,43,0.4);" data-sound="click">Deploy Free →</button>
+    <input class="cta-email" type="url" placeholder="https://yourbusiness.com" required id="ctaUrl" autocomplete="url"/>
+    <button type="submit" class="btn-primary" style="background:var(--navy);color:var(--signal);box-shadow:0 4px 20px rgba(7,16,43,0.4);" data-sound="click">Build my team →</button>
   </form>
   <div style="text-align:center;margin-top:16px;">
     <a href="#" onclick="openVoiceDemo(event)" style="color:rgba(7,16,43,0.5);font-size:13px;font-weight:600;text-decoration:none;letter-spacing:0.03em;">or speak with Alex first →</a>
@@ -1946,10 +1953,13 @@ document.addEventListener('keydown',e=>{
 // CTA email capture
 function ctaSubmit(e){
   e.preventDefault();
-  const email=document.getElementById('ctaEmail').value;
-  // Store locally and redirect
-  try{localStorage.setItem('squadronEmail',email);}catch(ex){}
-  window.location.href='/deploy?email='+encodeURIComponent(email);
+  const url=document.getElementById('ctaUrl').value;
+  window.location.href='/start?url='+encodeURIComponent(url);
+}
+function heroSubmit(e){
+  e.preventDefault();
+  const url=document.getElementById('heroUrl').value;
+  window.location.href='/start?url='+encodeURIComponent(url);
 }
 
 </script>

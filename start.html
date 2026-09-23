@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build your team — Squadron</title>
+<meta name="description" content="Enter your business and Squadron builds a customer-service team around it.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root{
+  --navy:#07102B;--navy-mid:#0E1A3F;--navy-light:#162252;
+  --signal:#CEEB00;--signal-dim:rgba(206,235,0,0.12);
+  --white:#fff;--slate:#B4BCD6;--muted:#8B95B8;
+  --green:#22D95A;--red:#FF5F57;--amber:#FEBC2E;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--navy);color:var(--white);-webkit-font-smoothing:antialiased;min-height:100vh}
+a{color:inherit}
+nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(7,16,43,0.94);backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:64px}
+.nav-logo{display:flex;align-items:center;text-decoration:none}
+.nav-logo-svg{height:26px;width:auto;overflow:visible;display:block}
+.logo-letter{transform-box:fill-box;transform-origin:50% 100%}
+.nav-right{font-size:15px;font-weight:600;color:var(--slate);text-decoration:none}
+.nav-right:hover{color:#fff}
+main{max-width:1100px;margin:0 auto;padding:120px 24px 120px}
+.eyebrow{font-size:14px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:var(--signal);margin-bottom:18px}
+h1{font-family:'Barlow Condensed',sans-serif;font-weight:900;text-transform:uppercase;line-height:0.95;letter-spacing:-0.01em;font-size:clamp(48px,7vw,92px);margin-bottom:24px}
+h1 em{font-style:normal;color:var(--signal)}
+h2{font-family:'Barlow Condensed',sans-serif;font-weight:800;text-transform:uppercase;font-size:34px;line-height:1;letter-spacing:0.01em;margin:0 0 18px}
+.lead{font-size:22px;line-height:1.5;color:var(--slate);max-width:720px;font-weight:500;margin-bottom:40px}
+.steps{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:56px}
+.step{font-size:14px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:10px 16px;border-radius:999px;border:2px solid rgba(255,255,255,0.14);color:var(--muted)}
+.step.on{border-color:var(--signal);color:var(--signal);background:var(--signal-dim)}
+.step.done{border-color:rgba(34,217,90,0.6);color:var(--green)}
+.tabs{display:flex;gap:6px;margin-bottom:22px;flex-wrap:wrap}
+.tab{font-size:16px;font-weight:700;padding:14px 22px;border-radius:14px;border:2px solid rgba(255,255,255,0.14);background:transparent;color:var(--slate);cursor:pointer}
+.tab.on{border-color:var(--signal);color:var(--navy);background:var(--signal)}
+.field{display:flex;gap:12px;flex-wrap:wrap}
+.input{flex:1;min-width:280px;font:inherit;font-size:22px;font-weight:600;padding:20px 24px;border-radius:18px;border:2px solid rgba(255,255,255,0.22);background:rgba(255,255,255,0.06);color:#fff;outline:none}
+.input::placeholder{color:rgba(255,255,255,0.45)}
+.input:focus{border-color:var(--signal);box-shadow:0 0 0 4px var(--signal-dim)}
+textarea.input{min-height:220px;font-size:17px;font-weight:500;line-height:1.5;resize:vertical}
+.btn{font:inherit;font-size:17px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;padding:20px 34px;border-radius:999px;border:none;cursor:pointer;background:linear-gradient(180deg,#DEFF00 0%,#CEEB00 45%,#aac800 100%);color:var(--navy);box-shadow:0 6px 0 #8aaa00,0 8px 20px rgba(206,235,0,0.35);white-space:nowrap}
+.btn:disabled{opacity:0.5;cursor:wait}
+.btn.ghost{background:transparent;color:#fff;border:2px solid rgba(255,255,255,0.28);box-shadow:none}
+.btn.small{font-size:14px;padding:12px 20px}
+.hint{font-size:16px;color:var(--muted);margin-top:14px;line-height:1.5;font-weight:500}
+.error{margin-top:18px;padding:16px 20px;border-radius:14px;background:rgba(255,95,87,0.12);border:2px solid rgba(255,95,87,0.5);color:#ffb3af;font-size:17px;font-weight:600;display:none}
+.docs-list{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+.doc{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:14px 18px;border-radius:12px;background:rgba(255,255,255,0.06);font-size:16px;font-weight:600}
+.doc small{color:var(--muted);font-weight:500}
+.drop{border:2px dashed rgba(255,255,255,0.25);border-radius:18px;padding:34px;text-align:center;font-size:18px;font-weight:600;color:var(--slate);margin-bottom:14px;cursor:pointer}
+.drop:hover{border-color:var(--signal);color:#fff}
+/* progress */
+.log{border-radius:18px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);padding:28px 30px;font-size:17px;font-weight:600;line-height:1.7;color:var(--slate)}
+.log div::before{content:'›';color:var(--signal);margin-right:12px;font-weight:900}
+.log .now{color:#fff}
+.log .now::before{content:'◌';animation:spin 1s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* profile */
+.gaps{border-radius:18px;background:rgba(254,188,46,0.1);border:2px solid rgba(254,188,46,0.5);padding:24px 28px;margin-bottom:40px}
+.gaps h3{font-size:20px;font-weight:800;color:var(--amber);margin-bottom:10px}
+.gaps li{font-size:17px;line-height:1.6;color:#fff;margin-left:20px;font-weight:500}
+.section{margin-bottom:44px;border-top:2px solid rgba(255,255,255,0.1);padding-top:30px}
+.row{display:grid;grid-template-columns:220px 1fr;gap:12px 24px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.08);align-items:start}
+.row label{font-size:15px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);padding-top:6px}
+.val{font-size:19px;line-height:1.5;font-weight:500;white-space:pre-wrap;word-break:break-word}
+.val.empty{color:var(--amber);font-weight:600}
+.meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.src{font-size:13px;font-weight:700;letter-spacing:0.04em;padding:6px 12px;border-radius:999px;background:rgba(34,217,90,0.14);color:var(--green);border:1px solid rgba(34,217,90,0.35);cursor:pointer;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.src.owner{background:rgba(206,235,0,0.14);color:var(--signal);border-color:rgba(206,235,0,0.4)}
+.src.none{background:rgba(254,188,46,0.12);color:var(--amber);border-color:rgba(254,188,46,0.4);cursor:default}
+.edit{font-size:13px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;padding:6px 12px;border-radius:999px;border:1px solid rgba(255,255,255,0.3);background:transparent;color:#fff;cursor:pointer}
+.quote{margin-top:10px;padding:14px 18px;border-left:3px solid var(--green);background:rgba(255,255,255,0.05);font-size:15px;line-height:1.6;color:var(--slate);display:none}
+.quote a{color:#fff;font-weight:600;word-break:break-all}
+.editbox{display:none;margin-top:8px}
+.editbox textarea{width:100%;font:inherit;font-size:18px;font-weight:500;padding:14px 16px;border-radius:12px;border:2px solid var(--signal);background:rgba(255,255,255,0.06);color:#fff;min-height:70px;outline:none}
+.editbox .acts{display:flex;gap:8px;margin-top:8px}
+.item{padding:12px 0 6px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.item .row{border:none;padding:8px 0}
+.item h4{font-size:15px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--signal);margin:6px 0 2px}
+.add{margin-top:12px}
+.bar{position:sticky;bottom:0;background:rgba(7,16,43,0.94);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,0.1);padding:20px 0;margin-top:40px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.saved{font-size:16px;font-weight:700;color:var(--green)}
+.hidden{display:none}
+@media (max-width:720px){main{padding:96px 16px 80px}.row{grid-template-columns:1fr}.field .btn{width:100%}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/" aria-label="Squadron"><svg class="nav-logo-svg" viewBox="0 -430 2278 492" xmlns="http://www.w3.org/2000/svg" aria-label="Squadron">
+      <g transform="translate(0,0)" data-letter="S" data-idx="0"><g class="logo-letter">
+        <path d="M 6 -371.28125 L 75 -429.65625 L 199 -429.65625 L 268 -371.28125 L 268.5 -304.921875 L 167.5 -304.921875 L 167.5 -349.015625 L 106.5 -349.015625 L 106.5 -259.5625 L 268 -259.984375 L 270 -57.953125 L 201 0.421875 L 77 0.421875 L 8 -57.953125 L 7.5 -124.3125 L 108.5 -124.3125 L 108.5 -80.21875 L 169.5 -80.21875 L 169.5 -169.6875 L 148.5 -169.6875 L 148.5 -169.265625 L 8 -169.265625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(286,0)" data-letter="Q" data-idx="1"><g class="logo-letter">
+        <path d="M 200 0.84375 L 187.5 0.84375 L 187.5 63.421875 L 87 63.421875 L 87 0.84375 L 74.5 0.84375 L 5.5 -57.546875 L 5.5 -370.015625 L 74.5 -428.40625 L 198 -428.40625 L 268 -369.1875 L 268 -56.703125 Z M 106 -347.765625 L 106 -82.3125 L 167.5 -82.3125 L 167.5 -346.921875 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(572,0)" data-letter="U" data-idx="2"><g class="logo-letter">
+        <path d="M 6.5 -428.40625 L 108 -428.40625 L 108 -83.15625 L 169 -83.15625 L 169 -352.796875 L 169.5 -352.796875 L 169.5 -429.234375 L 269.5 -429.234375 L 269.5 -58.375 L 200.5 0 L 76.5 0 L 7.5 -58.375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(858,0)" data-letter="A" data-idx="3"><g class="logo-letter">
+        <path d="M 107.5 0 L 7 0 L 7 -199.078125 L 6.5 -199.078125 L 6.5 -372.546875 L 75.5 -430.921875 L 199.5 -430.921875 L 268.5 -372.546875 L 268.5 -325.078125 L 269.5 0 L 169.5 0 L 168.5 -172.203125 L 107.5 -172.203125 Z M 107 -257.046875 L 168 -257.046875 L 168 -347.765625 L 107 -347.765625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1144,0)" data-letter="D" data-idx="4"><g class="logo-letter">
+        <path d="M 269.5 -55.859375 L 200.5 0.84375 L 30 0.421875 L 30 0 L 7.5 0 L 6.5 -429.65625 L 199.5 -429.65625 L 268.5 -371.28125 Z M 108 -83.578125 L 169 -83.578125 L 168 -359.9375 L 107 -359.9375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1430,0)" data-letter="R" data-idx="5"><g class="logo-letter">
+        <path d="M 108 0.421875 L 7.5 0.421875 L 7 -430.5 L 200 -430.5 L 269 -372.125 L 269 -324.65625 L 270 -233.515625 L 268.5 -233.09375 L 269 -230.15625 L 250 -214.203125 L 250.5 -214.203125 L 269.5 -198.234375 L 269 -195.296875 L 270.5 -194.875 L 270 0.421875 L 170 0.421875 L 169 -171.78125 L 108 -171.78125 Z M 107.5 -256.625 L 168.5 -256.625 L 168.5 -347.34375 L 107.5 -347.34375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1716,0)" data-letter="O" data-idx="6"><g class="logo-letter">
+        <path d="M 202 0.84375 L 76.5 0.84375 L 7.5 -57.546875 L 6.5 -372.546875 L 75.5 -430.921875 L 199 -430.921875 L 269 -371.703125 L 270 -56.703125 Z M 107 -350.28125 L 108 -82.3125 L 169.5 -82.3125 L 168.5 -349.4375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(2002,0)" data-letter="N" data-idx="7"><g class="logo-letter">
+        <path d="M 109 0.421875 L 8.5 0.421875 L 8.5 -198.65625 L 8 -198.65625 L 7 -430.5 L 108.5 -430.5 L 169.5 -263.34375 L 169.5 -430.5 L 270 -430.5 L 270 -324.65625 L 271 0.421875 L 170 0.421875 L 108.5 -162.546875 Z" fill="white"/>
+      </g></g>
+    </svg></a>
+  <a class="nav-right" href="/">Back to squadron.tel</a>
+</nav>
+<main>
+  <div class="steps" id="steps">
+    <span class="step on" data-s="1">1 · Enter your business</span>
+    <span class="step" data-s="2">2 · Analyze</span>
+    <span class="step" data-s="3">3 · Review profile</span>
+    <span class="step" data-s="4">4 · Build the team</span>
+    <span class="step" data-s="5">5 · Test</span>
+    <span class="step" data-s="6">6 · Deploy</span>
+  </div>
+
+  <!-- Screen 1 -->
+  <section id="s1">
+    <p class="eyebrow">Step 1</p>
+    <h1>Enter your <em>business.</em></h1>
+    <p class="lead">Give Squadron your website, your App Store listing, or your documents. It reads what you publish and nothing else.</p>
+    <div class="tabs">
+      <button class="tab on" data-kind="url" onclick="setKind('url',this)">Website</button>
+      <button class="tab" data-kind="appstore" onclick="setKind('appstore',this)">iOS App Store</button>
+      <button class="tab" data-kind="docs" onclick="setKind('docs',this)">Documents</button>
+    </div>
+    <div id="kind-url">
+      <div class="field">
+        <input class="input" id="urlInput" type="url" placeholder="https://yourbusiness.com" autocomplete="url" autofocus>
+        <button class="btn" id="goUrl" onclick="startUrl()">Analyze my business →</button>
+      </div>
+      <p class="hint">Squadron reads up to ten pages of your site, starting with pricing, FAQ, contact, hours and policies.</p>
+    </div>
+    <div id="kind-appstore" class="hidden">
+      <div class="field">
+        <input class="input" id="appInput" type="url" placeholder="https://apps.apple.com/us/app/your-app/id123456789">
+        <button class="btn" onclick="startApp()">Analyze my app →</button>
+      </div>
+      <p class="hint">Squadron reads the listing, then the support and seller sites the listing points to.</p>
+    </div>
+    <div id="kind-docs" class="hidden">
+      <div class="drop" id="drop" onclick="document.getElementById('fileInput').click()">Drop .txt, .md, .csv or .html files here, or click to choose them.</div>
+      <input type="file" id="fileInput" multiple accept=".txt,.md,.csv,.html,.htm,.json,text/*" class="hidden" onchange="addFiles(this.files)">
+      <div class="docs-list" id="docsList"></div>
+      <textarea class="input" id="pasteInput" placeholder="Or paste text here: your FAQ, price list, policies, hours."></textarea>
+      <div style="margin-top:14px"><button class="btn" onclick="startDocs()">Analyze my documents →</button></div>
+      <p class="hint">PDF and Word files are not read yet. Paste their text for now.</p>
+    </div>
+    <div class="error" id="err1"></div>
+  </section>
+
+  <!-- Screen 2 -->
+  <section id="s2" class="hidden">
+    <p class="eyebrow">Step 2</p>
+    <h1>Reading your <em>business.</em></h1>
+    <p class="lead" id="s2lead">This takes about a minute. Every fact Squadron records will show where it came from.</p>
+    <div class="log" id="log"></div>
+    <div class="error" id="err2"></div>
+    <div id="retryBox" class="hidden" style="margin-top:20px"><button class="btn ghost" onclick="location.href='/start'">Start over</button></div>
+  </section>
+
+  <!-- Screen 3 -->
+  <section id="s3" class="hidden">
+    <p class="eyebrow">Step 3</p>
+    <h1>Your Business <em>Profile.</em></h1>
+    <p class="lead">Every field shows its source. Correct anything that is wrong, and fill in what your sources do not say. Your team answers only from this profile.</p>
+    <div id="gaps"></div>
+    <div id="profile"></div>
+    <div class="bar">
+      <span class="saved" id="savedMsg"></span>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button class="btn ghost" onclick="reanalyze()">Re-read my sources</button>
+        <button class="btn" id="nextBtn" onclick="goTeam()" style="display:none">Build my team →</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let kind = 'url';
+let token = null;
+let docs = [];
+let profile = null;
+let sources = [];
+
+function setKind(k, el) {
+  kind = k;
+  document.querySelectorAll('.tab').forEach((t) => t.classList.toggle('on', t === el));
+  for (const x of ['url', 'appstore', 'docs']) $('kind-' + x).classList.toggle('hidden', x !== k);
+}
+function show(n) {
+  for (const i of [1, 2, 3]) $('s' + i).classList.toggle('hidden', i !== n);
+  document.querySelectorAll('.step').forEach((s) => {
+    const v = +s.dataset.s;
+    s.classList.toggle('on', v === n);
+    s.classList.toggle('done', v < n);
+  });
+  window.scrollTo({ top: 0 });
+}
+function err(id, msg) { const e = $(id); e.textContent = msg || ''; e.style.display = msg ? 'block' : 'none'; }
+function logLine(text, now) {
+  const l = $('log');
+  l.querySelectorAll('.now').forEach((x) => x.classList.remove('now'));
+  const d = document.createElement('div'); d.textContent = text; if (now) d.classList.add('now'); l.appendChild(d);
+}
+async function api(path, body, method) {
+  const r = await fetch(path, { method: method || (body ? 'POST' : 'GET'), headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
+  const j = await r.json().catch(() => ({ error: 'Bad response from server' }));
+  if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+  return j;
+}
+function remember(t) { token = t; try { localStorage.setItem('sqToken', t); } catch (e) {} history.replaceState(null, '', '/start?t=' + encodeURIComponent(t)); }
+
+async function startUrl() { const url = $('urlInput').value.trim(); if (!url) return err('err1', 'Enter your website address.'); await create({ kind: 'url', url }); }
+async function startApp() { const url = $('appInput').value.trim(); if (!url) return err('err1', 'Enter your App Store link.'); await create({ kind: 'url', url }); }
+async function startDocs() {
+  const pasted = $('pasteInput').value.trim();
+  const list = docs.slice();
+  if (pasted) list.push({ name: 'Pasted text', text: pasted });
+  if (!list.length) return err('err1', 'Add a file or paste some text first.');
+  await create({ kind: 'docs', documents: list });
+}
+function addFiles(files) {
+  for (const f of files) {
+    if (f.size > 2_000_000) { err('err1', f.name + ' is larger than 2 MB.'); continue; }
+    const reader = new FileReader();
+    reader.onload = () => { docs.push({ name: f.name, text: String(reader.result) }); renderDocs(); };
+    reader.readAsText(f);
+  }
+}
+function renderDocs() {
+  $('docsList').innerHTML = docs.map((d, i) => `<div class="doc"><span>${esc(d.name)} <small>${Math.round(d.text.length / 1000)} k characters</small></span><button class="edit" onclick="docs.splice(${i},1);renderDocs()">Remove</button></div>`).join('');
+}
+async function create(body) {
+  err('err1', '');
+  document.querySelectorAll('#s1 .btn').forEach((b) => (b.disabled = true));
+  try {
+    const r = await api('/api/business', body);
+    remember(r.token);
+    show(2);
+    $('log').innerHTML = '';
+    await analyze(body.kind === 'docs');
+  } catch (e) {
+    err('err1', e.message);
+  } finally { document.querySelectorAll('#s1 .btn').forEach((b) => (b.disabled = false)); }
+}
+async function analyze(skipCrawl) {
+  try {
+    if (!skipCrawl) {
+      logLine('Reading your site', true);
+      const c = await api('/api/ingest/crawl', { token });
+      for (const line of c.log) logLine(line);
+      sources = c.sources;
+    } else {
+      logLine('Documents received');
+    }
+    logLine('Building your Business Profile with a source on every field', true);
+    const x = await api('/api/ingest/extract', { token });
+    logLine('Profile ready');
+    await load();
+    show(3);
+  } catch (e) {
+    err('err2', e.message);
+    $('retryBox').classList.remove('hidden');
+  }
+}
+async function load() {
+  const r = await api('/api/profile?token=' + encodeURIComponent(token));
+  profile = r.profile; sources = r.sources;
+  if (!profile) throw new Error('No profile yet.');
+  renderProfile();
+}
+async function reanalyze() { show(2); $('log').innerHTML = ''; err('err2', ''); await analyze(false); }
+function goTeam() { location.href = '/team?t=' + encodeURIComponent(token); }
+
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+function srcChip(f, path) {
+  if (!f || f.value == null || f.value === '') return `<span class="src none">Not found in your sources</span>`;
+  if (f.source && f.source.kind === 'owner') return `<span class="src owner">Corrected by you</span>`;
+  if (f.source) {
+    const label = f.source.kind === 'appstore' ? 'App Store listing' : (f.source.url ? f.source.url.replace(/^https?:\/\//, '') : (f.source.title || 'Your document'));
+    return `<span class="src" onclick="toggleQuote('${path}')" title="Show the source">Source: ${esc(label)}</span>`;
+  }
+  return `<span class="src none">No source recorded</span>`;
+}
+function fieldRow(label, f, path) {
+  const id = path.replace(/[^a-z0-9_]/gi, '_');
+  const has = f && f.value != null && f.value !== '';
+  const q = f && f.source ? `<div class="quote" id="q_${id}">${f.source.quote ? '“' + esc(f.source.quote) + '”' : ''}${f.source.url ? `<br><a href="${esc(f.source.url)}" target="_blank" rel="noopener">${esc(f.source.url)}</a>` : ''}</div>` : '';
+  return `<div class="row"><label>${esc(label)}</label><div>
+    <div class="val ${has ? '' : 'empty'}" id="v_${id}">${has ? esc(f.value) : 'Not stated in your sources. Add it if customers will ask.'}</div>
+    <div class="meta">${srcChip(f, id)}<button class="edit" onclick="editField('${path}','${id}')">${has ? 'Edit' : 'Add'}</button></div>
+    ${q}
+    <div class="editbox" id="e_${id}"><textarea id="t_${id}">${has ? esc(f.value) : ''}</textarea><div class="acts"><button class="btn small" onclick="saveField('${path}','${id}')">Save</button><button class="btn small ghost" onclick="$('e_${id}').style.display='none'">Cancel</button></div></div>
+  </div></div>`;
+}
+function toggleQuote(id) { const q = $('q_' + id); if (q) q.style.display = q.style.display === 'block' ? 'none' : 'block'; }
+function editField(path, id) { $('e_' + id).style.display = 'block'; $('t_' + id).focus(); }
+async function saveField(path, id) {
+  const value = $('t_' + id).value.trim();
+  $('savedMsg').textContent = 'Saving…';
+  try {
+    const r = await api('/api/profile', { token, corrections: { [path]: value } });
+    profile = r.profile; renderProfile();
+    $('savedMsg').textContent = 'Saved.';
+    setTimeout(() => ($('savedMsg').textContent = ''), 2500);
+  } catch (e) { $('savedMsg').textContent = 'Could not save: ' + e.message; }
+}
+function listSection(title, key, cols, addLabel) {
+  const items = profile[key] || [];
+  let html = `<div class="section"><h2>${esc(title)}</h2>`;
+  if (!items.length) html += `<div class="val empty">Not stated in your sources.</div>`;
+  items.forEach((it, i) => {
+    html += `<div class="item"><h4>${esc(title)} ${i + 1}</h4>` + cols.map(([label, k]) => fieldRow(label, it[k], `${key}.${i}.${k}`)).join('') + `</div>`;
+  });
+  html += `<div class="add"><button class="btn small ghost" onclick="addItem('${key}', ${JSON.stringify(cols.map((c) => c[1])).replace(/"/g, '&quot;')})">${esc(addLabel)}</button></div></div>`;
+  return html;
+}
+async function addItem(key, keys) {
+  const items = profile[key] || [];
+  const i = items.length;
+  const corrections = {};
+  for (const k of keys) corrections[`${key}.${i}.${k}`] = '';
+  // Create the empty slot locally, then open the first field for editing.
+  profile[key] = items.concat([Object.fromEntries(keys.map((k) => [k, { value: null, source: null }]))]);
+  renderProfile();
+  editField(`${key}.${i}.${keys[0]}`, `${key}_${i}_${keys[0]}`);
+}
+function renderProfile() {
+  const p = profile;
+  const gaps = (p.gaps || []).filter(Boolean);
+  $('gaps').innerHTML = gaps.length ? `<div class="gaps"><h3>Your sources do not say</h3><ul>${gaps.map((g) => `<li>${esc(g)}</li>`).join('')}</ul></div>` : '';
+  let html = '';
+  html += `<div class="section"><h2>Company</h2>` + [['Name', 'name'], ['Tagline', 'tagline'], ['Description', 'description'], ['Industry', 'industry'], ['Website', 'website']].map(([l, k]) => fieldRow(l, p.company[k], 'company.' + k)).join('') + `</div>`;
+  html += listSection('Products', 'products', [['Name', 'name'], ['Description', 'description'], ['Price', 'price']], 'Add a product');
+  html += listSection('Services', 'services', [['Name', 'name'], ['Description', 'description'], ['Price', 'price']], 'Add a service');
+  html += listSection('Pricing', 'pricing', [['Item', 'item'], ['Price', 'price'], ['Notes', 'notes']], 'Add a price');
+  html += listSection('Hours', 'hours', [['Days', 'days'], ['Opens', 'open'], ['Closes', 'close'], ['Notes', 'notes']], 'Add hours');
+  html += listSection('Locations', 'locations', [['Name', 'name'], ['Address', 'address'], ['Phone', 'phone'], ['Email', 'email']], 'Add a location');
+  html += `<div class="section"><h2>Contact</h2>` + [['Phone', 'phone'], ['Email', 'email'], ['Support URL', 'support_url'], ['Booking URL', 'booking_url']].map(([l, k]) => fieldRow(l, p.contact[k], 'contact.' + k)).join('') + `</div>`;
+  html += listSection('Policies', 'policies', [['Policy', 'name'], ['Text', 'text']], 'Add a policy');
+  html += listSection('Support procedures', 'support_procedures', [['Situation', 'situation'], ['Procedure', 'procedure']], 'Add a procedure');
+  html += listSection('FAQs', 'faqs', [['Question', 'question'], ['Answer', 'answer']], 'Add a question');
+  html += `<div class="section"><h2>Brand voice</h2>` + [['Tone', 'tone'], ['Vocabulary', 'vocabulary'], ['Avoid', 'avoid']].map(([l, k]) => fieldRow(l, p.brand_voice[k], 'brand_voice.' + k)).join('') + `</div>`;
+  const as = p.app_store || {};
+  const hasApp = Object.values(as).some((f) => f && f.value);
+  if (hasApp) html += `<div class="section"><h2>App Store</h2>` + [['App', 'app_name'], ['Seller', 'seller'], ['Price', 'price'], ['Version', 'version'], ['Rating', 'rating'], ['URL', 'url'], ['Notes', 'platform_notes']].map(([l, k]) => fieldRow(l, as[k], 'app_store.' + k)).join('') + `</div>`;
+  html += `<div class="section"><h2>Sources read</h2>` + (sources || []).map((s) => `<div class="doc"><span>${esc(s.title || s.url || 'Document')}${s.url ? ` <small>${esc(s.url)}</small>` : ''}</span><small>${Math.round(s.chars / 1000)} k characters</small></div>`).join('') + `</div>`;
+  $('profile').innerHTML = html;
+}
+
+// Resume from a token in the URL or a stored one.
+(async () => {
+  const params = new URLSearchParams(location.search);
+  const t = params.get('t');
+  const u = params.get('url');
+  if (u) { $('urlInput').value = u; }
+  if (t) {
+    token = t;
+    try {
+      const r = await api('/api/profile?token=' + encodeURIComponent(t));
+      if (r.profile) { profile = r.profile; sources = r.sources; renderProfile(); show(3); return; }
+      if (r.business.status === 'crawled' || r.business.status === 'new') { show(2); $('log').innerHTML = ''; await analyze(r.business.kind === 'docs'); }
+    } catch (e) { err('err1', e.message); }
+  } else if (u) {
+    startUrl();
+  }
+})();
+</script>
+</body>
+</html>

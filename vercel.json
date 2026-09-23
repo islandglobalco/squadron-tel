@@ -1,21 +1,92 @@
 {
   "functions": {
-    "api/voice.js": {"maxDuration": 10},
-    "api/gather.js": {"maxDuration": 10},
-    "api/chat.js": {"maxDuration": 15},
-    "api/signup.js": {"maxDuration": 10},
-    "api/tts.js": {"maxDuration": 30},
-    "api/session.js": {"maxDuration": 30}
+    "api/voice.js": {
+      "maxDuration": 10
+    },
+    "api/gather.js": {
+      "maxDuration": 10
+    },
+    "api/chat.js": {
+      "maxDuration": 15
+    },
+    "api/signup.js": {
+      "maxDuration": 10
+    },
+    "api/tts.js": {
+      "maxDuration": 30
+    },
+    "api/session.js": {
+      "maxDuration": 30
+    },
+    "api/business.js": {
+      "maxDuration": 30
+    },
+    "api/ingest/crawl.js": {
+      "maxDuration": 120
+    },
+    "api/ingest/extract.js": {
+      "maxDuration": 300
+    },
+    "api/profile.js": {
+      "maxDuration": 30
+    }
   },
   "routes": [
-    {"src": "/", "dest": "/index.html"},
-    {"src": "/deploy", "dest": "/deploy.html"},
-    {"src": "/api/voice", "dest": "/api/voice.js"},
-    {"src": "/api/gather", "dest": "/api/gather.js"},
-    {"src": "/api/chat", "dest": "/api/chat.js"},
-    {"src": "/api/signup", "dest": "/api/signup.js"},
-    {"src": "/api/tts", "dest": "/api/tts.js"},
-    {"src": "/api/session", "dest": "/api/session.js"},
-    {"src": "/(.*)", "dest": "/$1"}
+    {
+      "src": "/",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/deploy",
+      "dest": "/deploy.html"
+    },
+    {
+      "src": "/api/voice",
+      "dest": "/api/voice.js"
+    },
+    {
+      "src": "/api/gather",
+      "dest": "/api/gather.js"
+    },
+    {
+      "src": "/api/chat",
+      "dest": "/api/chat.js"
+    },
+    {
+      "src": "/api/signup",
+      "dest": "/api/signup.js"
+    },
+    {
+      "src": "/api/tts",
+      "dest": "/api/tts.js"
+    },
+    {
+      "src": "/api/session",
+      "dest": "/api/session.js"
+    },
+    {
+      "src": "/start",
+      "dest": "/start.html"
+    },
+    {
+      "src": "/api/business",
+      "dest": "/api/business.js"
+    },
+    {
+      "src": "/api/ingest/crawl",
+      "dest": "/api/ingest/crawl.js"
+    },
+    {
+      "src": "/api/ingest/extract",
+      "dest": "/api/ingest/extract.js"
+    },
+    {
+      "src": "/api/profile",
+      "dest": "/api/profile.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
   ]
 }
