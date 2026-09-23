@@ -2,6 +2,8 @@
 // with its gaps and messages, and releases a demo number if one was used.
 import { sql, bad, newId, readJson } from '../_lib/db.js';
 import { checkSecret, ensureBridgeSchema } from '../_lib/bridge.js';
+import { settleHold, realtimeCostCents, PER_MINUTE, HOLD } from '../_lib/ledger.js';
+import { notifyOwner } from '../_lib/email.js';
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
@@ -24,6 +26,23 @@ export default async function handler(req, res) {
         ON CONFLICT (call_sid) DO UPDATE SET conversation_id = EXCLUDED.conversation_id`, [b.callSid, businessId, id, b.from || null, !!b.demo]);
     }
     for (const g of (b.gaps || []).slice(0, 20)) if (typeof g === 'string' && g.trim()) await sql().query('INSERT INTO knowledge_gaps (business_id, conversation_id, question) VALUES ($1,$2,$3)', [businessId, id, g.trim().slice(0, 500)]);
+    // Settle the call's hold to its measured cost: Realtime tokens plus
+    // transcription and Twilio per-minute charges. Without a usage report the
+    // hold settles at the worst-case rate, so a missing report never undercharges.
+    if (b.holdRef) {
+      const seconds = Math.max(1, Number(b.durationS) || 0);
+      const minutes = Math.ceil(seconds / 60);
+      const perMin = PER_MINUTE.transcribe + PER_MINUTE.twilioInbound + PER_MINUTE.twilioRecording;
+      const measured = b.usage && typeof b.usage === 'object' ? realtimeCostCents(String(b.model || ''), b.usage) + minutes * perMin : (seconds / 60) * HOLD.voicePerMinute;
+      await settleHold(String(b.holdRef), { cents: measured, seconds });
+    }
+    const msgs = (b.messages || []).filter((m) => m && m.message).slice(0, 10);
+    if (msgs.length && !b.demo) {
+      await notifyOwner(businessId, {
+        subject: `New message from a caller${b.from ? ' at ' + b.from : ''}`,
+        text: msgs.map((m) => `Message: ${m.message}\nContact: ${m.contact || 'not given'}`).join('\n\n') + '\n\nThe full call is in Squadron HQ: https://www.squadron.tel/hq',
+      }).catch((e) => console.error('[call-ended email]', e.message));
+    }
     for (const m of (b.messages || []).slice(0, 10)) if (m && m.message) await sql().query("INSERT INTO knowledge_gaps (business_id, conversation_id, question, proposed_answer, status) VALUES ($1,$2,$3,$4,'message')", [businessId, id, `Message taken: ${String(m.message).slice(0, 400)}`, `Contact: ${String(m.contact || 'not given').slice(0, 200)}`]);
     return res.status(200).json({ ok: true, conversationId: id });
   } catch (e) {
