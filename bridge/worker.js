@@ -76,8 +76,10 @@ export class CallSession {
     const sendOai = (o) => { if (oai && oaiReady) try { oai.send(JSON.stringify(o)); } catch {} };
 
     const openOpenAI = async () => {
-      ctx = await vercel(env, `/api/bridge/session?businessId=${encodeURIComponent(businessId)}`);
-      const resp = await fetch(`https://api.openai.com/v1/realtime?model=${encodeURIComponent(model)}`, { headers: { Upgrade: 'websocket', Authorization: `Bearer ${env.OPENAI_API_KEY}` } });
+      ctx = await vercel(env, `/api/bridge/session?businessId=${encodeURIComponent(businessId)}&model=${encodeURIComponent(model)}`);
+      // Squadron issues a short-lived key per call; a worker-held OPENAI_API_KEY is only a fallback.
+      const key = ctx.clientSecret || env.OPENAI_API_KEY;
+      const resp = await fetch(`https://api.openai.com/v1/realtime?model=${encodeURIComponent(model)}`, { headers: { Upgrade: 'websocket', Authorization: `Bearer ${key}` } });
       oai = resp.webSocket;
       if (!oai) throw new Error(`OpenAI did not accept the WebSocket (${resp.status})`);
       oai.accept();

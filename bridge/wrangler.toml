@@ -15,5 +15,6 @@ class_name = "CallSession"
 tag = "v1"
 new_sqlite_classes = ["CallSession"]
 
-# Secrets (set with `wrangler secret put`): OPENAI_API_KEY, BRIDGE_SECRET,
-# TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN.
+# Secrets (set with `wrangler secret put`): BRIDGE_SECRET, TWILIO_ACCOUNT_SID,
+# TWILIO_AUTH_TOKEN. OPENAI_API_KEY is optional: Squadron issues a short-lived
+# OpenAI key for each call.
