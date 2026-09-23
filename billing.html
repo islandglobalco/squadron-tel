@@ -68,7 +68,7 @@
 <main>
   <p class="eyebrow">Billing</p>
   <h1>Plans and <em>payment.</em></h1>
-  <p class="lead">Squadron is prepaid. You pay for 30 days up front by bank wire or ACH to our Mercury account, and your team starts when the payment lands. It never bills you after the fact: when a period's prepaid amount is used, your team pauses and we email you a top-up invoice. You are never upgraded automatically.</p>
+  <p class="lead">Squadron is prepaid. You pay for 30 days up front, by card (your team starts right away) or by bank wire or ACH to our Mercury account (your team starts when the transfer lands). It never bills you after the fact: when a period's prepaid amount is used, your team pauses and we email you a top-up invoice. You are never upgraded automatically.</p>
   <div class="error" id="err"></div>
   <div class="card" id="status"><p class="big">Loading your account.</p></div>
   <div id="invoices"></div>
@@ -131,7 +131,7 @@ function render() {
         <dt>Routing number</dt><dd>${esc(w.routingNumber)}</dd>
         <dt>Account number</dt><dd>${esc(w.accountNumber)}</dd>
       </dl>
-      <div class="actions"><button class="btn small" onclick="check(this)">I sent it, check for payment</button><button class="btn small ghost" onclick="cancelInv('${i.id}')">Cancel this invoice</button></div>
+      <div class="actions">${data.cards ? `<button class="btn small" onclick="card('${i.item}', this)">Pay ${money(i.amount_cents)} by card now</button>` : ''}<button class="btn small ${data.cards ? 'ghost' : ''}" onclick="check(this)">I sent a wire, check for it</button><button class="btn small ghost" onclick="cancelInv('${i.id}')">Cancel this invoice</button></div>
     </div>`;
   }
   if (paid.length) {
@@ -146,15 +146,23 @@ function render() {
     const open = pending.some((i) => i.item === k);
     return `<div class="plan ${cur ? 'current' : ''}"><h3>${PLAN_NAMES[k]}</h3><div class="price">${money(p.cents)}<small> / 30 days</small></div>
       <ul>${FEATURES[k].map((f) => `<li>${f}</li>`).join('')}</ul>
-      <button class="btn small ${cur ? 'ghost' : ''}" ${open ? 'disabled' : ''} onclick="invoice('${k}', this)">${open ? 'Invoice waiting' : cur ? 'Pay the next 30 days' : 'Choose ' + PLAN_NAMES[k]}</button></div>`;
+      ${data.cards ? `<button class="btn small" onclick="card('${k}', this)">${cur ? 'Pay the next 30 days by card' : 'Pay ' + money(p.cents) + ' by card'}</button>` : ''}
+      <button class="btn small ${data.cards ? 'ghost' : cur ? 'ghost' : ''}" ${open ? 'disabled' : ''} onclick="invoice('${k}', this)">${open ? 'Wire invoice waiting' : 'Pay by bank transfer'}</button></div>`;
   }).join('');
   $('packs').innerHTML = ['minutes100'].map((k) => {
     const p = data.prices[k];
     const open = pending.some((i) => i.item === k);
-    return `<div class="plan"><h3>100 extra minutes</h3><div class="price">${money(p.cents)}</div><button class="btn small ghost" ${open || !st.active ? 'disabled' : ''} onclick="invoice('${k}', this)">${open ? 'Invoice waiting' : st.active ? 'Buy 100 minutes' : 'Needs a paid plan'}</button></div>`;
+    return `<div class="plan"><h3>100 extra minutes</h3><div class="price">${money(p.cents)}</div>${st.active ? `${data.cards ? `<button class="btn small" onclick="card('${k}', this)">Buy by card</button>` : ''}<button class="btn small ghost" ${open ? 'disabled' : ''} onclick="invoice('${k}', this)">${open ? 'Wire invoice waiting' : 'Buy by bank transfer'}</button>` : '<button class="btn small ghost" disabled>Needs a paid plan</button>'}</div>`;
   }).join('');
 }
 
+async function card(item, b) {
+  b.disabled = true; $('err').textContent = '';
+  const r = await fetch('/api/billing', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'card', item, returnTo: '/billing' }) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || !j.url) { $('err').textContent = j.error || 'Card payment could not start. Please try again.'; b.disabled = false; return; }
+  location.href = j.url;
+}
 async function invoice(item, b) { b.disabled = true; await call({ action: 'invoice', item }); window.scrollTo({ top: $('invoices').offsetTop - 100, behavior: 'smooth' }); }
 async function check(b) { b.disabled = true; b.textContent = 'Checking…'; await call({ action: 'check' }); }
 async function cancelInv(id) { await call({ action: 'cancel', id }); }
@@ -165,7 +173,8 @@ async function login() {
   if (!r.ok) { $('err').textContent = j.error || 'Could not log in.'; return; }
   call();
 }
-call();
+const stripeSession = new URLSearchParams(location.search).get('stripe_session');
+if (stripeSession) { history.replaceState(null, '', '/billing'); call({ action: 'confirm', session: stripeSession }); } else call();
 </script>
 </body>
 </html>

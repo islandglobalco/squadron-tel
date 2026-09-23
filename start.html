@@ -232,8 +232,8 @@ async function payGate() {
   if (active) { box.innerHTML = ''; box.classList.add('hidden'); return reanalyze(); }
   box.innerHTML = `<p style="font-size:22px;font-weight:800;color:#fff;margin-bottom:16px">Choose your plan. Every plan has unlimited web chat, and nothing renews automatically.</p>
     <div class="planpick">${PLAN_CHOICES.map(([k, n, p, m]) => `<button class="planopt" onclick="choosePlan('${k}')"><span class="pn">${n}</span><span class="pp">${p}</span><span class="pm">30 days · ${m}</span></button>`).join('')}</div>
-    <p style="font-size:17px;color:var(--slate);margin-top:14px">Your invoice shows the bank wire details. When the payment lands, come back here and press the button below.</p>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="btn" onclick="paidRetry(this)">My payment has landed, build my team</button></div>`;
+    <p style="font-size:18px;color:rgba(255,255,255,0.88);margin-top:14px">Pick a plan to pay by card, and your team is built the moment the payment goes through. To pay by bank transfer instead, use <a href="/billing" style="color:var(--signal);font-weight:700">Billing</a>, then come back and press the button below when the transfer lands.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="btn ghost" onclick="paidRetry(this)">My bank transfer has landed, build my team</button></div>`;
 }
 async function payAuth(action) {
   err('err2', '');
@@ -242,8 +242,13 @@ async function payAuth(action) {
 }
 async function choosePlan(item) {
   err('err2', '');
-  try { await api('/api/billing', { action: 'invoice', item }); location.href = '/billing'; }
-  catch (e) { err('err2', e.message); }
+  try {
+    const j = await api('/api/billing', { action: 'card', item, returnTo: '/start?t=' + encodeURIComponent(token) });
+    location.href = j.url;
+  } catch (e) {
+    // Card payments not available: fall back to a bank-transfer invoice.
+    try { await api('/api/billing', { action: 'invoice', item }); location.href = '/billing'; } catch (e2) { err('err2', e2.message); }
+  }
 }
 async function paidRetry(b) {
   b.disabled = true; err('err2', '');
@@ -343,6 +348,15 @@ function renderProfile() {
   const t = params.get('t');
   const u = params.get('url');
   if (u) { $('urlInput').value = u; }
+  const cs = params.get('stripe_session');
+  if (t && cs) {
+    token = t; history.replaceState(null, '', '/start?t=' + encodeURIComponent(t));
+    show(2); $('log').innerHTML = ''; logLine('Confirming your card payment', true);
+    try { await api('/api/billing', { action: 'confirm', session: cs }); } catch (e) {}
+    const me = await api('/api/auth').catch(() => ({ account: null }));
+    if (me.account && me.account.active) { logLine('Payment received. Building your team now.'); return analyze(false); }
+    return payGate();
+  }
   if (t) {
     token = t;
     try {
