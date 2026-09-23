@@ -16,16 +16,16 @@
 .sqw-box.open{display:flex}\
 .sqw-head{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,0.1)}\
 .sqw-head img{width:40px;height:40px;border-radius:10px;object-fit:cover;background:#0E1A3F}\
-.sqw-head b{display:block;font-size:16px;font-weight:800}\
-.sqw-head small{font-size:12px;color:#B4BCD6;font-weight:600}\
+.sqw-head b{display:block;font-size:18px;font-weight:800}\
+.sqw-head small{font-size:14px;color:#D2D8EA;font-weight:600}\
 .sqw-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}\
-.sqw-m{max-width:88%;padding:11px 14px;border-radius:16px;font-size:15px;line-height:1.45;background:rgba(255,255,255,0.09);white-space:pre-wrap;word-break:break-word}\
+.sqw-m{max-width:88%;padding:11px 14px;border-radius:16px;font-size:17px;line-height:1.45;background:rgba(255,255,255,0.09);white-space:pre-wrap;word-break:break-word}\
 .sqw-m.me{align-self:flex-end;background:' + accent + ';color:#07102B;font-weight:600}\
-.sqw-m.note{background:rgba(254,188,46,0.15);border:1px solid rgba(254,188,46,0.5);font-size:13px}\
+.sqw-m.note{background:rgba(254,188,46,0.15);border:1px solid rgba(254,188,46,0.5);font-size:15px}\
 .sqw-form{display:flex;gap:8px;padding:12px;border-top:1px solid rgba(255,255,255,0.1)}\
-.sqw-form input{flex:1;font:inherit;font-size:15px;padding:12px 14px;border-radius:999px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#fff;outline:none}\
-.sqw-form button{font:inherit;font-weight:800;font-size:14px;padding:0 18px;border-radius:999px;border:none;background:' + accent + ';color:#07102B;cursor:pointer}\
-.sqw-foot{font-size:11px;color:#8B95B8;text-align:center;padding:0 12px 10px}';
+.sqw-form input{flex:1;font:inherit;font-size:17px;padding:12px 14px;border-radius:999px;border:2px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.06);color:#fff;outline:none}\
+.sqw-form button{font:inherit;font-weight:800;font-size:16px;padding:0 18px;border-radius:999px;border:none;background:' + accent + ';color:#07102B;cursor:pointer}\
+.sqw-foot{font-size:13px;color:#C3CAE0;text-align:center;padding:0 12px 10px}';
   var style = document.createElement('style'); style.textContent = css; document.head.appendChild(style);
 
   var btn = document.createElement('button'); btn.className = 'sqw-btn'; btn.setAttribute('aria-label', 'Chat with us');
