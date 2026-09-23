@@ -35,6 +35,12 @@
     },
     "api/converse.js": {
       "maxDuration": 60
+    },
+    "api/realtime.js": {
+      "maxDuration": 30
+    },
+    "api/conversations.js": {
+      "maxDuration": 30
     }
   },
   "routes": [
@@ -105,6 +111,14 @@
     {
       "src": "/api/converse",
       "dest": "/api/converse.js"
+    },
+    {
+      "src": "/api/realtime",
+      "dest": "/api/realtime.js"
+    },
+    {
+      "src": "/api/conversations",
+      "dest": "/api/conversations.js"
     },
     {
       "src": "/(.*)",

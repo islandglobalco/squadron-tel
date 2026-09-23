@@ -41,6 +41,12 @@
 .starters{display:flex;flex-wrap:wrap;gap:8px;padding:0 24px 20px}
 .starter{font-size:14px;font-weight:700;padding:9px 14px;border-radius:999px;border:2px solid rgba(255,255,255,0.2);background:transparent;color:#fff;cursor:pointer}
 .typing{font-size:15px;color:var(--muted);font-weight:600;padding:0 24px 12px}
+.vhead{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.1);flex-wrap:wrap}
+.vstatus{font-size:17px;font-weight:600;color:var(--slate);line-height:1.5;flex:1;min-width:240px}
+.vstatus.live{color:var(--green)}
+.vacts{display:flex;gap:8px;flex-wrap:wrap}
+.vnote{padding:16px 24px;font-size:14px;color:var(--muted);line-height:1.5;font-weight:500;border-top:1px solid rgba(255,255,255,0.1)}
+.m.tool .b{background:rgba(206,235,0,0.1);border:1px solid rgba(206,235,0,0.35);font-size:15px}
 @media (max-width:860px){.wrap{grid-template-columns:1fr}.roster{flex-direction:row;flex-wrap:wrap}}
 </style>
 </head>
@@ -87,14 +93,26 @@
   <h1>Test your <em>team.</em></h1>
   <p class="lead">Ask what your customers ask. Every answer shows the source it came from, and anything your profile does not cover is refused honestly and added to your knowledge queue.</p>
   <div class="modes">
-    <button class="mode on" id="modeChat">Chat</button>
-    <button class="mode soon" id="modeVoice" title="Voice testing arrives in the next update">Voice · next update</button>
+    <button class="mode on" id="modeChat" onclick="setMode('chat')">Chat</button>
+    <button class="mode" id="modeVoice" onclick="setMode('voice')">Voice</button>
     <button class="mode soon" id="modePhone" title="A demo number arrives in the next update">Call a demo number · next update</button>
   </div>
   <div class="error" id="err"></div>
   <div class="wrap">
     <div class="roster" id="roster"></div>
-    <div class="chat">
+    <div class="chat hidden" id="voicePanel">
+      <div class="vhead">
+        <div class="vstatus" id="vStatus">Press Start to talk to your team. Your browser will ask for the microphone.</div>
+        <div class="vacts">
+          <button class="btn" id="vStart" onclick="startVoice()">🎙 Start</button>
+          <button class="btn ghost" id="vMute" onclick="toggleMute()" disabled>Mute</button>
+          <button class="btn ghost" id="vStop" onclick="stopVoice(true)" disabled>End and save</button>
+        </div>
+      </div>
+      <div class="msgs" id="vmsgs"></div>
+      <div class="vnote">The team speaks with the Front Desk voice for the whole call and says out loud when it hands off. Messages, transfer requests and unanswered questions are recorded when you end the call.</div>
+    </div>
+    <div class="chat" id="chatPanel">
       <div class="msgs" id="msgs"></div>
       <div class="typing" id="typing"></div>
       <div class="starters" id="starters"></div>
@@ -157,6 +175,89 @@ async function send(text) {
   finally { busy = false; $('sendBtn').disabled = false; $('typing').textContent = ''; $('input').focus(); }
 }
 function reset() { conversationId = null; $('msgs').innerHTML = ''; roster(null); }
+function setMode(m) {
+  $('modeChat').classList.toggle('on', m === 'chat'); $('modeVoice').classList.toggle('on', m === 'voice');
+  $('chatPanel').classList.toggle('hidden', m !== 'chat'); $('voicePanel').classList.toggle('hidden', m !== 'voice');
+  if (m !== 'voice' && rtc) stopVoice(true);
+}
+
+// ---- Voice test: WebRTC to the team's Realtime session ----
+let rtc = null, rtcDc = null, rtcMic = null, rtcAudio = null, rtcQueue = [], muted = false, micGain = null, duckTimer = null;
+let vAgentLine = null, vUserLine = null, vTranscript = [], vGaps = [], vMessages = [], vTransfer = false, vStart = 0, vAgent = null, vAgents = [];
+function vStatus(t, live) { const e = $('vStatus'); e.textContent = t; e.classList.toggle('live', !!live); }
+function vLine(role, text, agentName) {
+  const d = document.createElement('div'); d.className = 'm' + (role === 'customer' ? ' me' : '');
+  d.innerHTML = role === 'customer' ? `<div class="b"><span class="t">${esc(text)}</span></div>` : `<img src="${esc(vAgent ? vAgent.portrait : '')}" alt=""><div><div class="who">${esc(agentName || (vAgent ? vAgent.persona + ' · ' + vAgent.title : 'Team'))}</div><div class="b"><span class="t">${esc(text)}</span></div></div>`;
+  $('vmsgs').appendChild(d); $('vmsgs').scrollTop = 1e9; return d;
+}
+function vTool(text) { const d = document.createElement('div'); d.className = 'm tool'; d.innerHTML = `<div class="b">${esc(text)}</div>`; $('vmsgs').appendChild(d); $('vmsgs').scrollTop = 1e9; }
+function agentDelta(delta) { if (!delta) return; vUserLine = null; if (!vAgentLine) { vAgentLine = vLine('agent', ''); vTranscript.push({ role: 'agent', text: '', agent_id: vAgent && vAgent.id, agent_name: vAgent && (vAgent.persona + ' · ' + vAgent.title), at: new Date().toISOString() }); } vAgentLine.querySelector('.t').textContent += delta; vTranscript[vTranscript.length - 1].text += delta; $('vmsgs').scrollTop = 1e9; }
+function duck(on) { if (!micGain) return; clearTimeout(duckTimer); const set = (v) => { try { micGain.gain.setTargetAtTime(v, micGain.context.currentTime, on ? 0.015 : 0.04); } catch (_) { micGain.gain.value = v; } }; if (on) { set(0.12); duckTimer = setTimeout(() => set(1), 8000); } else duckTimer = setTimeout(() => set(1), 350); }
+function rtcSend(evt) { if (rtcDc && rtcDc.readyState === 'open') rtcDc.send(JSON.stringify(evt)); else rtcQueue.push(evt); }
+function onRtc(e) {
+  let ev; try { ev = JSON.parse(e.data); } catch (_) { return; }
+  switch (ev.type) {
+    case 'session.created': vStatus('Connected. Speak any time.', true); rtcSend({ type: 'response.create' }); break;
+    case 'response.output_audio_transcript.delta': agentDelta(ev.delta); break;
+    case 'response.output_audio_transcript.done': vAgentLine = null; break;
+    case 'conversation.item.input_audio_transcription.completed': if (ev.transcript && ev.transcript.trim()) { vAgentLine = null; vUserLine = null; vLine('customer', ev.transcript.trim()); vTranscript.push({ role: 'customer', text: ev.transcript.trim(), at: new Date().toISOString() }); } break;
+    case 'input_audio_buffer.speech_started': vAgentLine = null; break;
+    case 'output_audio_buffer.started': duck(true); break;
+    case 'output_audio_buffer.stopped': case 'output_audio_buffer.cleared': duck(false); break;
+    case 'response.function_call_arguments.done': handleTool(ev); break;
+    case 'response.done': duck(false); break;
+    case 'error': console.error('[voice]', ev); vStatus('Voice error: ' + ((ev.error && ev.error.message) || 'unknown')); break;
+  }
+}
+function handleTool(ev) {
+  let args = {}; try { args = JSON.parse(ev.arguments || '{}'); } catch (_) {}
+  let output = { ok: true };
+  if (ev.name === 'take_message') { vMessages.push({ message: args.message, contact: args.contact }); if (args.question) vGaps.push(args.question); vTool('Message recorded for the business: “' + (args.message || '') + '” · Contact: ' + (args.contact || 'not given')); output = { ok: true, note: 'The message is recorded. Tell the customer a person will follow up.' }; }
+  else if (ev.name === 'request_transfer') { vTransfer = true; vTool('Transfer requested: ' + (args.reason || '')); output = { ok: false, note: 'This is a browser test, so no phone transfer is possible. Tell the customer that in a live call they would be transferred, and offer to take a message instead.' }; }
+  else if (ev.name === 'log_gap') { if (args.question) vGaps.push(args.question); vTool('Added to your knowledge queue: “' + (args.question || '') + '”'); }
+  rtcSend({ type: 'conversation.item.create', item: { type: 'function_call_output', call_id: ev.call_id, output: JSON.stringify(output) } });
+  rtcSend({ type: 'response.create' });
+}
+async function startVoice() {
+  if (rtc) return;
+  $('vStart').disabled = true; $('vmsgs').innerHTML = ''; vTranscript = []; vGaps = []; vMessages = []; vTransfer = false; vStart = Date.now();
+  vStatus('Connecting to your team…');
+  try {
+    const pc = new RTCPeerConnection(); rtc = pc;
+    rtcAudio = rtcAudio || Object.assign(document.createElement('audio'), { autoplay: true }); if (!rtcAudio.isConnected) document.body.appendChild(rtcAudio);
+    pc.ontrack = (ev) => { rtcAudio.srcObject = ev.streams[0]; rtcAudio.play().catch(() => {}); };
+    pc.onconnectionstatechange = () => { if (['failed', 'closed', 'disconnected'].includes(pc.connectionState) && rtc === pc) stopVoice(true); };
+    rtcMic = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true, channelCount: 1 } });
+    let sendStream = rtcMic;
+    try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); const src = ctx.createMediaStreamSource(rtcMic); micGain = ctx.createGain(); micGain.gain.value = 1; const dest = ctx.createMediaStreamDestination(); src.connect(micGain); micGain.connect(dest); sendStream = dest.stream; } catch (_) { micGain = null; }
+    sendStream.getAudioTracks().forEach((t) => pc.addTrack(t, sendStream));
+    duck(true);
+    const dc = pc.createDataChannel('oai-events'); rtcDc = dc; dc.onmessage = onRtc; dc.onopen = () => { const q = rtcQueue; rtcQueue = []; q.forEach(rtcSend); };
+    const offer = await pc.createOffer(); await pc.setLocalDescription(offer);
+    const r = await fetch('/api/realtime', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token, sdp: offer.sdp }) });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok || !data.sdp) throw new Error(data.error || ('HTTP ' + r.status));
+    if (rtc !== pc) return;
+    vAgent = data.agent; vAgents = data.agents || []; roster(vAgent.id);
+    await pc.setRemoteDescription({ type: 'answer', sdp: data.sdp });
+    $('vMute').disabled = false; $('vStop').disabled = false;
+  } catch (e) { console.error(e); vStatus('Could not start the call: ' + e.message); stopVoice(false); }
+}
+function toggleMute() { if (!rtcMic) return; muted = !muted; rtcMic.getAudioTracks().forEach((t) => (t.enabled = !muted)); $('vMute').textContent = muted ? 'Unmute' : 'Mute'; }
+async function stopVoice(save) {
+  try { if (rtcDc) rtcDc.close(); } catch (_) {} try { if (rtc) rtc.close(); } catch (_) {}
+  if (rtcMic) rtcMic.getTracks().forEach((t) => t.stop());
+  if (rtcAudio) rtcAudio.srcObject = null;
+  rtc = null; rtcDc = null; rtcMic = null; micGain = null; muted = false; rtcQueue = []; vAgentLine = null; vUserLine = null;
+  $('vStart').disabled = false; $('vMute').disabled = true; $('vStop').disabled = true; $('vMute').textContent = 'Mute';
+  if (save && vTranscript.length) {
+    vStatus('Saving the conversation…');
+    try {
+      await api('/api/conversations', { token, channel: 'voice-web', transcript: vTranscript, gaps: vGaps, messages: vMessages, escalated: vTransfer, outcome: vTransfer ? 'transfer requested' : vMessages.length ? 'message taken' : vGaps.length ? 'unanswered question' : 'answered', durationS: (Date.now() - vStart) / 1000, agentId: vAgent && vAgent.id, agentName: vAgent && (vAgent.persona + ' · ' + vAgent.title), test: true });
+      vStatus('Call ended and saved to Squadron HQ. Press Start to try again.');
+    } catch (e) { vStatus('Call ended, but saving failed: ' + e.message); }
+  } else vStatus('Call ended. Press Start to talk to your team.');
+}
 (async () => {
   if (!token) { location.href = '/start'; return; }
   try {
