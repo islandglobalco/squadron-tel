@@ -7,6 +7,30 @@
 
 function xml(s) { return String(s).replace(/[<>&"']/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&apos;' }[c])); }
 
+const enc = new TextEncoder();
+function b64(buf) { let s = ''; for (const b of new Uint8Array(buf)) s += String.fromCharCode(b); return btoa(s); }
+async function hmac(alg, key, data) {
+  const k = await crypto.subtle.importKey('raw', enc.encode(key), { name: 'HMAC', hash: alg }, false, ['sign']);
+  return b64(await crypto.subtle.sign('HMAC', k, enc.encode(data)));
+}
+function same(a, b) { if (typeof a !== 'string' || typeof b !== 'string' || a.length !== b.length) return false; let d = 0; for (let i = 0; i < a.length; i++) d |= a.charCodeAt(i) ^ b.charCodeAt(i); return d === 0; }
+
+// Twilio signs each webhook: HMAC-SHA1 of the full URL plus the sorted POST
+// parameters, keyed with the account auth token.
+async function validTwilio(env, url, form, signature) {
+  if (!env.TWILIO_AUTH_TOKEN || !signature) return false;
+  const keys = [...new Set([...form.keys()])].sort();
+  let data = url;
+  for (const k of keys) for (const v of form.getAll(k)) data += k + v;
+  return same(await hmac('SHA-1', env.TWILIO_AUTH_TOKEN, data), signature);
+}
+
+// A stream ticket proves the media stream was started by our own verified
+// voice webhook, so nobody can open an AI session by connecting to /media.
+async function ticket(env, businessId, callSid, demo, exp) {
+  return hmac('SHA-256', env.BRIDGE_SECRET || '', `${businessId}|${callSid}|${demo}|${exp}`);
+}
+
 async function vercel(env, path, body) {
   const origin = (env.SQUADRON_ORIGIN || 'https://www.squadron.tel').replace(/\/$/, '');
   const r = await fetch(`${origin}${path}`, { method: body ? 'POST' : 'GET', headers: { 'Content-Type': 'application/json', 'x-bridge-secret': env.BRIDGE_SECRET }, body: body ? JSON.stringify(body) : undefined });
@@ -33,6 +57,7 @@ export default {
     if (url.pathname === '/health') return Response.json({ ok: true, runtime: 'cloudflare-workers' });
     if (url.pathname === '/twilio/voice' && request.method === 'POST') {
       const form = new URLSearchParams(await request.text());
+      if (!(await validTwilio(env, request.url, form, request.headers.get('X-Twilio-Signature')))) return new Response('Forbidden', { status: 403 });
       const to = form.get('To'), from = form.get('From'), callSid = form.get('CallSid');
       let ctx = null;
       try { ctx = await vercel(env, `/api/bridge/context?number=${encodeURIComponent(to)}`); } catch (e) { console.log('context failed', e.message); }
@@ -41,8 +66,11 @@ export default {
         const why = ctx && ctx.reason === 'paused' ? 'This business has reached its plan allowance, so its assistant is paused right now. Please try again later.' : 'This number is not assigned to a business right now. Goodbye.';
         return new Response(`<?xml version="1.0" encoding="UTF-8"?><Response><Say>${xml(why)}</Say><Hangup/></Response>`, { headers });
       }
+      const demoFlag = ctx.demo ? '1' : '0';
+      const exp = String(Date.now() + 5 * 60 * 1000);
+      const tk = await ticket(env, ctx.businessId, callSid, demoFlag, exp);
       const notice = `This call is answered by an A I agent for ${ctx.businessName}. It is recorded for quality.`;
-      return new Response(`<?xml version="1.0" encoding="UTF-8"?><Response><Say>${xml(notice)}</Say><Connect><Stream url="wss://${url.host}/media"><Parameter name="businessId" value="${xml(ctx.businessId)}"/><Parameter name="callSid" value="${xml(callSid)}"/><Parameter name="from" value="${xml(from)}"/><Parameter name="to" value="${xml(to)}"/><Parameter name="demo" value="${ctx.demo ? '1' : '0'}"/></Stream></Connect></Response>`, { headers });
+      return new Response(`<?xml version="1.0" encoding="UTF-8"?><Response><Say>${xml(notice)}</Say><Connect><Stream url="wss://${url.host}/media"><Parameter name="businessId" value="${xml(ctx.businessId)}"/><Parameter name="callSid" value="${xml(callSid)}"/><Parameter name="from" value="${xml(from)}"/><Parameter name="to" value="${xml(to)}"/><Parameter name="demo" value="${demoFlag}"/><Parameter name="exp" value="${exp}"/><Parameter name="ticket" value="${xml(tk)}"/></Stream></Connect></Response>`, { headers });
     }
     if (url.pathname === '/media') {
       if (request.headers.get('Upgrade') !== 'websocket') return new Response('Expected a WebSocket', { status: 426 });
@@ -67,7 +95,7 @@ export class CallSession {
   async run(tw) {
     const env = this.env;
     const model = env.REALTIME_MODEL || 'gpt-realtime-2.1';
-    let streamSid = null, callSid = null, businessId = null, demo = false, ctx = null, oai = null, oaiReady = false, closed = false;
+    let verified = false, streamSid = null, callSid = null, businessId = null, demo = false, ctx = null, oai = null, oaiReady = false, closed = false;
     const transcript = [], gaps = [], messages = [];
     let transferRequested = false;
     const startedAt = Date.now();
@@ -141,6 +169,7 @@ export class CallSession {
     const finish = async () => {
       if (closed) return; closed = true;
       try { if (oai) oai.close(); } catch {}
+      if (!verified) return;
       try {
         await vercel(env, '/api/bridge/call-ended', { businessId, callSid, from: ctx && ctx.from, demo, transcript, gaps, messages, transferRequested, durationS: Math.round((Date.now() - startedAt) / 1000), agentId: ctx && ctx.agent.id, agentName: ctx && `${ctx.agent.persona} · ${ctx.agent.title}` });
       } catch (e) { console.log('call-ended failed', e.message); }
@@ -152,7 +181,11 @@ export class CallSession {
         streamSid = msg.start.streamSid;
         const p = msg.start.customParameters || {};
         businessId = p.businessId; callSid = p.callSid || msg.start.callSid; demo = p.demo === '1';
-        this.state.waitUntil(openOpenAI().then(() => {
+        this.state.waitUntil(ticket(env, p.businessId, p.callSid, p.demo, p.exp).then((want) => {
+          if (!env.BRIDGE_SECRET || !same(want, p.ticket) || !(Number(p.exp) > Date.now()) || p.callSid !== msg.start.callSid) throw new Error('invalid stream ticket');
+          verified = true;
+          return openOpenAI();
+        }).then(() => {
           ctx.from = p.from; ctx.to = p.to;
           const origin = (env.SQUADRON_ORIGIN || 'https://www.squadron.tel').replace(/\/$/, '');
           return twilio(env, `/Calls/${callSid}/Recordings.json`, { RecordingStatusCallback: `${origin}/api/bridge/recording?secret=${encodeURIComponent(env.BRIDGE_SECRET)}&businessId=${encodeURIComponent(businessId)}`, RecordingStatusCallbackEvent: 'completed', RecordingChannels: 'dual' }).catch((e) => console.log('recording failed', e.message));

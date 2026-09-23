@@ -9,3 +9,5 @@ Secrets are stored in the worker settings: BRIDGE_SECRET, TWILIO_ACCOUNT_SID and
 Health check: GET /health returns ok.
 
 Twilio voice webhook: POST /twilio/voice.
+
+Security: /twilio/voice rejects any request without a valid X-Twilio-Signature, which is checked with TWILIO_AUTH_TOKEN. The voice webhook then signs a short-lived stream ticket with BRIDGE_SECRET, and /media opens an AI session only when that ticket is valid, so nobody can start a call session by connecting to /media directly.
