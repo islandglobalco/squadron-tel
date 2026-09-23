@@ -23,6 +23,17 @@ export default async function handler(req, res) {
       const st = await ledgerStatus(acc.id);
       return res.status(200).json({ account: { id: acc.id, email: acc.email, active: st.active, plan: st.planKey, planInfo: st.plan, paidThrough: st.periodEnd, minutesIncluded: st.minutesIncluded, minutesUsed: st.minutesUsed }, businesses });
     }
+    if (action === 'claim') {
+      // Attaches an onboarding business to the signed-in account (for owners
+      // who were already logged in when they entered their website).
+      const acc = await currentAccount(req);
+      if (!acc) return bad(res, 401, 'Sign in first.');
+      const biz = body.token ? await loadBusiness(body.token) : null;
+      if (!biz) return bad(res, 404, 'Unknown business');
+      if (biz.account_id && biz.account_id !== acc.id) return bad(res, 403, 'This team belongs to another account.');
+      if (!biz.account_id) await sql().query('UPDATE businesses SET account_id = $2 WHERE id = $1 AND account_id IS NULL', [biz.id, acc.id]);
+      return res.status(200).json({ ok: true });
+    }
     if (action === 'logout') { res.setHeader('Set-Cookie', clearCookie()); return res.status(200).json({ ok: true }); }
     await sql().query(`CREATE TABLE IF NOT EXISTS password_resets (
       token_hash TEXT PRIMARY KEY, account_id TEXT NOT NULL, expires_at TIMESTAMPTZ NOT NULL, used_at TIMESTAMPTZ, created_at TIMESTAMPTZ NOT NULL DEFAULT now())`);

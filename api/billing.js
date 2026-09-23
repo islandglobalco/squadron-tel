@@ -6,6 +6,7 @@ import { sql, readJson, bad } from './_lib/db.js';
 import { currentAccount, PLANS } from './_lib/auth.js';
 import { ensureBillingSchema, PRICES, wireInstructions, reconcile, createInvoice } from './_lib/billing.js';
 import { ledgerStatus } from './_lib/ledger.js';
+import { sendEmail } from './_lib/email.js';
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
@@ -20,7 +21,11 @@ export default async function handler(req, res) {
       const p = PRICES[body.item];
       if (!p) return bad(res, 400, 'Unknown item');
       if (p.kind === 'pack' && !st.active) return bad(res, 400, 'Extra minutes are added to a running paid plan. Choose and pay for a plan first.');
-      await createInvoice(acc.id, body.item);
+      const { invoice, created } = await createInvoice(acc.id, body.item);
+      if (created) {
+        const w = await wireInstructions(invoice);
+        await sendEmail({ to: acc.email, subject: `Your Squadron invoice ${invoice.reference} ($${(invoice.amount_cents / 100).toFixed(2)})`, text: `Thank you for choosing Squadron. Squadron is prepaid, so your team starts as soon as this payment lands.\n\n${invoice.label}\nAmount: $${(invoice.amount_cents / 100).toFixed(2)}\nReference (put this in the wire or ACH memo): ${invoice.reference}\nBank: ${w.bank}\nRouting number: ${w.routingNumber}\nAccount number: ${w.accountNumber}\nBeneficiary: ${w.beneficiaryName}, ${w.beneficiaryAddress}\n\nWe email you as soon as the payment arrives. You can also see these details in Billing: https://www.squadron.tel/billing` }).catch((e) => console.error('[billing email]', e.message));
+      }
     } else if (body.action === 'check') {
       const r = await reconcile();
       notice = r.paid.length ? `Payment received for ${r.paid.length} invoice${r.paid.length > 1 ? 's' : ''}.` : 'No matching wire has arrived yet. Wires usually land the same business day.';
