@@ -37,7 +37,7 @@
       "maxDuration": 60
     },
     "api/realtime.js": {
-      "maxDuration": 30
+      "maxDuration": 300
     },
     "api/conversations.js": {
       "maxDuration": 30
@@ -83,6 +83,9 @@
     },
     "api/portrait.js": {
       "maxDuration": 15
+    },
+    "api/sweep.js": {
+      "maxDuration": 60
     }
   },
   "routes": [
@@ -219,6 +222,10 @@
       "dest": "/api/portrait.js?id=$id"
     },
     {
+      "src": "/reset",
+      "dest": "/reset.html"
+    },
+    {
       "src": "/account",
       "dest": "/account.html"
     },
@@ -235,6 +242,10 @@
       "dest": "/api/billing-cron.js"
     },
     {
+      "src": "/api/sweep",
+      "dest": "/api/sweep.js"
+    },
+    {
       "src": "/(.*)",
       "dest": "/$1"
     }
@@ -243,6 +254,10 @@
     {
       "path": "/api/billing-cron",
       "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/sweep",
+      "schedule": "* * * * *"
     }
   ]
 }

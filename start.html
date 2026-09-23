@@ -93,6 +93,7 @@
     <div class="log" id="log"></div>
     <div class="error" id="err2"></div>
     <div id="retryBox" class="hidden" style="margin-top:20px"><button class="btn ghost" onclick="location.href='/start'">Start over</button></div>
+    <div id="payBox" class="hidden" style="margin-top:24px"></div>
   </section>
 
   <!-- Screen 3 -->
@@ -192,7 +193,10 @@ async function analyze(skipCrawl) {
       logLine('Documents received');
     }
     logLine('Building your Business Profile with a source on every field', true);
-    const x = await api('/api/ingest/extract', { token });
+    const xr = await fetch('/api/ingest/extract', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token }) });
+    if (xr.status === 402) { logLine('Your site is read. Your plan comes next.'); return payGate(); }
+    const x = await xr.json().catch(() => ({}));
+    if (!xr.ok) throw new Error(x.error || ('HTTP ' + xr.status));
     logLine('Profile ready');
     await load();
     show(3);
@@ -200,6 +204,43 @@ async function analyze(skipCrawl) {
     err('err2', e.message);
     $('retryBox').classList.remove('hidden');
   }
+}
+// Squadron is prepaid, so the profile and team are built after the plan is
+// paid. Reading the site costs nothing and happens first.
+const PLAN_CHOICES = [['basic', 'Basic', '$39', '250 voice minutes'], ['pro', 'Pro', '$79', '650 voice minutes'], ['center', 'Command Center', '$199', '2,000 voice minutes']];
+async function payGate() {
+  const box = $('payBox'); box.classList.remove('hidden');
+  $('s2lead').textContent = 'Your site is read. Squadron is prepaid, so your profile and team are built as soon as your first 30 days are paid.';
+  const me = await api('/api/auth').catch(() => ({ account: null }));
+  if (!me.account) {
+    box.innerHTML = `<div class="card" style="padding:24px;border-radius:20px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.12)"><p style="font-size:20px;font-weight:700;color:#fff;margin-bottom:12px">Create your account to choose a plan.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><input class="input" id="p_email" type="email" placeholder="Email" autocomplete="email"><input class="input" id="p_pass" type="password" placeholder="Password (8+ characters)" autocomplete="new-password"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><button class="btn" onclick="payAuth('signup')">Create account</button><button class="btn ghost" onclick="payAuth('login')">I have an account, log in</button></div></div>`;
+    return;
+  }
+  const active = me.account.active;
+  if (active) { box.innerHTML = ''; box.classList.add('hidden'); return reanalyze(); }
+  box.innerHTML = `<p style="font-size:20px;font-weight:700;color:#fff;margin-bottom:14px">Choose your plan. Every plan has unlimited web chat, and nothing renews automatically.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">${PLAN_CHOICES.map(([k, n, p, m]) => `<button class="btn ghost" style="flex-direction:column;height:auto;padding:18px;font-size:20px" onclick="choosePlan('${k}')"><b>${n}</b><span>${p} for 30 days · ${m}</span></button>`).join('')}</div>
+    <p style="font-size:17px;color:var(--slate);margin-top:14px">Your invoice shows the bank wire details. When the payment lands, come back here and press the button below.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="btn" onclick="paidRetry(this)">My payment has landed, build my team</button></div>`;
+}
+async function payAuth(action) {
+  err('err2', '');
+  try { await api('/api/auth', { action, email: $('p_email').value.trim(), password: $('p_pass').value, token }); await payGate(); }
+  catch (e) { err('err2', e.message); }
+}
+async function choosePlan(item) {
+  err('err2', '');
+  try { await api('/api/billing', { action: 'invoice', item }); location.href = '/billing'; }
+  catch (e) { err('err2', e.message); }
+}
+async function paidRetry(b) {
+  b.disabled = true; err('err2', '');
+  try { await api('/api/billing', { action: 'check' }); } catch (e) {}
+  const me = await api('/api/auth').catch(() => ({ account: null }));
+  if (me.account && me.account.active) { $('payBox').classList.add('hidden'); $('payBox').innerHTML = ''; return reanalyze(); }
+  b.disabled = false; err('err2', 'Your payment has not arrived yet. Wires usually land the same business day; try again later.');
 }
 async function load() {
   const r = await api('/api/profile?token=' + encodeURIComponent(token));

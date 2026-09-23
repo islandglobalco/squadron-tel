@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your account — Squadron</title>
+<title>Reset your password — Squadron</title>
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -52,50 +52,39 @@
   <a class="nav-right" href="/billing">Billing</a>
 </nav>
 <main>
-  <p class="eyebrow">Your account</p>
-  <h1>Welcome <em>back.</em></h1>
+  <p class="eyebrow">Account</p>
+  <h1>Reset your <em>password.</em></h1>
   <div class="error" id="err"></div>
-  <div id="body"><p class="big">Loading.</p></div>
+  <div id="body"></div>
 </main>
 <script>
 const $ = (id) => document.getElementById(id);
-const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const token = new URLSearchParams(location.search).get('token');
 async function api(body) {
-  const r = await fetch('/api/auth', body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {});
+  const r = await fetch('/api/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
   const j = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error(j.error || 'Something went wrong. Please try again.');
   return j;
 }
-function loginForm() {
-  $('body').innerHTML = `<div class="card"><p class="big">Log in to see your teams, Squadron HQ and billing.</p>
-    <form class="two" onsubmit="event.preventDefault();login()"><input class="input" id="email" type="email" placeholder="Email" autocomplete="email" required><input class="input" id="pass" type="password" placeholder="Password" autocomplete="current-password" required><button class="btn" type="submit" style="grid-column:1/-1">Log in</button></form>
-    <p class="detail" style="margin-top:18px"><a href="/reset" style="color:var(--signal);font-weight:700">Forgot your password?</a></p>
-    <p class="detail" style="margin-top:10px">New to Squadron? <a href="/start" style="color:var(--signal);font-weight:700">Get started</a>. Plans start at $39 for 30 days, prepaid.</p></div>`;
+function askForm() {
+  $('body').innerHTML = `<div class="card"><p class="big">Enter the email you use for Squadron, and we will email you a link to choose a new password.</p>
+    <form class="two" onsubmit="event.preventDefault();ask()"><input class="input" id="email" type="email" placeholder="Email" autocomplete="email" required><button class="btn" type="submit" id="go">Email me a reset link</button></form></div>`;
 }
-async function login() {
-  $('err').textContent = '';
-  try { await api({ action: 'login', email: $('email').value.trim(), password: $('pass').value }); load(); } catch (e) { $('err').textContent = e.message; }
+async function ask() {
+  $('err').textContent = ''; $('go').disabled = true;
+  try { const j = await api({ action: 'forgot', email: $('email').value.trim() }); $('body').innerHTML = `<div class="card"><p class="big">${j.message}</p><p class="detail">Check your spam folder if it does not arrive within a few minutes.</p></div>`; }
+  catch (e) { $('err').textContent = e.message; $('go').disabled = false; }
 }
-async function logout() { await api({ action: 'logout' }); load(); }
-async function load() {
-  $('err').textContent = '';
-  let me; try { me = await api(); } catch (e) { $('err').textContent = e.message; return; }
-  if (!me.account) return loginForm();
-  const a = me.account;
-  const planLine = a.active ? `Your plan is <strong>${esc(a.planInfo.name)}</strong>, paid through ${new Date(a.paidThrough).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}.` : 'You have no active paid plan. Squadron is prepaid, so choose a plan in Billing to build and run your team.';
-  let h = `<div class="card"><p class="big">Signed in as ${esc(a.email)}. ${planLine}</p>
-    <div class="actions"><a class="btn small" href="/billing">Billing</a><a class="btn small ghost" href="/start">Build another team</a><button class="btn small ghost" onclick="logout()">Log out</button></div></div>`;
-  if (!me.businesses.length) h += `<div class="card"><p class="big">You have no teams yet.</p><div class="actions"><a class="btn small" href="/start">Build your team</a></div></div>`;
-  for (const b of me.businesses) {
-    const chat = b.channels && b.channels.chat && b.channels.chat.enabled;
-    const t = encodeURIComponent(b.token);
-    h += `<div class="card biz"><h3>${esc(b.input_value)}<span class="tag ${chat ? 'on' : ''}">${chat ? 'Chat live' : 'Not live'}</span></h3>
-      <p class="detail">Created ${new Date(b.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}.</p>
-      <div class="actions"><a class="btn small" href="/hq?t=${t}">Open Squadron HQ</a><a class="btn small ghost" href="/test?t=${t}">Test the team</a><a class="btn small ghost" href="/deploy?t=${t}">Channels and settings</a></div></div>`;
-  }
-  $('body').innerHTML = h;
+function setForm() {
+  $('body').innerHTML = `<div class="card"><p class="big">Choose a new password of at least 8 characters.</p>
+    <form class="two" onsubmit="event.preventDefault();setPw()"><input class="input" id="pass" type="password" placeholder="New password" autocomplete="new-password" minlength="8" required><button class="btn" type="submit" id="go">Save my new password</button></form></div>`;
 }
-load();
+async function setPw() {
+  $('err').textContent = ''; $('go').disabled = true;
+  try { await api({ action: 'reset', token, password: $('pass').value }); $('body').innerHTML = `<div class="card"><p class="big">Your password is changed, and you are signed in.</p><div class="actions"><a class="btn small" href="/account">Go to your account</a></div></div>`; }
+  catch (e) { $('err').textContent = e.message; $('go').disabled = false; }
+}
+token ? setForm() : askForm();
 </script>
 </body>
 </html>

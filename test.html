@@ -255,13 +255,17 @@ async function startVoice() {
     const data = await r.json().catch(() => ({}));
     if (!r.ok || !data.sdp) throw new Error(data.error || ('HTTP ' + r.status));
     if (rtc !== pc) return;
+    vCallId = data.callId || null;
     vAgent = data.agent; vAgents = data.agents || []; roster(vAgent.id);
+    if (data.limitSeconds) vStatus('Connected. Test calls end automatically after ' + Math.round(data.limitSeconds / 60) + ' minutes, and they use your prepaid balance.');
     await pc.setRemoteDescription({ type: 'answer', sdp: data.sdp });
     $('vMute').disabled = false; $('vStop').disabled = false;
   } catch (e) { console.error(e); vStatus('Could not start the call: ' + e.message); stopVoice(false); }
 }
 function toggleMute() { if (!rtcMic) return; muted = !muted; rtcMic.getAudioTracks().forEach((t) => (t.enabled = !muted)); $('vMute').textContent = muted ? 'Unmute' : 'Mute'; }
+let vCallId = null;
 async function stopVoice(save) {
+  if (vCallId) { const id = vCallId; vCallId = null; fetch('/api/realtime', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token, action: 'end', callId: id }), keepalive: true }).catch(() => {}); }
   try { if (rtcDc) rtcDc.close(); } catch (_) {} try { if (rtc) rtc.close(); } catch (_) {}
   if (rtcMic) rtcMic.getTracks().forEach((t) => t.stop());
   if (rtcAudio) rtcAudio.srcObject = null;

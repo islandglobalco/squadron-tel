@@ -442,6 +442,19 @@ nav{
 .step-points li::before{content:'—';color:rgba(7,16,43,0.35);}
 .step-time{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:0.08em;color:rgba(7,16,43,0.5);text-transform:uppercase;}
 
+/* PRICE COMPARISON */
+.compare{margin:72px auto 0;max-width:1100px}
+.compare-title{font-family:'Barlow Condensed',sans-serif;font-size:44px;font-weight:900;text-transform:uppercase;letter-spacing:0.02em;text-align:center;margin-bottom:12px}
+.compare-sub,.compare-note{font-size:18px;line-height:1.55;color:rgba(255,255,255,0.85);text-align:center;max-width:760px;margin:0 auto 24px}
+.compare-note{margin-top:20px;font-size:16px}
+.compare-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.compare-table{width:100%;border-collapse:collapse;font-size:19px;min-width:640px}
+.compare-table th{font-size:14px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.8);text-align:left;padding:14px 16px;border-bottom:2px solid rgba(255,255,255,0.25)}
+.compare-table td{padding:16px;border-bottom:1px solid rgba(255,255,255,0.12);color:#fff;font-weight:600}
+.compare-table td a{color:#fff;text-decoration:underline;text-underline-offset:3px}
+.compare-table tr.us td{background:var(--signal);color:var(--navy);font-weight:900;border-bottom:2px solid var(--navy)}
+.compare-table td:nth-child(4){font-weight:900;font-size:22px}
+
 /* PRICING */
 .pricing-section{padding:120px 48px;}
 .pricing-inner{max-width:1400px;margin:0 auto;}
@@ -837,11 +850,7 @@ details[open] .faq-q{color:var(--signal);}
         <input class="hero-url" type="url" id="heroUrl" placeholder="https://yourbusiness.com" autocomplete="url" required>
         <button type="submit" class="btn-primary" data-sound="click">Build my team →</button>
       </form>
-      <p class="hero-note">Enter your website, an App Store link, or your documents. 14-day trial. No card required.</p>
-      <div class="hero-live-btn" id="alexLiveBtn" onclick="openVoiceDemo(event)" style="cursor:pointer;">
-        <span class="live-dot"></span>
-        <span>Talk to Alex live &nbsp;·&nbsp; No signup</span>
-      </div>
+      <p class="hero-note">Enter your website, an App Store link, or your documents. Plans from $39 for 30 days, prepaid, with unlimited web chat.</p>
     </div>
   </div>
 </section>
@@ -1069,32 +1078,51 @@ details[open] .faq-q{color:var(--signal);}
     <div class="pricing-header">
       <p class="section-label">Pricing</p>
       <h2 class="section-title">Pick your plan.</h2>
-      <p class="section-sub" style="margin:24px auto 0;font-size:20px;color:rgba(255,255,255,0.8);max-width:640px;">Every plan includes the full team. Start with a 14-day trial, with no card required. Web chat is live today; phone lines are opening soon.</p>
+      <p class="section-sub" style="margin:24px auto 0;font-size:22px;color:rgba(255,255,255,0.88);max-width:720px;">Every plan includes the full team and unlimited web chat. You prepay 30 days by bank transfer, and you are never billed after the fact. Web chat is live today; phone lines are opening soon.</p>
     </div>
     <div class="pricing-grid">
       <div class="price-card">
-        <div class="price-plan">Scout</div><div class="price-amount">$99</div>
-        <div class="price-period">/ month · billed monthly</div>
+        <div class="price-plan">Basic</div><div class="price-amount">$39</div>
+        <div class="price-period">per 30 days, prepaid · about 16¢ a voice minute</div>
         <div class="price-divider"></div>
-        <ul class="price-features"><li>The full team</li><li>250 voice minutes included</li><li>1,000 chat conversations included</li><li>Web chat widget</li><li>Squadron HQ</li><li>Email support</li></ul>
-        <a href="/start" class="price-btn price-btn-outline" data-sound="click">Start with Scout →</a>
+        <ul class="price-features"><li>The full team</li><li>250 AI voice minutes</li><li>Unlimited web chat</li><li>Squadron HQ</li><li>Extra minutes 25¢ each</li></ul>
+        <a href="/start" class="price-btn price-btn-outline" data-sound="click">Start with Basic →</a>
       </div>
       <div class="price-card featured">
-        <div class="price-plan">Commander</div><div class="price-amount">$299</div>
-        <div class="price-period">/ month · billed monthly</div>
+        <div class="price-plan">Pro</div><div class="price-amount">$79</div>
+        <div class="price-period">per 30 days, prepaid · about 12¢ a voice minute</div>
         <div class="price-divider"></div>
-        <ul class="price-features"><li>The full team</li><li>1,000 voice minutes included</li><li>Unlimited chat conversations</li><li>Web chat widget</li><li>Squadron HQ</li><li>Priority support</li></ul>
-        <a href="/start" class="price-btn price-btn-solid" data-sound="click">Start with Commander →</a>
+        <ul class="price-features"><li>The full team</li><li>650 AI voice minutes</li><li>Unlimited web chat</li><li>Squadron HQ</li><li>Extra minutes 25¢ each</li></ul>
+        <a href="/start" class="price-btn price-btn-solid" data-sound="click">Start with Pro →</a>
       </div>
       <div class="price-card">
-        <div class="price-plan">Command HQ</div><div class="price-amount">$799</div>
-        <div class="price-period">/ month · billed monthly</div>
+        <div class="price-plan">Command Center</div><div class="price-amount">$199</div>
+        <div class="price-period">per 30 days, prepaid · under 10¢ a voice minute</div>
         <div class="price-divider"></div>
-        <ul class="price-features"><li>The full team</li><li>Unlimited voice minutes</li><li>Unlimited chat conversations</li><li>Web chat widget</li><li>Squadron HQ</li><li>Priority support</li></ul>
-        <a href="/start" class="price-btn price-btn-outline" data-sound="click">Start with Command HQ →</a>
+        <ul class="price-features"><li>The full team</li><li>2,000 AI voice minutes</li><li>Unlimited web chat</li><li>Squadron HQ</li><li>Extra minutes 25¢ each</li></ul>
+        <a href="/start" class="price-btn price-btn-outline" data-sound="click">Start with Command Center →</a>
       </div>
-        </div>
-    <p class="section-sub" style="margin:40px auto 0;text-align:center;max-width:720px;font-size:20px;color:rgba(255,255,255,0.8);">When you reach your allowance, your team pauses and Squadron HQ shows a notice. You can buy an extra pack from the Billing page. There is no automatic upgrade.</p>
+    </div>
+    <p class="section-sub" style="margin:40px auto 0;text-align:center;max-width:760px;font-size:20px;color:rgba(255,255,255,0.88);">No contract, no setup fee and no automatic upgrade. When a period's prepaid amount is used, your team pauses and we email you a top-up invoice, so you never get a surprise bill.</p>
+
+    <div class="compare" id="compare">
+      <h3 class="compare-title">How the price per minute compares</h3>
+      <p class="compare-sub">Monthly prices from each company's own pricing page, checked on September 23, 2026. Price per minute is the plan price divided by the minutes it includes.</p>
+      <div class="compare-scroll"><table class="compare-table">
+        <thead><tr><th>Service</th><th>Plan</th><th>Minutes included</th><th>Price per minute</th><th>Web chat</th></tr></thead>
+        <tbody>
+          <tr class="us"><td>Squadron</td><td>Command Center, $199</td><td>2,000</td><td>10¢</td><td>Unlimited</td></tr>
+          <tr class="us"><td>Squadron</td><td>Pro, $79</td><td>650</td><td>12¢</td><td>Unlimited</td></tr>
+          <tr class="us"><td>Squadron</td><td>Basic, $39</td><td>250</td><td>16¢</td><td>Unlimited</td></tr>
+          <tr><td><a href="https://heyrosie.com/pricing" rel="nofollow noopener" target="_blank">Rosie</a></td><td>$149</td><td>1,000</td><td>15¢</td><td>Included</td></tr>
+          <tr><td><a href="https://heyrosie.com/pricing" rel="nofollow noopener" target="_blank">Rosie</a></td><td>$49</td><td>250</td><td>20¢</td><td>Included</td></tr>
+          <tr><td><a href="https://dialzara.com/pricing" rel="nofollow noopener" target="_blank">Dialzara</a></td><td>$349</td><td>1,000</td><td>35¢</td><td>Extra cost</td></tr>
+          <tr><td><a href="https://www.myaifrontdesk.com/pricing" rel="nofollow noopener" target="_blank">My AI Front Desk</a></td><td>$99</td><td>200</td><td>50¢</td><td>100 chats</td></tr>
+          <tr><td><a href="https://frontdesk.care/pricing" rel="nofollow noopener" target="_blank">Front Desk</a></td><td>$299</td><td>500</td><td>60¢</td><td>500 chats</td></tr>
+        </tbody>
+      </table></div>
+      <p class="compare-note">Competitor prices change; follow each link to check the current price. Rosie also sells a $299 plan with 2,000 minutes, which works out to 15¢ a minute.</p>
+    </div>
   </div>
 </section>
 
@@ -1121,11 +1149,11 @@ details[open] .faq-q{color:var(--signal);}
       </details>
       <details class="faq-item">
         <summary class="faq-q">Is there a free trial? <span class="faq-chevron">+</span></summary>
-        <p class="faq-a">Yes. Every plan starts with a 14-day trial, and no card is required to start.</p>
+        <p class="faq-a">No. Squadron is prepaid instead: you pay for 30 days, and there is no contract, so you can simply not renew. Plans start at $39.</p>
       </details>
       <details class="faq-item">
         <summary class="faq-q">How is pricing calculated? <span class="faq-chevron">+</span></summary>
-        <p class="faq-a">A flat monthly rate per plan with a stated voice-minute and conversation allowance. When you reach the allowance, your team pauses and Squadron HQ shows a notice; you can buy an extra pack from the Billing page. There is no automatic upgrade and no per-agent fee.</p>
+        <p class="faq-a">Each plan is a flat prepaid price for 30 days, with a set number of AI voice minutes and unlimited web chat. Extra voice minutes cost 25¢ each, prepaid in blocks of 100. Squadron never bills after the fact: when a period's prepaid amount is used, your team pauses and we email you a top-up invoice. There is no automatic upgrade and no per-agent fee.</p>
       </details>
     </div>
   </div>

@@ -68,14 +68,14 @@
 <main>
   <p class="eyebrow">Billing</p>
   <h1>Plans and <em>payment.</em></h1>
-  <p class="lead">Every plan includes the full team. Pay by bank wire or ACH to our Mercury account. When your usage reaches your plan's cap, your team pauses and we tell you. You are never upgraded automatically.</p>
+  <p class="lead">Squadron is prepaid. You pay for 30 days up front by bank wire or ACH to our Mercury account, and your team starts when the payment lands. It never bills you after the fact: when a period's prepaid amount is used, your team pauses and we email you a top-up invoice. You are never upgraded automatically.</p>
   <div class="error" id="err"></div>
   <div class="card" id="status"><p class="big">Loading your account.</p></div>
   <div id="invoices"></div>
   <h2 style="margin:34px 0 16px">Plans</h2>
   <div class="plans" id="plans"></div>
-  <h2 style="margin:34px 0 16px">Extra capacity packs</h2>
-  <p class="detail" style="margin-bottom:16px">Packs add to the current month's allowance and do not renew.</p>
+  <h2 style="margin:34px 0 16px">Extra voice minutes</h2>
+  <p class="detail" style="margin-bottom:16px">Extra minutes cost $0.25 each, prepaid in blocks of 100. A block adds to your current paid period and does not renew.</p>
   <div class="packs" id="packs"></div>
 </main>
 <script>
@@ -84,28 +84,34 @@ const money = (c) => '$' + (c / 100).toLocaleString('en-US', { minimumFractionDi
 const date = (d) => d ? new Date(d).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '';
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const FEATURES = {
-  scout: ['250 voice minutes a month', '1,000 chat conversations a month', 'The full team'],
-  commander: ['1,000 voice minutes a month', 'Unlimited chat conversations', 'The full team'],
-  hq: ['Unlimited voice minutes', 'Unlimited chat conversations', 'The full team'],
+  basic: ['250 AI voice minutes', 'Unlimited web chat', 'The full team, 24/7'],
+  pro: ['650 AI voice minutes', 'Unlimited web chat', 'The full team, 24/7'],
+  center: ['2,000 AI voice minutes', 'Unlimited web chat', 'The full team, 24/7'],
 };
+const PLAN_NAMES = { basic: 'Basic', pro: 'Pro', center: 'Command Center' };
 let data = null;
 
 async function call(body) {
   $('err').textContent = '';
   const r = await fetch('/api/billing', body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {});
   const j = await r.json().catch(() => ({}));
-  if (r.status === 401) { $('status').innerHTML = '<p class="big">Log in to see billing.</p><div class="packs" style="margin-top:14px"><input class="input" id="a_email" type="email" placeholder="Email" autocomplete="email"><input class="input" id="a_pass" type="password" placeholder="Password" autocomplete="current-password"></div><div class="actions"><button class="btn small" onclick="login()">Log in</button><a class="btn small ghost" href="/start">New here? Start a free trial</a></div>'; $('plans').innerHTML = ''; $('packs').innerHTML = ''; return null; }
+  if (r.status === 401) { $('status').innerHTML = '<p class="big">Log in to see billing.</p><div class="packs" style="margin-top:14px"><input class="input" id="a_email" type="email" placeholder="Email" autocomplete="email"><input class="input" id="a_pass" type="password" placeholder="Password" autocomplete="current-password"></div><div class="actions"><button class="btn small" onclick="login()">Log in</button><a class="btn small ghost" href="/start">New here? Get started</a><a class="btn small ghost" href="/reset">Forgot your password?</a></div>'; $('plans').innerHTML = ''; $('packs').innerHTML = ''; return null; }
   if (!r.ok) { $('err').textContent = j.error || 'Something went wrong. Please try again.'; return null; }
   data = j; render(); return j;
 }
 
 function render() {
-  const a = data.account;
-  const onTrial = a.plan === 'trial';
-  let s = `<p class="big">Signed in as ${esc(a.email)}. Your plan is <strong>${esc(a.planInfo.name)}</strong>.</p>`;
-  if (onTrial) s += `<p class="detail">Your trial ends on ${date(a.trialEndsAt)}. No card was taken, and nothing is charged when it ends. Choose a plan below to keep your team running.</p>`;
-  else if (a.paidThrough) s += `<p class="detail">Paid through ${date(a.paidThrough)}.</p>`;
+  const a = data.account, st = data.status;
+  let s = `<p class="big">Signed in as ${esc(a.email)}.</p>`;
+  if (st.active) {
+    s += `<p class="big">Your plan is <strong>${esc(st.planInfo.name)}</strong>, paid through ${date(st.periodEnd)}.</p>`;
+    s += `<p class="detail">Voice minutes this period: ${st.minutesUsed.toLocaleString()} used of ${st.minutesIncluded.toLocaleString()}. Prepaid balance left: ${st.balancePercent}%. Chat has no conversation limit; it draws on the same prepaid balance.</p>`;
+  } else {
+    s += `<p class="big">You have no active paid plan, so your team is not answering yet.</p><p class="detail">Choose a plan below. Your invoice shows the wire details, and your team is built and switched on as soon as the payment lands.</p>`;
+  }
   if (data.notice) s += `<p class="ok">${esc(data.notice)}</p>`;
+  let t = null; try { t = localStorage.getItem('sqToken'); } catch (_) {}
+  if (t) s += `<div class="actions"><a class="btn small" href="/start?t=${encodeURIComponent(t)}">${st.active ? 'Continue building your team' : 'Back to your team setup'}</a></div>`;
   $('status').innerHTML = s;
 
   const pending = data.invoices.filter((i) => i.status === 'pending');
@@ -134,18 +140,18 @@ function render() {
   }
   $('invoices').innerHTML = h;
 
-  $('plans').innerHTML = ['scout', 'commander', 'hq'].map((k) => {
+  $('plans').innerHTML = ['basic', 'pro', 'center'].map((k) => {
     const p = data.prices[k];
-    const cur = a.plan === k;
+    const cur = st.active && st.plan === k;
     const open = pending.some((i) => i.item === k);
-    return `<div class="plan ${cur ? 'current' : ''}"><h3>${esc(p.label.replace(' plan, one month', ''))}</h3><div class="price">${money(p.cents)}<small> / month</small></div>
+    return `<div class="plan ${cur ? 'current' : ''}"><h3>${PLAN_NAMES[k]}</h3><div class="price">${money(p.cents)}<small> / 30 days</small></div>
       <ul>${FEATURES[k].map((f) => `<li>${f}</li>`).join('')}</ul>
-      <button class="btn small ${cur ? 'ghost' : ''}" ${open ? 'disabled' : ''} onclick="invoice('${k}', this)">${open ? 'Invoice waiting' : cur ? 'Pay next month' : 'Choose ' + esc(p.label.replace(' plan, one month', ''))}</button></div>`;
+      <button class="btn small ${cur ? 'ghost' : ''}" ${open ? 'disabled' : ''} onclick="invoice('${k}', this)">${open ? 'Invoice waiting' : cur ? 'Pay the next 30 days' : 'Choose ' + PLAN_NAMES[k]}</button></div>`;
   }).join('');
-  $('packs').innerHTML = ['minutes100', 'chats500'].map((k) => {
+  $('packs').innerHTML = ['minutes100'].map((k) => {
     const p = data.prices[k];
     const open = pending.some((i) => i.item === k);
-    return `<div class="plan"><h3>${esc(p.label)}</h3><div class="price">${money(p.cents)}</div><button class="btn small ghost" ${open ? 'disabled' : ''} onclick="invoice('${k}', this)">${open ? 'Invoice waiting' : 'Buy this pack'}</button></div>`;
+    return `<div class="plan"><h3>100 extra minutes</h3><div class="price">${money(p.cents)}</div><button class="btn small ghost" ${open || !st.active ? 'disabled' : ''} onclick="invoice('${k}', this)">${open ? 'Invoice waiting' : st.active ? 'Buy 100 minutes' : 'Needs a paid plan'}</button></div>`;
   }).join('');
 }
 

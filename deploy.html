@@ -116,11 +116,11 @@ async function api(path, body, method) {
 }
 function renderAccount() {
   if (account) {
-    const ends = account.trialEndsAt ? new Date(account.trialEndsAt) : null;
-    $('acctBody').innerHTML = `<div class="acct">Signed in as <b style="color:#fff">${esc(account.email)}</b> · ${esc(account.planInfo.name)}${ends && account.plan === 'trial' ? ` · trial ends ${ends.toLocaleDateString()}` : ''} · <a href="/billing" style="color:var(--signal)">Billing</a> · <a href="#" onclick="logout();return false" style="color:var(--signal)">Log out</a></div>`;
+    const planText = account.active ? `${esc(account.planInfo.name)}, paid through ${new Date(account.paidThrough).toLocaleDateString()}` : 'No paid plan yet, so your team cannot go live';
+    $('acctBody').innerHTML = `<div class="acct">Signed in as <b style="color:#fff">${esc(account.email)}</b> · ${planText} · <a href="/billing" style="color:var(--signal)">Billing</a> · <a href="#" onclick="logout();return false" style="color:var(--signal)">Log out</a></div>`;
     return;
   }
-  $('acctBody').innerHTML = `<p class="detail">Create your account to deploy. 14-day trial, no card required.</p>
+  $('acctBody').innerHTML = `<p class="detail">Create your account to deploy. Squadron is prepaid: plans start at $39 for 30 days.</p>
     <div class="row2 field"><div><label>Email</label><input id="a_email" type="email" autocomplete="email"></div><div><label>Password (8+ characters)</label><input id="a_pass" type="password" autocomplete="new-password"></div></div>
     <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn small" onclick="auth('signup')">Create account</button><button class="btn small ghost" onclick="auth('login')">I already have one, log in</button></div>`;
 }
