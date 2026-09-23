@@ -19,7 +19,7 @@ Deploy `bridge/` as a Node service with these variables: `OPENAI_API_KEY`, `BRID
 
 ### Cloudflare Workers (free plan)
 
-`bridge/worker.js` and `bridge/wrangler.toml` run the same bridge on Workers with a Durable Object per call. From `bridge/`: `npx wrangler deploy`, then `npx wrangler secret put` for `OPENAI_API_KEY`, `BRIDGE_SECRET`, `TWILIO_ACCOUNT_SID` and `TWILIO_AUTH_TOKEN`. The voice webhook is `https://squadron-bridge.<account>.workers.dev/twilio/voice`.
+`bridge/worker.js` and `bridge/wrangler.toml` run the same bridge on Workers with a Durable Object per call. From `bridge/`: `npx wrangler deploy`, then `npx wrangler secret put` for `BRIDGE_SECRET`, `TWILIO_ACCOUNT_SID` and `TWILIO_AUTH_TOKEN`. The worker does not need `OPENAI_API_KEY`, because Squadron issues a short-lived OpenAI key for each call. The voice webhook is `https://squadron-bridge.<account>.workers.dev/twilio/voice`.
 
 ## Compliance defaults
 
