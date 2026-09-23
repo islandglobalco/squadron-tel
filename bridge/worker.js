@@ -27,8 +27,8 @@ async function validTwilio(env, url, form, signature) {
 
 // A stream ticket proves the media stream was started by our own verified
 // voice webhook, so nobody can open an AI session by connecting to /media.
-async function ticket(env, businessId, callSid, demo, exp) {
-  return hmac('SHA-256', env.BRIDGE_SECRET || '', `${businessId}|${callSid}|${demo}|${exp}`);
+async function ticket(env, businessId, callSid, demo, exp, limit, hold) {
+  return hmac('SHA-256', env.BRIDGE_SECRET || '', `${businessId}|${callSid}|${demo}|${exp}|${limit}|${hold}`);
 }
 
 async function vercel(env, path, body) {
@@ -60,7 +60,7 @@ export default {
       if (!(await validTwilio(env, request.url, form, request.headers.get('X-Twilio-Signature')))) return new Response('Forbidden', { status: 403 });
       const to = form.get('To'), from = form.get('From'), callSid = form.get('CallSid');
       let ctx = null;
-      try { ctx = await vercel(env, `/api/bridge/context?number=${encodeURIComponent(to)}`); } catch (e) { console.log('context failed', e.message); }
+      try { ctx = await vercel(env, `/api/bridge/context?number=${encodeURIComponent(to)}&callSid=${encodeURIComponent(callSid)}`); } catch (e) { console.log('context failed', e.message); }
       const headers = { 'Content-Type': 'text/xml' };
       if (!ctx || !ctx.ok) {
         const why = ctx && ctx.reason === 'paused' ? 'This business has reached its plan allowance, so its assistant is paused right now. Please try again later.' : 'This number is not assigned to a business right now. Goodbye.';
@@ -68,9 +68,11 @@ export default {
       }
       const demoFlag = ctx.demo ? '1' : '0';
       const exp = String(Date.now() + 5 * 60 * 1000);
-      const tk = await ticket(env, ctx.businessId, callSid, demoFlag, exp);
+      const limit = String(Math.max(0, Math.floor(Number(ctx.limitSeconds) || 0)));
+      const hold = String(ctx.holdRef || '');
+      const tk = await ticket(env, ctx.businessId, callSid, demoFlag, exp, limit, hold);
       const notice = `This call is answered by an A I agent for ${ctx.businessName}. It is recorded for quality.`;
-      return new Response(`<?xml version="1.0" encoding="UTF-8"?><Response><Say>${xml(notice)}</Say><Connect><Stream url="wss://${url.host}/media"><Parameter name="businessId" value="${xml(ctx.businessId)}"/><Parameter name="callSid" value="${xml(callSid)}"/><Parameter name="from" value="${xml(from)}"/><Parameter name="to" value="${xml(to)}"/><Parameter name="demo" value="${demoFlag}"/><Parameter name="exp" value="${exp}"/><Parameter name="ticket" value="${xml(tk)}"/></Stream></Connect></Response>`, { headers });
+      return new Response(`<?xml version="1.0" encoding="UTF-8"?><Response><Say>${xml(notice)}</Say><Connect><Stream url="wss://${url.host}/media"><Parameter name="businessId" value="${xml(ctx.businessId)}"/><Parameter name="callSid" value="${xml(callSid)}"/><Parameter name="from" value="${xml(from)}"/><Parameter name="to" value="${xml(to)}"/><Parameter name="demo" value="${demoFlag}"/><Parameter name="exp" value="${exp}"/><Parameter name="limit" value="${limit}"/><Parameter name="hold" value="${xml(hold)}"/><Parameter name="ticket" value="${xml(tk)}"/></Stream></Connect></Response>`, { headers });
     }
     if (url.pathname === '/media') {
       if (request.headers.get('Upgrade') !== 'websocket') return new Response('Expected a WebSocket', { status: 426 });
@@ -94,8 +96,9 @@ export class CallSession {
 
   async run(tw) {
     const env = this.env;
-    const model = env.REALTIME_MODEL || 'gpt-realtime-2.1';
-    let verified = false, streamSid = null, callSid = null, businessId = null, demo = false, ctx = null, oai = null, oaiReady = false, closed = false;
+    const usage = { input_token_details: { text_tokens: 0, audio_tokens: 0, cached_tokens: 0, cached_tokens_details: { text_tokens: 0, audio_tokens: 0 } }, output_token_details: { text_tokens: 0, audio_tokens: 0 } };
+    const addUsage = (u) => { if (!u) return; const i = u.input_token_details || {}, o = u.output_token_details || {}, c = i.cached_tokens_details || {}; usage.input_token_details.text_tokens += i.text_tokens || 0; usage.input_token_details.audio_tokens += i.audio_tokens || 0; usage.input_token_details.cached_tokens += i.cached_tokens || 0; usage.input_token_details.cached_tokens_details.text_tokens += c.text_tokens || 0; usage.input_token_details.cached_tokens_details.audio_tokens += c.audio_tokens || 0; usage.output_token_details.text_tokens += o.text_tokens || 0; usage.output_token_details.audio_tokens += o.audio_tokens || 0; };
+    let verified = false, holdRef = null, limitMs = 0, limitTimer = null, model = env.REALTIME_MODEL || 'gpt-realtime-2.1-mini', streamSid = null, callSid = null, businessId = null, demo = false, ctx = null, oai = null, oaiReady = false, closed = false;
     const transcript = [], gaps = [], messages = [];
     let transferRequested = false;
     const startedAt = Date.now();
@@ -119,6 +122,9 @@ export class CallSession {
         switch (ev.type) {
           case 'response.output_audio.delta':
             if (streamSid) { sendTw({ event: 'media', streamSid, media: { payload: ev.delta } }); if (responseStartTs == null) responseStartTs = latestMediaTs; if (ev.item_id) lastAssistantItem = ev.item_id; }
+            break;
+          case 'response.done':
+            addUsage(ev.response && ev.response.usage);
             break;
           case 'response.output_audio_transcript.done':
             if (ev.transcript) transcript.push({ role: 'agent', text: ev.transcript, agent_id: ctx.agent.id, agent_name: `${ctx.agent.persona} · ${ctx.agent.title}`, at: new Date().toISOString() });
@@ -166,12 +172,20 @@ export class CallSession {
       sendOai({ type: 'response.create' });
     };
 
+    const endForLimit = async () => {
+      if (closed || !callSid) return;
+      try { await twilio(env, `/Calls/${callSid}.json`, { Twiml: '<?xml version="1.0" encoding="UTF-8"?><Response><Say>This call has reached its time limit. Goodbye.</Say><Hangup/></Response>' }); }
+      catch (e) { console.log('limit hangup failed', e.message); try { await twilio(env, `/Calls/${callSid}.json`, { Status: 'completed' }); } catch {} }
+      setTimeout(() => this.state.waitUntil(finish()), 12000);
+    };
+
     const finish = async () => {
       if (closed) return; closed = true;
+      if (limitTimer) clearTimeout(limitTimer);
       try { if (oai) oai.close(); } catch {}
       if (!verified) return;
       try {
-        await vercel(env, '/api/bridge/call-ended', { businessId, callSid, from: ctx && ctx.from, demo, transcript, gaps, messages, transferRequested, durationS: Math.round((Date.now() - startedAt) / 1000), agentId: ctx && ctx.agent.id, agentName: ctx && `${ctx.agent.persona} · ${ctx.agent.title}` });
+        await vercel(env, '/api/bridge/call-ended', { businessId, callSid, from: ctx && ctx.from, demo, transcript, gaps, messages, transferRequested, durationS: Math.round((Date.now() - startedAt) / 1000), holdRef, model, usage, agentId: ctx && ctx.agent.id, agentName: ctx && `${ctx.agent.persona} · ${ctx.agent.title}` });
       } catch (e) { console.log('call-ended failed', e.message); }
     };
 
@@ -181,9 +195,12 @@ export class CallSession {
         streamSid = msg.start.streamSid;
         const p = msg.start.customParameters || {};
         businessId = p.businessId; callSid = p.callSid || msg.start.callSid; demo = p.demo === '1';
-        this.state.waitUntil(ticket(env, p.businessId, p.callSid, p.demo, p.exp).then((want) => {
-          if (!env.BRIDGE_SECRET || !same(want, p.ticket) || !(Number(p.exp) > Date.now()) || p.callSid !== msg.start.callSid) throw new Error('invalid stream ticket');
+        this.state.waitUntil(ticket(env, p.businessId, p.callSid, p.demo, p.exp, p.limit, p.hold).then((want) => {
+          if (!env.BRIDGE_SECRET || !same(want, p.ticket) || !(Number(p.exp) > Date.now()) || p.callSid !== msg.start.callSid || !(Number(p.limit) >= 60)) throw new Error('invalid stream ticket');
           verified = true;
+          holdRef = p.hold; limitMs = Number(p.limit) * 1000;
+          // Hard stop at the prepaid limit: end the call even if nothing else does.
+          limitTimer = setTimeout(() => { this.state.waitUntil(endForLimit()); }, Math.max(0, limitMs - 15000));
           return openOpenAI();
         }).then(() => {
           ctx.from = p.from; ctx.to = p.to;
