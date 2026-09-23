@@ -4,6 +4,7 @@
 import { ensureSchema, sql, loadBusiness, loadProfile, loadTeam, newId, readJson, bad } from './_lib/db.js';
 import { applyCorrections } from './_lib/profile.js';
 import { answer } from './_lib/answer.js';
+import { usageFor } from './_lib/usage.js';
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
@@ -34,6 +35,10 @@ export default async function handler(req, res) {
     const agents = team.agents.agents.filter((a) => a.enabled !== false);
     if (!agents.length) return bad(res, 400, 'Every agent is turned off.');
     const business = { name: profile.company?.name?.value || biz.input_value };
+    if (!test && !body.conversationId) {
+      const u = await usageFor(biz.id);
+      if (u.paused) return bad(res, 429, `${business.name} has reached its plan allowance for this month, so the team is paused. The business has been notified.`);
+    }
 
     let convo = null;
     if (body.conversationId) {

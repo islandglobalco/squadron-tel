@@ -1,7 +1,7 @@
 // /api/hq — everything Squadron HQ shows: conversations, escalations, usage
 // against the plan allowance, the knowledge queue, settings and channel
 // status. ?export=csv returns the conversation log as a file.
-import { sql, loadBusiness, bad } from './_lib/db.js';
+import { sql, loadBusiness, loadProfile, bad } from './_lib/db.js';
 import { ensureAuthSchema, currentAccount, PLANS } from './_lib/auth.js';
 import { channelStatus } from './_lib/channels.js';
 
@@ -35,8 +35,10 @@ export default async function handler(req, res) {
     const gaps = await sql().query('SELECT id, conversation_id, question, proposed_answer, status, created_at FROM knowledge_gaps WHERE business_id = $1 ORDER BY created_at DESC LIMIT 200', [biz.id]);
     const minutes = Math.round(usage[0].seconds / 60);
     const paused = (plan.minutes != null && minutes >= plan.minutes) || (plan.conversations != null && usage[0].conversations >= plan.conversations);
+    const prow = await loadProfile(biz.id);
+    const bizName = (prow && prow.profile && prow.profile.company && prow.profile.company.name && prow.profile.company.name.value) || biz.input_value;
     return res.status(200).json({
-      business: { id: biz.id, name: biz.input_value, status: biz.status, phone_number: biz.phone_number },
+      business: { id: biz.id, name: bizName, status: biz.status, phone_number: biz.phone_number },
       account: acc ? { email: acc.email, plan: acc.plan, trialEndsAt: acc.trial_ends_at } : null,
       plan,
       usage: { periodStart: since.toISOString(), minutes, conversations: usage[0].conversations, escalations: usage[0].escalations, testConversations: tests[0].n, paused },
