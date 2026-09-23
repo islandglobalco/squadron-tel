@@ -4,7 +4,8 @@
   var script = document.currentScript || (function () { var s = document.getElementsByTagName('script'); return s[s.length - 1]; })();
   var business = script && script.getAttribute('data-business');
   if (!business) return;
-  var origin = (script.src || '').replace(/\/widget\.js.*$/, '') || 'https://squadron.tel';
+  // squadron.tel redirects to www, and a redirected preflight fails, so the API is always called on www.
+  var origin = ((script.src || '').replace(/\/widget\.js.*$/, '') || 'https://www.squadron.tel').replace('https://squadron.tel', 'https://www.squadron.tel');
   var accent = script.getAttribute('data-color') || '#CEEB00';
   var conversationId = null, open = false, busy = false, agent = null;
 
