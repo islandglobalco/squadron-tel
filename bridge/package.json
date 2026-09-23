@@ -1,0 +1,10 @@
+{
+  "name": "squadron-bridge",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Squadron phone bridge: Twilio Media Streams to OpenAI Realtime, with knowledge, transfer and message tools.",
+  "engines": { "node": ">=20" },
+  "scripts": { "start": "node server.js" },
+  "dependencies": { "ws": "^8.18.0" }
+}
