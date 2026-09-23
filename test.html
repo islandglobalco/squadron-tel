@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test your team — Squadron</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="/onboard.css">
+<style>
+.modes{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.mode{font-size:16px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;padding:14px 22px;border-radius:14px;border:2px solid rgba(255,255,255,0.14);background:transparent;color:var(--slate);cursor:pointer}
+.mode.on{border-color:var(--signal);color:var(--navy);background:var(--signal)}
+.mode.soon{opacity:0.55;cursor:default}
+.wrap{display:grid;grid-template-columns:300px 1fr;gap:24px;align-items:start}
+.roster{display:flex;flex-direction:column;gap:10px}
+.r{display:flex;gap:12px;align-items:center;padding:10px;border-radius:14px;background:rgba(255,255,255,0.05);border:2px solid transparent}
+.r.on{border-color:var(--signal)}
+.r img{width:48px;height:48px;border-radius:10px;object-fit:cover;background:#0E1A3F}
+.r b{display:block;font-family:'Barlow Condensed',sans-serif;font-weight:800;text-transform:uppercase;font-size:20px;line-height:1}
+.r small{font-size:13px;font-weight:700;color:var(--signal);text-transform:uppercase;letter-spacing:0.04em}
+.chat{border-radius:22px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);display:flex;flex-direction:column;min-height:560px}
+.msgs{flex:1;padding:24px;display:flex;flex-direction:column;gap:18px;overflow-y:auto;max-height:64vh}
+.m{display:flex;gap:12px;max-width:85%}
+.m.me{align-self:flex-end;flex-direction:row-reverse}
+.m img{width:44px;height:44px;border-radius:10px;object-fit:cover;flex:none;background:#0E1A3F}
+.b{padding:14px 18px;border-radius:18px;font-size:18px;line-height:1.5;font-weight:500;background:rgba(255,255,255,0.08)}
+.m.me .b{background:var(--signal);color:var(--navy);font-weight:600}
+.m .who{font-size:12px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--signal);margin-bottom:6px}
+.m.refusal .b{border:2px solid rgba(254,188,46,0.5)}
+.m.transfer .b{border:2px solid rgba(255,95,87,0.5)}
+.cits{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.cit{font-size:12px;font-weight:800;padding:5px 10px;border-radius:999px;background:rgba(34,217,90,0.14);color:var(--green);border:1px solid rgba(34,217,90,0.35);cursor:pointer}
+.cit.gap{background:rgba(254,188,46,0.12);color:var(--amber);border-color:rgba(254,188,46,0.4);cursor:default}
+.citbox{margin-top:8px;font-size:14px;line-height:1.5;color:var(--slate);border-left:3px solid var(--green);padding:8px 12px;display:none}
+.citbox a{color:#fff;word-break:break-all}
+.compose{display:flex;gap:10px;padding:16px;border-top:1px solid rgba(255,255,255,0.1)}
+.compose input{flex:1;font:inherit;font-size:18px;font-weight:600;padding:16px 20px;border-radius:999px;border:2px solid rgba(255,255,255,0.22);background:rgba(255,255,255,0.06);color:#fff;outline:none}
+.compose input:focus{border-color:var(--signal)}
+.starters{display:flex;flex-wrap:wrap;gap:8px;padding:0 24px 20px}
+.starter{font-size:14px;font-weight:700;padding:9px 14px;border-radius:999px;border:2px solid rgba(255,255,255,0.2);background:transparent;color:#fff;cursor:pointer}
+.typing{font-size:15px;color:var(--muted);font-weight:600;padding:0 24px 12px}
+@media (max-width:860px){.wrap{grid-template-columns:1fr}.roster{flex-direction:row;flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/" aria-label="Squadron"><svg class="nav-logo-svg" viewBox="0 -430 2278 492" xmlns="http://www.w3.org/2000/svg" aria-label="Squadron">
+      <g transform="translate(0,0)" data-letter="S" data-idx="0"><g class="logo-letter">
+        <path d="M 6 -371.28125 L 75 -429.65625 L 199 -429.65625 L 268 -371.28125 L 268.5 -304.921875 L 167.5 -304.921875 L 167.5 -349.015625 L 106.5 -349.015625 L 106.5 -259.5625 L 268 -259.984375 L 270 -57.953125 L 201 0.421875 L 77 0.421875 L 8 -57.953125 L 7.5 -124.3125 L 108.5 -124.3125 L 108.5 -80.21875 L 169.5 -80.21875 L 169.5 -169.6875 L 148.5 -169.6875 L 148.5 -169.265625 L 8 -169.265625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(286,0)" data-letter="Q" data-idx="1"><g class="logo-letter">
+        <path d="M 200 0.84375 L 187.5 0.84375 L 187.5 63.421875 L 87 63.421875 L 87 0.84375 L 74.5 0.84375 L 5.5 -57.546875 L 5.5 -370.015625 L 74.5 -428.40625 L 198 -428.40625 L 268 -369.1875 L 268 -56.703125 Z M 106 -347.765625 L 106 -82.3125 L 167.5 -82.3125 L 167.5 -346.921875 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(572,0)" data-letter="U" data-idx="2"><g class="logo-letter">
+        <path d="M 6.5 -428.40625 L 108 -428.40625 L 108 -83.15625 L 169 -83.15625 L 169 -352.796875 L 169.5 -352.796875 L 169.5 -429.234375 L 269.5 -429.234375 L 269.5 -58.375 L 200.5 0 L 76.5 0 L 7.5 -58.375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(858,0)" data-letter="A" data-idx="3"><g class="logo-letter">
+        <path d="M 107.5 0 L 7 0 L 7 -199.078125 L 6.5 -199.078125 L 6.5 -372.546875 L 75.5 -430.921875 L 199.5 -430.921875 L 268.5 -372.546875 L 268.5 -325.078125 L 269.5 0 L 169.5 0 L 168.5 -172.203125 L 107.5 -172.203125 Z M 107 -257.046875 L 168 -257.046875 L 168 -347.765625 L 107 -347.765625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1144,0)" data-letter="D" data-idx="4"><g class="logo-letter">
+        <path d="M 269.5 -55.859375 L 200.5 0.84375 L 30 0.421875 L 30 0 L 7.5 0 L 6.5 -429.65625 L 199.5 -429.65625 L 268.5 -371.28125 Z M 108 -83.578125 L 169 -83.578125 L 168 -359.9375 L 107 -359.9375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1430,0)" data-letter="R" data-idx="5"><g class="logo-letter">
+        <path d="M 108 0.421875 L 7.5 0.421875 L 7 -430.5 L 200 -430.5 L 269 -372.125 L 269 -324.65625 L 270 -233.515625 L 268.5 -233.09375 L 269 -230.15625 L 250 -214.203125 L 250.5 -214.203125 L 269.5 -198.234375 L 269 -195.296875 L 270.5 -194.875 L 270 0.421875 L 170 0.421875 L 169 -171.78125 L 108 -171.78125 Z M 107.5 -256.625 L 168.5 -256.625 L 168.5 -347.34375 L 107.5 -347.34375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1716,0)" data-letter="O" data-idx="6"><g class="logo-letter">
+        <path d="M 202 0.84375 L 76.5 0.84375 L 7.5 -57.546875 L 6.5 -372.546875 L 75.5 -430.921875 L 199 -430.921875 L 269 -371.703125 L 270 -56.703125 Z M 107 -350.28125 L 108 -82.3125 L 169.5 -82.3125 L 168.5 -349.4375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(2002,0)" data-letter="N" data-idx="7"><g class="logo-letter">
+        <path d="M 109 0.421875 L 8.5 0.421875 L 8.5 -198.65625 L 8 -198.65625 L 7 -430.5 L 108.5 -430.5 L 169.5 -263.34375 L 169.5 -430.5 L 270 -430.5 L 270 -324.65625 L 271 0.421875 L 170 0.421875 L 108.5 -162.546875 Z" fill="white"/>
+      </g></g>
+    </svg></a>
+  <a class="nav-right" href="#" id="backLink">← Back to the team</a>
+</nav>
+<main>
+  <div class="steps">
+    <span class="step done">1 · Enter your business</span>
+    <span class="step done">2 · Analyze</span>
+    <span class="step done">3 · Review profile</span>
+    <span class="step done">4 · Build the team</span>
+    <span class="step on">5 · Test</span>
+    <span class="step">6 · Deploy</span>
+  </div>
+  <p class="eyebrow">Step 5</p>
+  <h1>Test your <em>team.</em></h1>
+  <p class="lead">Ask what your customers ask. Every answer shows the source it came from, and anything your profile does not cover is refused honestly and added to your knowledge queue.</p>
+  <div class="modes">
+    <button class="mode on" id="modeChat">Chat</button>
+    <button class="mode soon" id="modeVoice" title="Voice testing arrives in the next update">Voice · next update</button>
+    <button class="mode soon" id="modePhone" title="A demo number arrives in the next update">Call a demo number · next update</button>
+  </div>
+  <div class="error" id="err"></div>
+  <div class="wrap">
+    <div class="roster" id="roster"></div>
+    <div class="chat">
+      <div class="msgs" id="msgs"></div>
+      <div class="typing" id="typing"></div>
+      <div class="starters" id="starters"></div>
+      <div class="compose">
+        <input id="input" placeholder="Type a customer question" autocomplete="off" onkeydown="if(event.key==='Enter')send()">
+        <button class="btn" id="sendBtn" onclick="send()">Send</button>
+        <button class="btn ghost" onclick="reset()">New conversation</button>
+      </div>
+    </div>
+  </div>
+  <div class="bar">
+    <span class="saved"></span>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <button class="btn ghost" onclick="location.href='/team?t='+encodeURIComponent(token)">Edit the team</button>
+      <button class="btn" disabled title="Deployment arrives in the next update">Deploy · next update</button>
+    </div>
+  </div>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const token = new URLSearchParams(location.search).get('t');
+let agents = [], conversationId = null, busy = false;
+$('backLink').href = '/team?t=' + encodeURIComponent(token || '');
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+function err(msg) { const e = $('err'); e.textContent = msg || ''; e.style.display = msg ? 'block' : 'none'; }
+async function api(path, body, method) {
+  const r = await fetch(path, { method: method || (body ? 'POST' : 'GET'), headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
+  const j = await r.json().catch(() => ({ error: 'Bad response from server' }));
+  if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+  return j;
+}
+function roster(activeId) {
+  $('roster').innerHTML = agents.map((a) => `<div class="r ${a.id === activeId ? 'on' : ''}"><img src="${esc(a.portrait)}" alt=""><div><b>${esc(a.persona)}</b><small>${esc(a.title)}</small></div></div>`).join('');
+}
+function addMe(text) {
+  const d = document.createElement('div'); d.className = 'm me'; d.innerHTML = `<div class="b">${esc(text)}</div>`; $('msgs').appendChild(d); scroll();
+}
+function addAgent(r) {
+  const d = document.createElement('div'); d.className = 'm ' + (r.replyType === 'refusal' || r.replyType === 'take_message' ? 'refusal' : r.replyType === 'transfer' ? 'transfer' : '');
+  const cits = (r.citations || []).map((c, i) => `<span class="cit" onclick="this.parentNode.nextElementSibling.style.display='block';this.parentNode.nextElementSibling.innerHTML=${JSON.stringify(citHtml(c)).replace(/"/g, '&quot;')}">Source ${i + 1}</span>`).join('');
+  const gap = r.replyType === 'refusal' || r.replyType === 'take_message' ? `<span class="cit gap">Not in your profile · added to your knowledge queue</span>` : r.replyType === 'transfer' ? `<span class="cit gap">Transfer to a person</span>` : '';
+  d.innerHTML = `<img src="${esc(r.agent.portrait)}" alt=""><div><div class="who">${esc(r.agent.persona)} · ${esc(r.agent.title)}${r.handoff ? ' · handoff' : ''}</div><div class="b">${esc(r.reply)}</div><div class="cits">${cits}${gap}</div><div class="citbox"></div></div>`;
+  $('msgs').appendChild(d); scroll(); roster(r.agent.id);
+}
+function citHtml(c) {
+  const s = c.source || {};
+  return `<b>${esc(c.text)}</b><br>${s.quote ? '“' + esc(s.quote) + '”' : ''}${s.url ? `<br><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.url)}</a>` : ''}${s.kind === 'owner' ? '<br>Corrected by you' : ''}`;
+}
+function scroll() { const m = $('msgs'); m.scrollTop = m.scrollHeight; }
+async function send(text) {
+  const msg = (text || $('input').value).trim();
+  if (!msg || busy) return;
+  busy = true; $('sendBtn').disabled = true; $('input').value = '';
+  addMe(msg); $('typing').textContent = 'The team is answering…'; err('');
+  try {
+    const r = await api('/api/converse', { token, conversationId, message: msg, channel: 'chat', test: true });
+    conversationId = r.conversationId;
+    addAgent(r);
+  } catch (e) { err(e.message); }
+  finally { busy = false; $('sendBtn').disabled = false; $('typing').textContent = ''; $('input').focus(); }
+}
+function reset() { conversationId = null; $('msgs').innerHTML = ''; roster(null); }
+(async () => {
+  if (!token) { location.href = '/start'; return; }
+  try {
+    const r = await api('/api/team?token=' + encodeURIComponent(token));
+    if (!r.agents) { location.href = '/team?t=' + encodeURIComponent(token); return; }
+    agents = r.agents.filter((a) => a.enabled !== false);
+    roster(null);
+    const starters = ['Hi, what do you offer?', 'What are your hours?', 'How much does it cost?', 'What is your refund policy?', 'Can I speak to a person?', 'Do you deliver to Alaska?'];
+    $('starters').innerHTML = starters.map((s) => `<button class="starter" onclick="send(${JSON.stringify(s).replace(/"/g, '&quot;')})">${esc(s)}</button>`).join('');
+  } catch (e) { err(e.message); }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your team — Squadron</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="/onboard.css">
+<style>
+.team{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;margin-bottom:30px}
+.agent{border-radius:22px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);overflow:hidden;display:flex;flex-direction:column}
+.agent.off{opacity:0.45}
+.agent .head{display:flex;gap:16px;align-items:center;padding:18px 18px 0}
+.agent img{width:84px;height:84px;border-radius:16px;object-fit:cover;background:#0E1A3F;flex:none}
+.agent .title{font-family:'Barlow Condensed',sans-serif;font-weight:900;text-transform:uppercase;font-size:30px;line-height:1;letter-spacing:0.01em}
+.agent .who{font-size:15px;font-weight:700;color:var(--signal);margin-top:6px;letter-spacing:0.04em;text-transform:uppercase}
+.agent .body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:14px;flex:1}
+.agent p{font-size:16px;line-height:1.55;color:#E5E9F5;font-weight:500}
+.agent .lbl{font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:13px;font-weight:700;padding:6px 10px;border-radius:999px;background:rgba(206,235,0,0.12);color:var(--signal);border:1px solid rgba(206,235,0,0.3)}
+.chip.out{background:rgba(255,255,255,0.06);color:var(--slate);border-color:rgba(255,255,255,0.15)}
+.esc{font-size:15px;line-height:1.55;color:#fff;font-weight:500;padding:12px 14px;border-radius:12px;background:rgba(254,188,46,0.1);border:1px solid rgba(254,188,46,0.4)}
+.greet{font-size:15px;line-height:1.55;color:var(--slate);font-style:italic}
+.why{font-size:14px;color:var(--muted);line-height:1.5}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.play{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;padding:10px 16px;border-radius:999px;border:2px solid rgba(255,255,255,0.28);background:transparent;color:#fff;cursor:pointer}
+.play.on{border-color:var(--signal);color:var(--signal)}
+.notes{font-size:18px;line-height:1.6;color:var(--slate);font-weight:500;padding:20px 24px;border-radius:16px;background:rgba(255,255,255,0.05);margin-bottom:30px;max-width:900px}
+.editform{display:none;padding:0 18px 18px}
+.editform label{display:block;font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin:10px 0 4px}
+.editform textarea,.editform input{width:100%;font:inherit;font-size:15px;font-weight:500;padding:10px 12px;border-radius:10px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#fff;outline:none}
+.editform textarea:focus,.editform input:focus{border-color:var(--signal)}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/" aria-label="Squadron"><svg class="nav-logo-svg" viewBox="0 -430 2278 492" xmlns="http://www.w3.org/2000/svg" aria-label="Squadron">
+      <g transform="translate(0,0)" data-letter="S" data-idx="0"><g class="logo-letter">
+        <path d="M 6 -371.28125 L 75 -429.65625 L 199 -429.65625 L 268 -371.28125 L 268.5 -304.921875 L 167.5 -304.921875 L 167.5 -349.015625 L 106.5 -349.015625 L 106.5 -259.5625 L 268 -259.984375 L 270 -57.953125 L 201 0.421875 L 77 0.421875 L 8 -57.953125 L 7.5 -124.3125 L 108.5 -124.3125 L 108.5 -80.21875 L 169.5 -80.21875 L 169.5 -169.6875 L 148.5 -169.6875 L 148.5 -169.265625 L 8 -169.265625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(286,0)" data-letter="Q" data-idx="1"><g class="logo-letter">
+        <path d="M 200 0.84375 L 187.5 0.84375 L 187.5 63.421875 L 87 63.421875 L 87 0.84375 L 74.5 0.84375 L 5.5 -57.546875 L 5.5 -370.015625 L 74.5 -428.40625 L 198 -428.40625 L 268 -369.1875 L 268 -56.703125 Z M 106 -347.765625 L 106 -82.3125 L 167.5 -82.3125 L 167.5 -346.921875 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(572,0)" data-letter="U" data-idx="2"><g class="logo-letter">
+        <path d="M 6.5 -428.40625 L 108 -428.40625 L 108 -83.15625 L 169 -83.15625 L 169 -352.796875 L 169.5 -352.796875 L 169.5 -429.234375 L 269.5 -429.234375 L 269.5 -58.375 L 200.5 0 L 76.5 0 L 7.5 -58.375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(858,0)" data-letter="A" data-idx="3"><g class="logo-letter">
+        <path d="M 107.5 0 L 7 0 L 7 -199.078125 L 6.5 -199.078125 L 6.5 -372.546875 L 75.5 -430.921875 L 199.5 -430.921875 L 268.5 -372.546875 L 268.5 -325.078125 L 269.5 0 L 169.5 0 L 168.5 -172.203125 L 107.5 -172.203125 Z M 107 -257.046875 L 168 -257.046875 L 168 -347.765625 L 107 -347.765625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1144,0)" data-letter="D" data-idx="4"><g class="logo-letter">
+        <path d="M 269.5 -55.859375 L 200.5 0.84375 L 30 0.421875 L 30 0 L 7.5 0 L 6.5 -429.65625 L 199.5 -429.65625 L 268.5 -371.28125 Z M 108 -83.578125 L 169 -83.578125 L 168 -359.9375 L 107 -359.9375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1430,0)" data-letter="R" data-idx="5"><g class="logo-letter">
+        <path d="M 108 0.421875 L 7.5 0.421875 L 7 -430.5 L 200 -430.5 L 269 -372.125 L 269 -324.65625 L 270 -233.515625 L 268.5 -233.09375 L 269 -230.15625 L 250 -214.203125 L 250.5 -214.203125 L 269.5 -198.234375 L 269 -195.296875 L 270.5 -194.875 L 270 0.421875 L 170 0.421875 L 169 -171.78125 L 108 -171.78125 Z M 107.5 -256.625 L 168.5 -256.625 L 168.5 -347.34375 L 107.5 -347.34375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1716,0)" data-letter="O" data-idx="6"><g class="logo-letter">
+        <path d="M 202 0.84375 L 76.5 0.84375 L 7.5 -57.546875 L 6.5 -372.546875 L 75.5 -430.921875 L 199 -430.921875 L 269 -371.703125 L 270 -56.703125 Z M 107 -350.28125 L 108 -82.3125 L 169.5 -82.3125 L 168.5 -349.4375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(2002,0)" data-letter="N" data-idx="7"><g class="logo-letter">
+        <path d="M 109 0.421875 L 8.5 0.421875 L 8.5 -198.65625 L 8 -198.65625 L 7 -430.5 L 108.5 -430.5 L 169.5 -263.34375 L 169.5 -430.5 L 270 -430.5 L 270 -324.65625 L 271 0.421875 L 170 0.421875 L 108.5 -162.546875 Z" fill="white"/>
+      </g></g>
+    </svg></a>
+  <a class="nav-right" href="#" id="backLink">← Back to the profile</a>
+</nav>
+<main>
+  <div class="steps">
+    <span class="step done">1 · Enter your business</span>
+    <span class="step done">2 · Analyze</span>
+    <span class="step done">3 · Review profile</span>
+    <span class="step on">4 · Build the team</span>
+    <span class="step">5 · Test</span>
+    <span class="step">6 · Deploy</span>
+  </div>
+  <section id="gen">
+    <p class="eyebrow">Step 4</p>
+    <h1>Building your <em>team.</em></h1>
+    <p class="lead">Squadron reads your profile and creates the agents your business needs: each with a job description, a scope, an escalation rule and a voice from the library.</p>
+    <div class="log" id="log"><div class="now">Designing the team from your Business Profile</div></div>
+    <div class="error" id="err"></div>
+  </section>
+  <section id="show" class="hidden">
+    <p class="eyebrow">Step 4</p>
+    <h1>Your <em>team.</em></h1>
+    <p class="lead">Every agent answers only from your profile. Edit any job description, scope or escalation rule, or turn an agent off. Play a voice to hear it.</p>
+    <div class="notes" id="notes"></div>
+    <div class="team" id="team"></div>
+    <div class="bar">
+      <span class="saved" id="savedMsg"></span>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button class="btn ghost" onclick="regenerate()">Rebuild the team</button>
+        <button class="btn" onclick="location.href='/test?t='+encodeURIComponent(token)">Test my team →</button>
+      </div>
+    </div>
+  </section>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const token = new URLSearchParams(location.search).get('t');
+let agents = [], notes = '';
+let audio = null, playingBtn = null;
+$('backLink').href = '/start?t=' + encodeURIComponent(token || '');
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+function err(msg) { const e = $('err'); e.textContent = msg || ''; e.style.display = msg ? 'block' : 'none'; }
+async function api(path, body, method) {
+  const r = await fetch(path, { method: method || (body ? 'POST' : 'GET'), headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
+  const j = await r.json().catch(() => ({ error: 'Bad response from server' }));
+  if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+  return j;
+}
+function card(a) {
+  return `<div class="agent ${a.enabled === false ? 'off' : ''}" id="card_${a.id}">
+    <div class="head"><img src="${esc(a.portrait)}" alt="${esc(a.persona)}"><div><div class="title">${esc(a.title)}</div><div class="who">${esc(a.persona)} · ${esc(a.tone)}</div></div></div>
+    <div class="body">
+      <p>${esc(a.job_description)}</p>
+      <div><div class="lbl">Handles</div><div class="chips">${(a.scope || []).map((s) => `<span class="chip">${esc(s)}</span>`).join('')}</div></div>
+      ${(a.out_of_scope || []).length ? `<div><div class="lbl">Hands off</div><div class="chips">${a.out_of_scope.map((s) => `<span class="chip out">${esc(s)}</span>`).join('')}</div></div>` : ''}
+      <div><div class="lbl">Escalation rule</div><div class="esc">${esc(a.escalation_rule)}</div></div>
+      <div><div class="lbl">Opens with</div><div class="greet">“${esc(a.greeting)}”</div></div>
+      <div class="why">${esc(a.why)}</div>
+      <div class="acts">
+        <button class="play" onclick="play(${a.persona_idx}, this)">▶ Hear ${esc(a.persona)}</button>
+        <button class="play" onclick="toggleEdit('${a.id}')">Edit</button>
+        <button class="play" onclick="toggle('${a.id}', ${a.enabled === false})">${a.enabled === false ? 'Turn on' : 'Turn off'}</button>
+      </div>
+    </div>
+    <div class="editform" id="edit_${a.id}">
+      <label>Title</label><input id="f_title_${a.id}" value="${esc(a.title)}">
+      <label>Job description</label><textarea id="f_job_${a.id}" rows="3">${esc(a.job_description)}</textarea>
+      <label>Handles (one per line)</label><textarea id="f_scope_${a.id}" rows="4">${esc((a.scope || []).join('\n'))}</textarea>
+      <label>Escalation rule</label><textarea id="f_esc_${a.id}" rows="3">${esc(a.escalation_rule)}</textarea>
+      <label>Opening line</label><textarea id="f_greet_${a.id}" rows="2">${esc(a.greeting)}</textarea>
+      <div class="acts" style="margin-top:12px"><button class="btn small" onclick="saveEdit('${a.id}')">Save</button><button class="btn small ghost" onclick="toggleEdit('${a.id}')">Cancel</button></div>
+    </div>
+  </div>`;
+}
+function render() {
+  $('notes').textContent = notes || '';
+  $('notes').style.display = notes ? 'block' : 'none';
+  $('team').innerHTML = agents.map(card).join('');
+}
+function toggleEdit(id) { const e = $('edit_' + id); e.style.display = e.style.display === 'block' ? 'none' : 'block'; }
+async function saveEdit(id) {
+  const patch = { token, agentId: id, title: $('f_title_' + id).value.trim(), job_description: $('f_job_' + id).value.trim(), scope: $('f_scope_' + id).value.split('\n').map((s) => s.trim()).filter(Boolean), escalation_rule: $('f_esc_' + id).value.trim(), greeting: $('f_greet_' + id).value.trim() };
+  await patchAgent(patch);
+}
+async function toggle(id, on) { await patchAgent({ token, agentId: id, enabled: on }); }
+async function patchAgent(patch) {
+  $('savedMsg').textContent = 'Saving…';
+  try { const r = await api('/api/team', patch, 'PATCH'); agents = r.agents; render(); $('savedMsg').textContent = 'Saved.'; setTimeout(() => ($('savedMsg').textContent = ''), 2500); }
+  catch (e) { $('savedMsg').textContent = 'Could not save: ' + e.message; }
+}
+async function play(idx, btn) {
+  if (audio) { audio.pause(); audio = null; if (playingBtn) playingBtn.classList.remove('on'); if (playingBtn === btn) { playingBtn = null; return; } }
+  playingBtn = btn; btn.classList.add('on');
+  audio = new Audio('/api/tts?agent=' + idx);
+  audio.onended = () => { btn.classList.remove('on'); audio = null; playingBtn = null; };
+  audio.play().catch(() => { btn.classList.remove('on'); });
+}
+async function regenerate() {
+  $('show').classList.add('hidden'); $('gen').classList.remove('hidden'); err('');
+  try { const r = await api('/api/team', { token }); agents = r.agents; notes = r.routing_notes; render(); $('gen').classList.add('hidden'); $('show').classList.remove('hidden'); }
+  catch (e) { err(e.message); }
+}
+(async () => {
+  if (!token) { location.href = '/start'; return; }
+  try {
+    const r = await api('/api/team?token=' + encodeURIComponent(token));
+    if (r.agents) { agents = r.agents; notes = r.routing_notes; render(); $('gen').classList.add('hidden'); $('show').classList.remove('hidden'); }
+    else await regenerate();
+  } catch (e) { err(e.message); }
+})();
+</script>
+</body>
+</html>

@@ -29,6 +29,12 @@
     },
     "api/profile.js": {
       "maxDuration": 30
+    },
+    "api/team.js": {
+      "maxDuration": 180
+    },
+    "api/converse.js": {
+      "maxDuration": 60
     }
   },
   "routes": [
@@ -83,6 +89,22 @@
     {
       "src": "/api/profile",
       "dest": "/api/profile.js"
+    },
+    {
+      "src": "/team",
+      "dest": "/team.html"
+    },
+    {
+      "src": "/test",
+      "dest": "/test.html"
+    },
+    {
+      "src": "/api/team",
+      "dest": "/api/team.js"
+    },
+    {
+      "src": "/api/converse",
+      "dest": "/api/converse.js"
     },
     {
       "src": "/(.*)",
