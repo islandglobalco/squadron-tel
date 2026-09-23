@@ -56,7 +56,8 @@ const server = http.createServer(async (req, res) => {
     try { ctx = await vercel(`/api/bridge/context?number=${encodeURIComponent(to)}`); } catch (e) { log('context failed', e.message); }
     res.writeHead(200, { 'Content-Type': 'text/xml' });
     if (!ctx || !ctx.ok) {
-      return res.end(`<?xml version="1.0" encoding="UTF-8"?><Response><Say>This number is not assigned to a business right now. Goodbye.</Say><Hangup/></Response>`);
+      const why = ctx && ctx.reason === 'paused' ? 'This business has reached its plan allowance, so its assistant is paused right now. Please try again later.' : 'This number is not assigned to a business right now. Goodbye.';
+      return res.end(`<?xml version="1.0" encoding="UTF-8"?><Response><Say>${xml(why)}</Say><Hangup/></Response>`);
     }
     const host = PUBLIC_HOST || req.headers.host;
     const notice = `This call is answered by an A I agent for ${ctx.businessName}. It is recorded for quality.`;
