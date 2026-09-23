@@ -107,7 +107,7 @@ function render() {
     s += `<p class="big">Your plan is <strong>${esc(st.planInfo.name)}</strong>, paid through ${date(st.periodEnd)}.</p>`;
     s += `<p class="detail">Voice minutes this period: ${st.minutesUsed.toLocaleString()} used of ${st.minutesIncluded.toLocaleString()}. Prepaid balance left: ${st.balancePercent}%. Chat has no conversation limit; it draws on the same prepaid balance.</p>`;
   } else {
-    s += `<p class="big">You have no active paid plan, so your team is not answering yet.</p><p class="detail">Choose a plan below. Your invoice shows the wire details, and your team is built and switched on as soon as the payment lands.</p>`;
+    s += `<p class="big">You have no active paid plan, so your team is not answering yet.</p><p class="detail">${data.cards ? 'Choose a plan below. Pay by card and your team is built and switched on right away, or pay by bank wire or ACH and it switches on as soon as the transfer lands.' : 'Choose a plan below. Your invoice shows the wire details, and your team is built and switched on as soon as the payment lands.'}</p>`;
   }
   if (data.notice) s += `<p class="ok">${esc(data.notice)}</p>`;
   let t = null; try { t = localStorage.getItem('sqToken'); } catch (_) {}
@@ -121,7 +121,7 @@ function render() {
   for (const i of pending) {
     const w = i.wire || {};
     h += `<div class="inv"><h3>${esc(i.label)}: ${money(i.amount_cents)}</h3>
-      <p class="detail" style="margin-bottom:14px">Send a wire or ACH transfer with these details. Put the reference in the memo so we can match your payment.</p>
+      <p class="detail" style="margin-bottom:14px">${data.cards ? 'Pay by card with the button below, or send a wire or ACH transfer with these details.' : 'Send a wire or ACH transfer with these details.'} Put the reference in the memo so we can match your payment.</p>
       <dl class="wire">
         <dt>Reference (memo)</dt><dd class="ref">${esc(w.reference)}</dd>
         <dt>Amount</dt><dd>${money(i.amount_cents)}</dd>
