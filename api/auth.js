@@ -34,6 +34,42 @@ export default async function handler(req, res) {
       if (!biz.account_id) await sql().query('UPDATE businesses SET account_id = $2 WHERE id = $1 AND account_id IS NULL', [biz.id, acc.id]);
       return res.status(200).json({ ok: true });
     }
+    if (action === 'delete') {
+      // Permanently deletes the signed-in account: every team, profile,
+      // conversation, recording and usage row. Paid invoice records are kept
+      // for tax purposes, detached from any email address.
+      const acc = await currentAccount(req);
+      if (!acc) return bad(res, 401, 'Log in first.');
+      const full = await findAccount(acc.email);
+      if (!full || !verifyPassword(String(body.password || ''), full.pass_hash)) return bad(res, 401, 'That password is not correct.');
+      const ids = (await sql().query('SELECT id FROM businesses WHERE account_id = $1', [acc.id])).map((r) => r.id);
+      if (ids.length && process.env.BLOB_READ_WRITE_TOKEN) {
+        try {
+          const { list, del } = await import('@vercel/blob');
+          for (const id of ids) {
+            let cursor;
+            do {
+              const page = await list({ prefix: `recordings/${id}/`, cursor, token: process.env.BLOB_READ_WRITE_TOKEN });
+              if (page.blobs.length) await del(page.blobs.map((b) => b.url), { token: process.env.BLOB_READ_WRITE_TOKEN });
+              cursor = page.hasMore ? page.cursor : undefined;
+            } while (cursor);
+          }
+        } catch (e) { console.error('[auth delete blobs]', e.message); }
+      }
+      const q = async (text, params) => { try { await sql().query(text, params); } catch (e) { if (!/does not exist/.test(e.message)) throw e; } };
+      if (ids.length) {
+        await q('DELETE FROM calls WHERE business_id = ANY($1)', [ids]);
+        await q('UPDATE demo_numbers SET business_id = NULL, expires_at = NULL, assigned_at = NULL WHERE business_id = ANY($1)', [ids]);
+        await q('DELETE FROM businesses WHERE id = ANY($1)', [ids]);
+      }
+      await q('DELETE FROM spend WHERE account_id = $1 AND settled = true', [acc.id]);
+      await q("UPDATE invoices SET status = 'cancelled' WHERE account_id = $1 AND status = 'pending'", [acc.id]);
+      await q('DELETE FROM password_resets WHERE account_id = $1', [acc.id]);
+      await sql().query('DELETE FROM accounts WHERE id = $1', [acc.id]);
+      await sendEmail({ to: acc.email, subject: 'Your Squadron account is deleted', text: 'Your Squadron account, teams, conversations and call recordings have been permanently deleted. If you did not do this, reply to this email right away.' }).catch(() => {});
+      res.setHeader('Set-Cookie', clearCookie());
+      return res.status(200).json({ ok: true });
+    }
     if (action === 'logout') { res.setHeader('Set-Cookie', clearCookie()); return res.status(200).json({ ok: true }); }
     await sql().query(`CREATE TABLE IF NOT EXISTS password_resets (
       token_hash TEXT PRIMARY KEY, account_id TEXT NOT NULL, expires_at TIMESTAMPTZ NOT NULL, used_at TIMESTAMPTZ, created_at TIMESTAMPTZ NOT NULL DEFAULT now())`);
