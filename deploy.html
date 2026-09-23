@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Deploy Your Squad — Squadron</title>
-<meta name="description" content="Get your AI support agents live in 5 minutes. No credit card required.">
+<meta name="description" content="Request access to Squadron. 14-day trial, no credit card required.">
 <style>
   :root { --navy: #0a0e1a; --navy2: #111827; --gold: #DEFF00; --gold2: #FFD700; --white: #fff; --mid: #8b9ab0; --card: #141c2e; --border: #1e2d45; --success: #22c55e; --radius: 12px; }
   * { margin:0; padding:0; box-sizing:border-box; }
@@ -78,15 +78,15 @@
   </div>
 </div>
 <div class="deploy-hero">
-  <div class="deploy-badge">Agents live in under 5 minutes</div>
+  <div class="deploy-badge">14-day trial · No card required</div>
   <h1>Launch Your<br><span>AI Support Squad</span></h1>
-  <p>Set up your voice and chat agents in minutes. No engineers needed. Your first 250 minutes are free.</p>
+  <p>Tell us about your business and pick a plan. Onboarding is being rebuilt around your business profile, and we will email you when your team is ready to build.</p>
 </div>
 <div id="formCard" class="form-card">
   <div class="plan-toggle">
-    <div class="plan-opt selected" onclick="selectPlan('scout',this)"><div class="plan-name">Scout</div><div class="plan-price">$99<span style="font-size:14px;font-weight:400;color:var(--mid)">/mo</span></div><div class="plan-detail">250 voice min · 3 agents</div><div class="plan-free-badge">FREE TRIAL</div></div>
-    <div class="plan-opt" onclick="selectPlan('commander',this)"><div class="plan-name">Commander</div><div class="plan-price">$299<span style="font-size:14px;font-weight:400;color:var(--mid)">/mo</span></div><div class="plan-detail">1,000 min · API access</div></div>
-    <div class="plan-opt" onclick="selectPlan('hq',this)"><div class="plan-name">HQ</div><div class="plan-price">$799<span style="font-size:14px;font-weight:400;color:var(--mid)">/mo</span></div><div class="plan-detail">Unlimited · White-label</div></div>
+    <div class="plan-opt selected" onclick="selectPlan('scout',this)"><div class="plan-name">Scout</div><div class="plan-price">$99<span style="font-size:14px;font-weight:400;color:var(--mid)">/mo</span></div><div class="plan-detail">250 voice min · full team</div><div class="plan-free-badge">14-DAY TRIAL</div></div>
+    <div class="plan-opt" onclick="selectPlan('commander',this)"><div class="plan-name">Commander</div><div class="plan-price">$299<span style="font-size:14px;font-weight:400;color:var(--mid)">/mo</span></div><div class="plan-detail">1,000 voice min · full team</div></div>
+    <div class="plan-opt" onclick="selectPlan('hq',this)"><div class="plan-name">HQ</div><div class="plan-price">$799<span style="font-size:14px;font-weight:400;color:var(--mid)">/mo</span></div><div class="plan-detail">Largest allowance · full team</div></div>
   </div>
   <form id="deployForm" onsubmit="handleDeploy(event)">
     <div class="form-row">
@@ -99,25 +99,17 @@
       <div class="form-group"><label>Monthly call volume</label><select id="callVolume"><option value="under500">Under 500</option><option value="500-2000" selected>500 – 2,000</option><option value="2000-10000">2,000 – 10,000</option><option value="10000+">10,000+</option></select></div>
       <div class="form-group"><label>Primary use case</label><select id="useCase"><option value="support" selected>Customer support</option><option value="sales">Sales & outreach</option><option value="scheduling">Scheduling</option><option value="other">Other</option></select></div>
     </div>
-    <button type="submit" class="submit-btn" id="submitBtn">Deploy Free → No credit card needed</button>
+    <button type="submit" class="submit-btn" id="submitBtn">Request access → No credit card needed</button>
   </form>
-  <div class="form-note">By signing up you agree to our <strong>Terms of Service</strong> and <strong>Privacy Policy</strong>.</div>
   <div class="proof-strip">
-    <div class="proof-item">⚡ Live in 5 minutes</div>
-    <div class="proof-item">🔒 SOC 2 Type II</div>
     <div class="proof-item">💳 No card required</div>
     <div class="proof-item">🔄 Cancel anytime</div>
   </div>
 </div>
 <div id="successCard" class="form-card success-state">
   <div class="success-icon">🚀</div>
-  <h2>Your squad is <span>deploying</span></h2>
-  <p id="successMsg">Check your inbox — we've sent your dashboard credentials and your dedicated phone number.</p>
-  <div class="success-code"><pre id="snippetCode">&lt;script src="https://squadron.tel/widget.js" data-key="sq_live_YOUR_KEY" data-agent="alex" data-color="#DEFF00"&gt;&lt;/script&gt;</pre><button class="copy-btn" onclick="copySnippet()">Copy snippet</button></div>
-  <div class="next-steps">
-    <a href="https://app.squadron.tel" class="next-step-card"><div class="next-step-num">STEP 2</div><div class="next-step-title">Open your dashboard</div><div class="next-step-desc">Upload your knowledge base and configure your agents</div></a>
-    <a href="https://docs.squadron.tel" class="next-step-card"><div class="next-step-num">STEP 3</div><div class="next-step-title">Read the docs</div><div class="next-step-desc">Twilio setup, webhook config, API reference</div></a>
-  </div>
+  <h2>Request <span>received</span></h2>
+  <p id="successMsg">Your request has been recorded. We will contact you when your team is ready to build.</p>
 </div>
 <div style="height:80px;"></div>
 <script>
@@ -127,16 +119,15 @@ function selectPlan(plan, el) { selectedPlan = plan; document.querySelectorAll('
 async function handleDeploy(e) {
   e.preventDefault();
   const btn = document.getElementById('submitBtn');
-  btn.textContent = 'Deploying your squad…'; btn.classList.add('loading'); btn.disabled = true;
+  btn.textContent = 'Sending…'; btn.classList.add('loading'); btn.disabled = true;
   const data = { firstName: document.getElementById('firstName').value, lastName: document.getElementById('lastName').value, email: document.getElementById('workEmail').value, company: document.getElementById('company').value, callVolume: document.getElementById('callVolume').value, useCase: document.getElementById('useCase').value, plan: selectedPlan, ts: new Date().toISOString() };
   fetch('/api/signup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }).catch(() => {});
   await new Promise(r => setTimeout(r, 1800));
-  document.getElementById('successMsg').textContent = `We've sent your dashboard link and phone number to ${data.email}.`;
+  document.getElementById("successMsg").textContent = `Your request has been recorded for ${data.email}. We will contact you when your team is ready to build.`;
   document.getElementById('formCard').style.display = 'none';
   document.getElementById('successCard').style.display = 'block';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-function copySnippet() { const text = document.getElementById('snippetCode').textContent; navigator.clipboard.writeText(text).then(() => { const btn = document.querySelector('.copy-btn'); btn.textContent = '✓ Copied!'; setTimeout(() => { btn.textContent = 'Copy snippet'; }, 2000); }); }
 </script>
 </body>
 </html>

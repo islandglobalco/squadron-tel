@@ -131,8 +131,8 @@ nav{
   100%{transform:scale(1.15);opacity:1;}
 }
 .hero-inner{
-  display:grid;grid-template-columns:1fr 1fr;gap:64px;
-  align-items:center;max-width:1400px;width:100%;
+  display:grid;grid-template-columns:1fr;gap:64px;
+  align-items:center;max-width:1100px;width:100%;
 }
 .hero-badge{
   display:inline-flex;align-items:center;gap:8px;
@@ -156,8 +156,8 @@ nav{
 }
 .hero-h1 em{color:var(--signal);font-style:normal;text-shadow:0 0 40px rgba(206,235,0,0.4);}
 .hero-sub{
-  font-size:18px;line-height:1.6;color:rgba(255,255,255,0.65);
-  max-width:460px;margin-bottom:44px;font-weight:400;
+  font-size:24px;line-height:1.5;color:rgba(255,255,255,0.82);
+  max-width:640px;margin-bottom:44px;font-weight:500;
 }
 .hero-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:52px;}
 
@@ -217,8 +217,9 @@ nav{
 .btn-ghost:active{transform:translateY(0);}
 
 .hero-live-btn{
-  display:inline-flex;align-items:center;gap:8px;
-  font-size:13px;color:rgba(255,255,255,0.6);
+  display:inline-flex;align-items:center;gap:12px;
+  font-size:18px;font-weight:700;color:#fff;
+  padding:14px 22px;border:2px solid rgba(255,255,255,0.28);border-radius:999px;
 }
 .live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;box-shadow:0 0 8px var(--green);}
 
@@ -323,7 +324,7 @@ nav{
   font-size:clamp(40px,5vw,68px);font-weight:900;line-height:0.95;
   text-transform:uppercase;margin-bottom:20px;
 }
-.section-sub{font-size:18px;line-height:1.65;color:rgba(255,255,255,0.5);max-width:520px;font-weight:400;margin-bottom:64px;}
+.section-sub{font-size:21px;line-height:1.55;color:rgba(255,255,255,0.8);max-width:600px;font-weight:500;margin-bottom:64px;}
 
 /* PORTRAIT GRID */
 .portrait-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:2px;}
@@ -418,7 +419,7 @@ nav{
   font-family:'Barlow Condensed',sans-serif;font-size:clamp(40px,5vw,72px);
   font-weight:900;line-height:0.92;text-transform:uppercase;color:var(--navy);margin-bottom:12px;
 }
-.how-sub{font-size:18px;color:rgba(7,16,43,0.65);margin-bottom:72px;font-weight:400;}
+.how-sub{font-size:22px;color:rgba(7,16,43,0.8);margin-bottom:72px;font-weight:500;max-width:820px;}
 .steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
 .step-card{
   background:rgba(7,16,43,0.07);padding:44px 36px 40px;
@@ -428,9 +429,9 @@ nav{
 .step-card:hover{background:rgba(7,16,43,0.12);transform:translateY(-2px);box-shadow:0 8px 30px rgba(7,16,43,0.15),inset 0 0 0 1px rgba(7,16,43,0.15);}
 .step-num{font-family:'Barlow Condensed',sans-serif;font-size:72px;font-weight:900;color:rgba(7,16,43,0.12);line-height:1;margin-bottom:20px;}
 .step-title{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:800;text-transform:uppercase;color:var(--navy);letter-spacing:0.03em;margin-bottom:12px;}
-.step-desc{font-size:14px;line-height:1.65;color:rgba(7,16,43,0.65);margin-bottom:20px;}
+.step-desc{font-size:17px;line-height:1.6;color:rgba(7,16,43,0.85);margin-bottom:20px;font-weight:500;}
 .step-points{list-style:none;margin-bottom:24px;}
-.step-points li{font-size:13px;color:rgba(7,16,43,0.7);padding:5px 0;border-bottom:1px solid rgba(7,16,43,0.1);display:flex;align-items:center;gap:8px;}
+.step-points li{font-size:15px;font-weight:600;color:rgba(7,16,43,0.85);padding:5px 0;border-bottom:1px solid rgba(7,16,43,0.1);display:flex;align-items:center;gap:8px;}
 .step-points li::before{content:'—';color:rgba(7,16,43,0.35);}
 .step-time{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:0.08em;color:rgba(7,16,43,0.5);text-transform:uppercase;}
 
@@ -459,7 +460,7 @@ nav{
 .price-divider{height:1px;background:rgba(255,255,255,0.07);margin-bottom:24px;}
 .price-card.featured .price-divider{background:rgba(7,16,43,0.15);}
 .price-features{list-style:none;margin-bottom:36px;}
-.price-features li{font-size:13.5px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;gap:10px;color:rgba(255,255,255,0.7);}
+.price-features li{font-size:16px;font-weight:500;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:10px;color:rgba(255,255,255,0.85);}
 .price-card.featured .price-features li{color:rgba(7,16,43,0.8);border-color:rgba(7,16,43,0.1);}
 .price-features li::before{content:'✓';color:var(--signal);font-weight:700;}
 .price-card.featured .price-features li::before{color:var(--navy);}
@@ -515,7 +516,7 @@ nav{
   font-weight:900;text-transform:uppercase;line-height:0.92;
   color:var(--navy);margin-bottom:24px;position:relative;
 }
-.cta-sub{font-size:18px;color:rgba(7,16,43,0.6);margin-bottom:44px;position:relative;}
+.cta-sub{font-size:22px;font-weight:600;color:rgba(7,16,43,0.8);margin-bottom:44px;position:relative;}
 .cta-btns{display:flex;align-items:center;justify-content:center;gap:16px;position:relative;}
 
 /* FOOTER */
@@ -665,20 +666,20 @@ footer{
 details[open] .faq-chevron{transform:rotate(45deg);color:var(--signal);}
 details[open] .faq-q{color:var(--signal);}
 .faq-a{
-  padding:0 0 24px;font-size:15px;line-height:1.7;
-  color:rgba(255,255,255,0.6);
+  padding:0 0 24px;font-size:18px;line-height:1.65;font-weight:500;
+  color:rgba(255,255,255,0.82);
 }
 
 /* EMAIL CAPTURE IN CTA */
 .cta-form{display:flex;gap:12px;max-width:480px;margin:32px auto 0;flex-wrap:wrap;}
 .cta-email{
   flex:1;min-width:220px;padding:16px 24px;
-  background:rgba(255,255,255,0.08);
-  border:1px solid rgba(255,255,255,0.15);
-  border-radius:999px;color:#fff;font-size:15px;outline:none;
+  background:rgba(255,255,255,0.75);
+  border:2px solid rgba(7,16,43,0.35);
+  border-radius:999px;color:#07102B;font-size:17px;font-weight:600;outline:none;
   transition:border-color 0.2s;
 }
-.cta-email::placeholder{color:rgba(255,255,255,0.3);}
+.cta-email::placeholder{color:rgba(7,16,43,0.55);}
 .cta-email:focus{border-color:var(--signal);}
 
 @media(max-width:768px){
@@ -812,7 +813,6 @@ details[open] .faq-q{color:var(--signal);}
     <li><a href="#how">How it works</a></li>
     <li><a href="#squad">The Squad</a></li>
     <li><a href="#pricing">Pricing</a></li>
-    <li><a href="#api">Docs</a></li>
     <li><a href="mailto:info@squadron.tel">Support</a></li>
   </ul>
   <a href="/deploy" class="nav-cta">Deploy Free →</a>
@@ -821,78 +821,18 @@ details[open] .faq-q{color:var(--signal);}
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-copy">
-      <div class="hero-badge">
-        <div class="hero-badge-dot"></div>
-        <span>Live on production · 24 agents active</span>
-      </div>
-      <h1 class="hero-h1">Launch a voice<br>support team<br><em>in minutes.</em></h1>
+      <h1 class="hero-h1">Deploy a<br>customer-service team<br><em>in minutes.</em></h1>
       <p class="hero-sub">AI voice and chat agents with real personality. Your customers will actually look forward to calling.</p>
       <div class="hero-actions">
         <a href="/deploy" class="btn-primary" data-sound="click">Deploy Free →</a>
-        <a href="#" class="btn-ghost" data-sound="whoosh" id="speakLiveBtn" onclick="openVoiceDemo(event)">Speak with a live agent</a>
       </div>
       <div class="hero-live-btn" id="alexLiveBtn" onclick="openVoiceDemo(event)" style="cursor:pointer;">
         <span class="live-dot"></span>
-        <span>Talk to Alex Live &nbsp;·&nbsp; No signup · Low latency</span>
-      </div>
-    </div>
-    <div>
-      <div class="terminal hero-terminal" id="heroTerminal">
-        <div class="terminal-bar">
-          <div class="t-dot red"></div><div class="t-dot amber"></div><div class="t-dot green"></div>
-          <div class="terminal-title">terminal</div>
-        </div>
-        <div class="terminal-body" id="terminalBody">
-          <pre id="terminalOutput"></pre>
-          <div class="t-success-box" id="successBox">
-            <div class="t-success-label">✓ AGENT LIVE</div>
-            <pre id="successOutput"></pre>
-          </div>
-        </div>
+        <span>Talk to Alex live &nbsp;·&nbsp; No signup</span>
       </div>
     </div>
   </div>
 </section>
-
-<div class="metrics-strip">
-  <div class="metrics-inner">
-    <div class="metric-item">
-      <div class="metric-num">0.4s</div>
-      <div class="metric-label">Avg response time</div>
-    </div>
-    <div class="metric-item">
-      <div class="metric-num">98%</div>
-      <div class="metric-label">CSAT score</div>
-    </div>
-    <div class="metric-item">
-      <div class="metric-num">24/7</div>
-      <div class="metric-label">Zero downtime</div>
-    </div>
-    <div class="metric-item">
-      <div class="metric-num">$2.40</div>
-      <div class="metric-label">Per hour vs $18 human</div>
-    </div>
-    <div class="metric-item">
-      <div class="metric-num">1B+</div>
-      <div class="metric-label">Concurrent calls</div>
-    </div>
-    <div class="metric-item">
-      <div class="metric-num">5 min</div>
-      <div class="metric-label">Time to deploy</div>
-    </div>
-  </div>
-</div>
-
-<div class="logos-bar">
-  <span class="logos-label">Trusted by early teams at</span>
-  <div class="logos-list">
-    <span class="logo-name">Fieldline</span>
-    <span class="logo-name">Driftware</span>
-    <span class="logo-name">Northpine</span>
-    <span class="logo-name">Sovran</span>
-    <span class="logo-name">Crestmark</span>
-  </div>
-</div>
 
 <section class="squad-section" id="squad">
   <div class="squad-header">
@@ -1099,134 +1039,16 @@ details[open] .faq-q{color:var(--signal);}
   </div><!-- /portrait-grid -->
 </section>
 
-<section class="testimonials-section">
-  <div class="testimonials-inner">
-    <p class="section-label">What teams are saying</p>
-    <h2 class="section-title">Early adopters love it.</h2>
-    <div class="testimonials-grid">
-      <div class="testi-card">
-        <div class="testi-stars">
-          <span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span>
-        </div>
-        <div class="testi-quote">We cut our support headcount by 60% in the first month. Our CSAT actually went up. Customers don't notice and honestly don't care — they just get answers instantly.</div>
-        <div class="testi-author">
-          <div class="testi-avatar">🛒</div>
-          <div>
-            <div class="testi-name">Marcus T.</div>
-            <div class="testi-role">Head of CX · Fieldline Commerce</div>
-          </div>
-        </div>
-      </div>
-      <div class="testi-card">
-        <div class="testi-stars">
-          <span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span>
-        </div>
-        <div class="testi-quote">Five minutes to set up, and it handled 800 calls our first weekend. Alex took the tricky ones. Maya handled returns. We literally went to the beach.</div>
-        <div class="testi-author">
-          <div class="testi-avatar">🏠</div>
-          <div>
-            <div class="testi-name">Priya K.</div>
-            <div class="testi-role">Founder · Sovran Property Group</div>
-          </div>
-        </div>
-      </div>
-      <div class="testi-card">
-        <div class="testi-stars">
-          <span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span>
-        </div>
-        <div class="testi-quote">I was skeptical. Then I called our own number and couldn't tell it was AI. The voice is that good. We're on the $299 plan and it's paying for itself 10x every month.</div>
-        <div class="testi-author">
-          <div class="testi-avatar">💊</div>
-          <div>
-            <div class="testi-name">James W.</div>
-            <div class="testi-role">COO · Northpine Health</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section class="how-section" id="how">
   <div class="how-inner">
     <p class="section-label" style="color:rgba(7,16,43,0.4)">How it works</p>
-    <h2 class="how-title">From zero to live<br>in five minutes.</h2>
-    <p class="how-sub">No infrastructure. No engineering sprint. Just a working support agent answering real calls.</p>
+    <h2 class="how-title">Enter your business.<br>Get a team.</h2>
+    <p class="how-sub">Squadron reads your business, builds a customer-service team around it, and lets you test it before anything goes live.</p>
     <div class="steps-grid">
-      <div class="step-card"><div class="step-num">01</div><div class="step-title">Create your account</div><p class="step-desc">Sign up with your email. Pick a plan, enter payment. Your phone number is assigned instantly.</p><ul class="step-points"><li>Email + password — no OAuth friction</li><li>Scout, Commander, or Command HQ</li><li>Credits deposited immediately</li></ul><span class="step-time">⏱ ~2 min</span></div>
-      <div class="step-card"><div class="step-num">02</div><div class="step-title">Train your squad</div><p class="step-desc">Upload your docs, FAQs, or link your helpdesk. Choose personalities. Zero code required.</p><ul class="step-points"><li>Paste FAQs or upload PDF/URL</li><li>Choose from 24 agents — or mix them</li><li>Set escalation rules in the dashboard</li></ul><span class="step-time">⏱ ~5–15 min</span></div>
-      <div class="step-card"><div class="step-num">03</div><div class="step-title">Ship it</div><p class="step-desc">One script tag for chat. Your number is already live. Voice calls route the moment you confirm.</p><ul class="step-points"><li>Copy-paste one line of HTML</li><li>Phone calls route automatically</li><li>Real-time dashboard from day one</li></ul><span class="step-time">⏱ &lt;1 min</span></div>
+      <div class="step-card"><div class="step-num">01</div><div class="step-title">Enter your business</div><p class="step-desc">Give Squadron your website, your App Store listing, or your documents.</p><ul class="step-points"><li>Website URL</li><li>iOS App Store URL</li><li>Uploaded documents</li></ul></div>
+      <div class="step-card"><div class="step-num">02</div><div class="step-title">Review your profile and team</div><p class="step-desc">Squadron builds a Business Profile with a source on every fact, then generates the specialized agents your business needs. You correct anything before it goes live.</p><ul class="step-points"><li>Products, pricing, policies, hours</li><li>Front desk, scheduling, billing, returns and more</li><li>Voices from the 24-agent library</li></ul></div>
+      <div class="step-card"><div class="step-num">03</div><div class="step-title">Test, then deploy</div><p class="step-desc">Talk to your team by chat and voice in the browser, then turn on phone and chat with honest per-channel status.</p><ul class="step-points"><li>Test by chat, voice and a real demo number</li><li>Phone and chat from one screen</li><li>Every conversation logged in Squadron HQ</li></ul></div>
     </div>
-  </div>
-</section>
-
-<section class="roi-section">
-  <div class="roi-inner">
-    <p class="section-label" style="color:rgba(206,235,0,0.6)">ROI Calculator</p>
-    <h2 class="section-title" style="color:#fff;">See your savings<br>in seconds.</h2>
-    <div class="roi-card">
-      <div class="roi-row">
-        <div class="roi-label">Monthly support calls</div>
-        <input class="roi-slider" type="range" min="100" max="10000" step="100" value="2000" id="roiCalls" oninput="calcROI()">
-        <div class="roi-val" id="roiCallsVal">2,000</div>
-      </div>
-      <div class="roi-row">
-        <div class="roi-label">Avg call duration (minutes)</div>
-        <input class="roi-slider" type="range" min="1" max="20" step="1" value="5" id="roiDuration" oninput="calcROI()">
-        <div class="roi-val" id="roiDurationVal">5 min</div>
-      </div>
-      <div class="roi-row">
-        <div class="roi-label">Human agent hourly rate</div>
-        <input class="roi-slider" type="range" min="12" max="50" step="1" value="22" id="roiRate" oninput="calcROI()">
-        <div class="roi-val" id="roiRateVal">$22/hr</div>
-      </div>
-      <div class="roi-output">
-        <div class="roi-saving" id="roiSaving">$8,250</div>
-        <div class="roi-saving-label">monthly savings vs a human team</div>
-        <div class="roi-breakdown">
-          <div class="roi-item">
-            <div class="roi-item-num" id="roiHumanCost">$9,167</div>
-            <div class="roi-item-lbl">Human team cost</div>
-          </div>
-          <div class="roi-item">
-            <div class="roi-item-num" id="roiSquadCost">$917</div>
-            <div class="roi-item-lbl">Squadron cost</div>
-          </div>
-          <div class="roi-item">
-            <div class="roi-item-num" id="roiPercent">90%</div>
-            <div class="roi-item-lbl">Cost reduction</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="compare-section">
-  <div class="compare-inner">
-    <p class="section-label">The numbers</p>
-    <h2 class="section-title">Why teams switch<br>to Squadron.</h2>
-    <table class="compare-table">
-      <thead>
-        <tr>
-          <th>What you care about</th>
-          <th style="color:#fff;">Human Team</th>
-          <th class="compare-col-squadron">Squadron ↗</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>Cost per hour</td><td>$18–35</td><td class="compare-highlight">$2.40</td></tr>
-        <tr><td>Time to hire + train</td><td>4–12 weeks</td><td class="compare-highlight">5 minutes</td></tr>
-        <tr><td>Available hours</td><td>8–10 hrs/day</td><td class="compare-highlight">24/7/365</td></tr>
-        <tr><td>Simultaneous calls</td><td>1 per agent</td><td class="compare-highlight">Unlimited</td></tr>
-        <tr><td>Consistent quality</td><td><span class="check-no">✕</span></td><td><span class="check-yes">✓</span></td></tr>
-        <tr><td>Instant scale (seasonal spikes)</td><td><span class="check-no">✕</span></td><td><span class="check-yes">✓</span></td></tr>
-        <tr><td>Every call transcribed</td><td><span class="check-no">✕</span></td><td><span class="check-yes">✓</span></td></tr>
-        <tr><td>Zero sick days or turnover</td><td><span class="check-no">✕</span></td><td><span class="check-yes">✓</span></td></tr>
-        <tr><td>CSAT tracking per agent</td><td><span class="check-no">✕</span></td><td><span class="check-yes">✓</span></td></tr>
-        <tr><td>Seamless human escalation</td><td><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
-      </tbody>
-    </table>
   </div>
 </section>
 
@@ -1234,93 +1056,35 @@ details[open] .faq-q{color:var(--signal);}
   <div class="pricing-inner">
     <div class="pricing-header">
       <p class="section-label">Pricing</p>
-      <h2 class="section-title">Pick your squad size.</h2>
+      <h2 class="section-title">Pick your plan.</h2>
+      <p class="section-sub" style="margin:24px auto 0;font-size:20px;color:rgba(255,255,255,0.8);max-width:640px;">Every plan includes the full team. Start with a 14-day trial and a real phone number, with no card required.</p>
     </div>
     <div class="pricing-grid">
       <div class="price-card">
         <div class="price-plan">Scout</div><div class="price-amount">$99</div>
         <div class="price-period">/ month · billed monthly</div>
         <div class="price-divider"></div>
-        <ul class="price-features"><li>250 voice minutes included</li><li>1,000 chat conversations</li><li>Up to 3 agents</li><li>1 phone number</li><li>Dashboard + analytics</li><li>Email support</li></ul>
+        <ul class="price-features"><li>The full team</li><li>250 voice minutes included</li><li>1,000 chat conversations included</li><li>1 phone number</li><li>Squadron HQ</li><li>Email support</li></ul>
         <a href="/deploy?plan=scout" class="price-btn price-btn-outline" data-sound="click">Deploy Scout →</a>
       </div>
       <div class="price-card featured">
         <div class="price-plan">Commander</div><div class="price-amount">$299</div>
         <div class="price-period">/ month · billed monthly</div>
         <div class="price-divider"></div>
-        <ul class="price-features"><li>1,000 voice minutes included</li><li>Unlimited chat conversations</li><li>Up to 12 agents</li><li>3 phone numbers</li><li>Webhooks + API access</li><li>Priority support</li></ul>
+        <ul class="price-features"><li>The full team</li><li>1,000 voice minutes included</li><li>Chat conversations included</li><li>3 phone numbers</li><li>Squadron HQ</li><li>Priority support</li></ul>
         <a href="/deploy?plan=commander" class="price-btn price-btn-solid" data-sound="click">Deploy Commander →</a>
       </div>
       <div class="price-card">
         <div class="price-plan">Command HQ</div><div class="price-amount">$799</div>
         <div class="price-period">/ month · billed monthly</div>
         <div class="price-divider"></div>
-        <ul class="price-features"><li>Unlimited voice minutes</li><li>Unlimited chat conversations</li><li>All 24 agents</li><li>Unlimited phone numbers</li><li>Custom integrations via API</li><li>SLA + dedicated CSM</li><li>White-label available</li></ul>
-        <a href="mailto:info@squadron.tel" class="price-btn price-btn-outline" data-sound="click">Contact Sales →</a>
+        <ul class="price-features"><li>The full team</li><li>The largest voice-minute allowance</li><li>The largest chat allowance</li><li>Multiple phone numbers</li><li>Squadron HQ</li><li>Priority support</li></ul>
+        <a href="/deploy?plan=hq" class="price-btn price-btn-outline" data-sound="click">Deploy Command HQ →</a>
       </div>
-    </div>
+        </div>
+    <p class="section-sub" style="margin:40px auto 0;text-align:center;max-width:720px;font-size:20px;color:rgba(255,255,255,0.8);">When you reach your allowance, Squadron pauses and notifies you. You can add a one-click pack. There is no automatic upgrade.</p>
   </div>
 </section>
-
-<div style="background:#040A1C;border-top:1px solid rgba(255,255,255,0.05)">
-<section class="api-section" id="api">
-  <div class="api-inner">
-    <p class="section-label">API Reference</p>
-    <h2 class="section-title" style="margin-bottom:64px">Scale up to 1 billion support calls simultaneously.</h2>
-    <div class="api-grid">
-      <div class="api-nav">
-        <div class="api-nav-title">Sections</div>
-        <ul class="api-nav-items">
-          <li><a href="#auth">Authentication</a></li><li><a href="#voice-agent">Voice Agent</a></li>
-          <li><a href="#chat-widget">Chat Widget</a></li><li><a href="#webhooks">Webhooks</a></li>
-          <li><a href="#configuration">Configuration</a></li><li><a href="#errors">Errors</a></li>
-        </ul>
-      </div>
-      <div>
-        <div class="api-block" id="voice-agent">
-          <div class="api-block-title">Voice Agent</div>
-          <div class="api-block-desc">Deploy a live voice agent to a phone number in a single API call.</div>
-          <div class="api-endpoint"><span class="method post">POST</span><span class="api-path">/v1/agents/deploy</span></div>
-          <div class="api-endpoint-desc">Deploy an agent to a phone number</div>
-          <div class="terminal"><div class="terminal-bar"><div class="t-dot red"></div><div class="t-dot amber"></div><div class="t-dot green"></div><div class="terminal-title">voice agent · deploy</div></div><div class="terminal-body"><pre><span class="t-cmd">curl</span> <span class="t-muted">-X POST</span> <span class="t-url">https://api.squadron.tel/v1/agents/deploy</span> \
-  <span class="t-muted">-H</span> <span class="t-str">"Authorization: Bearer sq_live_..."</span> \
-  <span class="t-muted">-d</span> <span class="t-str">'{ "agent":"alex","phone":"+15550001234" }'</span>
-
-<span class="t-comment"># Response</span>
-<span class="t-muted">{</span><span class="t-key">"agent_id"</span><span class="t-muted">:</span><span class="t-str">"agt_9xKmPq2r"</span><span class="t-muted">,</span><span class="t-key">"status"</span><span class="t-muted">:</span><span class="t-str">"live"</span><span class="t-muted">}</span></pre></div></div>
-          <div style="margin-top:20px">
-          <div class="api-endpoint"><span class="method post">POST</span><span class="api-path">/v1/calls/outbound</span></div>
-          <div class="api-endpoint-desc">Initiate an outbound call</div>
-          <div class="api-endpoint"><span class="method get">GET</span><span class="api-path">/v1/calls/{id}</span></div>
-          <div class="api-endpoint-desc">Retrieve call transcript + metadata</div>
-          </div>
-        </div>
-        <div class="api-block" id="chat-widget">
-          <div class="api-block-title">Chat Widget</div>
-          <div class="api-block-desc">One script tag. No build step, no dependencies.</div>
-          <div class="terminal"><div class="terminal-bar"><div class="t-dot red"></div><div class="t-dot amber"></div><div class="t-dot green"></div><div class="terminal-title">chat widget · embed</div></div><div class="terminal-body"><pre><span class="t-comment">&lt;!-- Drop before &lt;/body&gt; --&gt;</span>
-<span class="t-muted">&lt;</span><span class="t-cmd">script</span>
-  <span class="t-key">src</span><span class="t-muted">=</span><span class="t-str">"https://cdn.squadron.tel/widget.js"</span>
-  <span class="t-key">data-key</span><span class="t-muted">=</span><span class="t-str">"sq_live_..."</span>
-  <span class="t-key">data-agent</span><span class="t-muted">=</span><span class="t-str">"maya"</span>
-<span class="t-muted">&gt;&lt;/</span><span class="t-cmd">script</span><span class="t-muted">&gt;</span></pre></div></div>
-        </div>
-        <div class="api-block" id="webhooks">
-          <div class="api-block-title">Webhooks</div>
-          <div class="api-block-desc">Receive real-time events as calls and chats complete.</div>
-          <div class="terminal"><div class="terminal-bar"><div class="t-dot red"></div><div class="t-dot amber"></div><div class="t-dot green"></div><div class="terminal-title">webhook · call.completed</div></div><div class="terminal-body"><pre><span class="t-comment"># call.completed payload</span>
-<span class="t-muted">{</span>
-  <span class="t-key">"event"</span><span class="t-muted">:</span> <span class="t-str">"call.completed"</span><span class="t-muted">,</span>
-  <span class="t-key">"agent"</span><span class="t-muted">:</span> <span class="t-str">"alex"</span><span class="t-muted">,</span>
-  <span class="t-key">"duration_s"</span><span class="t-muted">:</span> <span class="t-val">187</span><span class="t-muted">,</span>
-  <span class="t-key">"csat_score"</span><span class="t-muted">:</span> <span class="t-val">5</span>
-<span class="t-muted">}</span></pre></div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-</div>
 
 <section class="faq-section">
   <div class="faq-inner">
@@ -1328,32 +1092,28 @@ details[open] .faq-q{color:var(--signal);}
     <h2 class="section-title">Still have<br>questions?</h2>
     <div class="faq-list">
       <details class="faq-item">
-        <summary class="faq-q">Can customers tell it's AI? <span class="faq-chevron">+</span></summary>
-        <p class="faq-a">Most can't. Our agents are trained on natural speech patterns with realistic pacing, filler words, and personality. In our internal testing, fewer than 8% of callers ask if they're speaking with a bot — and when they do, the agent answers honestly and offers to transfer to a human if needed.</p>
+        <summary class="faq-q">Does the agent say it is an AI? <span class="faq-chevron">+</span></summary>
+        <p class="faq-a">Yes. Every Squadron agent identifies itself as an AI at the start of every conversation, and every call begins with an audible recording notice. Squadron answers inbound conversations only; it never places outbound AI calls.</p>
       </details>
       <details class="faq-item">
         <summary class="faq-q">What if the agent doesn't know the answer? <span class="faq-chevron">+</span></summary>
-        <p class="faq-a">The agent escalates. You define escalation rules in the dashboard — by topic, intent, or sentiment. When something falls outside the knowledge base, the call transfers to a live rep with full context already in the handoff note. No customer left hanging.</p>
+        <p class="faq-a">It says so, and it escalates. Every agent answers only from your Business Profile, and when a question falls outside it the agent tells the customer it does not have that information, takes a message or transfers to your on-call contact, and logs the gap in Squadron HQ so you can approve an answer for next time.</p>
       </details>
       <details class="faq-item">
-        <summary class="faq-q">How long does training take? <span class="faq-chevron">+</span></summary>
-        <p class="faq-a">You can paste in FAQs, upload PDFs, or link your helpdesk in about five minutes. The agent is trained on that content instantly. For large knowledge bases (1,000+ articles), a full sync takes under an hour. No engineering required at any step.</p>
+        <summary class="faq-q">What does Squadron need from me? <span class="faq-chevron">+</span></summary>
+        <p class="faq-a">A website URL, an iOS App Store URL, or your documents. Squadron builds a Business Profile from them, shows every field with its source, and asks you to correct anything before your team goes live. Nothing is invented.</p>
       </details>
       <details class="faq-item">
-        <summary class="faq-q">What phone system do you integrate with? <span class="faq-chevron">+</span></summary>
-        <p class="faq-a">Squadron is powered by Twilio under the hood, so it works with your existing phone setup via SIP forwarding, or you can use one of our provisioned numbers. We also integrate with Salesforce, HubSpot, Zendesk, Intercom, and Zapier out of the box.</p>
+        <summary class="faq-q">Do I need a new phone number? <span class="faq-chevron">+</span></summary>
+        <p class="faq-a">Squadron gives you a phone number. You can publish it directly or forward your existing business line to it from your current carrier.</p>
       </details>
       <details class="faq-item">
         <summary class="faq-q">Is there a free trial? <span class="faq-chevron">+</span></summary>
-        <p class="faq-a">The Scout plan ships with 250 free minutes — enough to handle real calls and see the quality for yourself. No credit card required to start. You'll hear the difference in the first call.</p>
-      </details>
-      <details class="faq-item">
-        <summary class="faq-q">What's the latency like on voice calls? <span class="faq-chevron">+</span></summary>
-        <p class="faq-a">Response latency averages 400ms from end of speech to first word of reply — indistinguishable from a normal conversational pause. We run on edge infrastructure close to your callers. There's no perceptible AI delay.</p>
+        <p class="faq-a">Yes. Every plan starts with a 14-day trial that includes a real phone number, and no card is required to start.</p>
       </details>
       <details class="faq-item">
         <summary class="faq-q">How is pricing calculated? <span class="faq-chevron">+</span></summary>
-        <p class="faq-a">Monthly flat rate per plan, plus usage-based overage on voice minutes at $0.04/min if you exceed your plan's included minutes. Chat conversations are unlimited on Commander and above. No per-seat fees, no per-agent fees.</p>
+        <p class="faq-a">A flat monthly rate per plan with a stated voice-minute and conversation allowance. When you reach the allowance, Squadron pauses and notifies you; you can add a one-click pack. There is no automatic upgrade and no per-agent fee.</p>
       </details>
     </div>
   </div>
@@ -1361,7 +1121,7 @@ details[open] .faq-q{color:var(--signal);}
 
 <section class="cta-strip">
   <h2 class="cta-title">Ready to deploy<br>your squad?</h2>
-  <p class="cta-sub">No infrastructure. No engineering sprint. Live in five minutes.</p>
+  <p class="cta-sub">No infrastructure. No engineering sprint.</p>
   <form class="cta-form" onsubmit="ctaSubmit(event)">
     <input class="cta-email" type="email" placeholder="your@company.com" required id="ctaEmail" autocomplete="email"/>
     <button type="submit" class="btn-primary" style="background:var(--navy);color:var(--signal);box-shadow:0 4px 20px rgba(7,16,43,0.4);" data-sound="click">Deploy Free →</button>
@@ -1399,10 +1159,9 @@ details[open] .faq-q{color:var(--signal);}
         <path d="M 109 0.421875 L 8.5 0.421875 L 8.5 -198.65625 L 8 -198.65625 L 7 -430.5 L 108.5 -430.5 L 169.5 -263.34375 L 169.5 -430.5 L 270 -430.5 L 270 -324.65625 L 271 0.421875 L 170 0.421875 L 108.5 -162.546875 Z" fill="white"/>
       </g></g>
     </svg></a>
-    <div class="footer-copy">© 2024 Squadron. All rights reserved.</div>
+    <div class="footer-copy">© 2026 Squadron. All rights reserved.</div>
   </div>
   <div class="footer-links">
-    <a href="/privacy">Privacy</a><a href="/terms">Terms</a>
     <a href="mailto:info@squadron.tel">Support</a><a href="mailto:hello@squadron.tel">hello@squadron.tel</a>
   </div>
 </footer>
@@ -1666,168 +1425,6 @@ document.querySelectorAll('.portrait-card').forEach(card=>{
   card.addEventListener('mouseenter',()=>{
     if(!cardCooldown){playChime();cardCooldown=true;setTimeout(()=>cardCooldown=false,600);}
   });
-});
-
-// ═══════════════════════════════════════════════
-// HOLLYWOOD TERMINAL ANIMATION
-// ═══════════════════════════════════════════════
-const terminalOutput=document.getElementById('terminalOutput');
-const successBox=document.getElementById('successBox');
-const successOutput=document.getElementById('successOutput');
-
-// Terminal content: array of {type, text, delay, spanClass}
-const TERMINAL_LINES=[
-  {raw:true, html:'<span class="t-comment"># Deploy in 3 lines</span>', delay:600},
-  {raw:true, html:'<span class="t-cmd">curl</span> <span class="t-muted">-X POST</span> \\', delay:80},
-  {raw:true, html:'  <span class="t-url">api.squadron.tel/v1/agents/deploy</span> \\', delay:60},
-  {raw:true, html:'  <span class="t-muted">-H</span> <span class="t-str">"Authorization: Bearer sq_live_..."</span> \\', delay:60},
-  {raw:true, html:"  <span class='t-muted'>-d</span> <span class='t-str'>'</span><span class='t-val'>{</span>", delay:60},
-  {raw:true, html:"    <span class='t-key'>\"agent\"</span><span class='t-str'>: </span><span class='t-str'>\"alex\"</span><span class='t-val'>,</span>", delay:55},
-  {raw:true, html:"    <span class='t-key'>\"phone\"</span><span class='t-str'>: </span><span class='t-str'>\"+15550001234\"</span><span class='t-val'>,</span>", delay:55},
-  {raw:true, html:"    <span class='t-key'>\"greeting\"</span><span class='t-str'>: </span><span class='t-str'>\"Hi, thanks for calling!\"</span><span class='t-val'>,</span>", delay:55},
-  {raw:true, html:"    <span class='t-key'>\"knowledge_url\"</span><span class='t-str'>: </span><span class='t-str'>\"https://help.acme.com\"</span><span class='t-val'>,</span>", delay:55},
-  {raw:true, html:"    <span class='t-key'>\"escalate_to\"</span><span class='t-str'>: </span><span class='t-str'>\"+15559876543\"</span>", delay:55},
-  {raw:true, html:"  <span class='t-val'>}</span><span class='t-str'>'</span>", delay:55},
-  {pause:900},
-];
-
-const SUCCESS_LINES=[
-  {raw:true, html:"<span class='t-muted'>{</span><span class='t-key'>\"agent_id\"</span><span class='t-muted'>:</span><span class='t-str'>\"agt_9xKmPq2r\"</span><span class='t-muted'>,</span>", delay:60},
-  {raw:true, html:" <span class='t-key'>\"status\"</span><span class='t-muted'>:</span><span class='t-str'>\"live\"</span><span class='t-muted'>,</span>", delay:60},
-  {raw:true, html:" <span class='t-key'>\"phone\"</span><span class='t-muted'>:</span><span class='t-str'>\"+15550001234\"</span><span class='t-muted'>,</span>", delay:60},
-  {raw:true, html:" <span class='t-key'>\"live_at\"</span><span class='t-muted'>:</span><span class='t-val'>1712345678</span><span class='t-muted'>}</span>", delay:60},
-];
-
-// Terminal boot: startup flicker
-function terminalBoot(){
-  const body=document.querySelector('.hero-terminal .terminal-body');
-  body.style.opacity='0';
-  setTimeout(()=>{body.style.transition='opacity 0.1s';body.style.opacity='0.7';},80);
-  setTimeout(()=>{body.style.opacity='0.2';},160);
-  setTimeout(()=>{body.style.opacity='1';body.style.transition='';},240);
-  setTimeout(()=>{body.style.opacity='0.8';},300);
-  setTimeout(()=>{body.style.opacity='1';startTerminal();},380);
-}
-
-// Cursor element
-let cursorEl=null;
-function ensureCursor(){
-  if(!cursorEl){cursorEl=document.createElement('span');cursorEl.className='t-cursor';}
-  return cursorEl;
-}
-
-// Type a line character by character with syntax spans
-async function typeLine(lineEl, htmlContent, charDelay=2){
-  // Parse HTML to get visible text and tags
-  const temp=document.createElement('div'); temp.innerHTML=htmlContent;
-  const nodes=Array.from(temp.childNodes);
-  lineEl.innerHTML='';
-
-  for(const node of nodes){
-    if(node.nodeType===3){
-      // Text node: type char by char
-      const text=node.textContent;
-      for(const ch of text){
-        lineEl.appendChild(document.createTextNode(ch));
-        
-        await sleep(charDelay+Math.random()*charDelay*0.3);
-      }
-    } else {
-      // Element node: clone and type its text
-      const span=document.createElement(node.tagName);
-      span.className=node.className;
-      lineEl.appendChild(span);
-      const text=node.textContent;
-      for(const ch of text){
-        span.appendChild(document.createTextNode(ch));
-        
-        await sleep(charDelay+Math.random()*charDelay*0.3);
-      }
-    }
-  }
-}
-
-function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
-
-async function startTerminal(){
-  terminalOutput.innerHTML='';
-  successBox.classList.remove('visible');
-
-  // Add cursor
-  const cur=ensureCursor();
-  terminalOutput.appendChild(cur);
-
-  // Initial pause - cursor blinking
-  await sleep(800);
-
-  // Type each line
-  for(const line of TERMINAL_LINES){
-    if(line.pause){
-      await sleep(line.pause);
-      continue;
-    }
-    // Remove cursor
-    if(cur.parentNode) cur.parentNode.removeChild(cur);
-    // New line element
-    const lineEl=document.createElement('span');
-    lineEl.style.display='block';
-    terminalOutput.appendChild(lineEl);
-
-    if(line.raw){
-      await typeLine(lineEl, line.html, line.delay||2);
-    }
-
-    // Add cursor after line
-    terminalOutput.appendChild(cur);
-    await sleep(40);
-  }
-
-  // Remove cursor
-  if(cur.parentNode) cur.parentNode.removeChild(cur);
-
-  // Show "connecting..." with ellipsis
-  const connecting=document.createElement('span');
-  connecting.style.display='block';
-  connecting.style.color='rgba(255,255,255,0.3)';
-  connecting.style.marginTop='4px';
-  terminalOutput.appendChild(connecting);
-
-  for(let i=0;i<3;i++){
-    connecting.textContent='  Connecting'+'.'.repeat(i+1);
-    await sleep(350);
-  }
-  connecting.textContent='  Connecting to api.squadron.tel...';
-  await sleep(500);
-  connecting.textContent='  ✓ Connected';
-  connecting.style.color='var(--green)';
-  await sleep(600);
-  connecting.remove();
-
-  // Show success box
-  successBox.classList.add('visible');
-  await sleep(100);
-
-  // Type success lines
-  successOutput.innerHTML='';
-  for(const line of SUCCESS_LINES){
-    const lineEl=document.createElement('span');
-    lineEl.style.display='block';
-    successOutput.appendChild(lineEl);
-    await typeLine(lineEl,line.html,line.delay||4);
-    await sleep(40);
-  }
-
-  // Play success chime
-  playChime();
-
-  // Loop after pause
-  await sleep(5000);
-  terminalBoot();
-}
-
-// Start terminal on load
-window.addEventListener('load',()=>{
-  setTimeout(terminalBoot,800);
 });
 
 // Stop voice when clicking outside
@@ -2273,7 +1870,7 @@ async function startLive(){
     vStatus(rtcMic?'Connected · speak any time':'Mic unavailable · type below and Alex will answer out loud');
   }catch(err){
     console.error('[voice] start failed',err);
-    vStatus('Could not connect to the live agent. Please try again.');
+    vStatus('Could not connect to Alex. Please try again.');
     stopLive();
   }finally{
     rtcConnecting=false; setMicBtn();
@@ -2345,28 +1942,6 @@ function closeVoiceDemo(){
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape') closeVoiceDemo();
 });
-
-// ROI Calculator
-function fmt(n){return n>=1000?'$'+Math.round(n).toLocaleString():'$'+Math.round(n);}
-function calcROI(){
-  const calls=+document.getElementById('roiCalls').value;
-  const dur=+document.getElementById('roiDuration').value;
-  const rate=+document.getElementById('roiRate').value;
-  const hrs=calls*dur/60;
-  const humanCost=hrs*rate;
-  // Squadron: ~$0.04/min voice + $99 base
-  const sqCost=Math.max(99,calls*dur*0.04+99);
-  const saving=Math.max(0,humanCost-sqCost);
-  const pct=humanCost>0?Math.round(saving/humanCost*100):0;
-  document.getElementById('roiCallsVal').textContent=calls.toLocaleString();
-  document.getElementById('roiDurationVal').textContent=dur+' min';
-  document.getElementById('roiRateVal').textContent='$'+rate+'/hr';
-  document.getElementById('roiSaving').textContent=fmt(saving);
-  document.getElementById('roiHumanCost').textContent=fmt(humanCost);
-  document.getElementById('roiSquadCost').textContent=fmt(sqCost);
-  document.getElementById('roiPercent').textContent=pct+'%';
-}
-window.addEventListener('load',calcROI);
 
 // CTA email capture
 function ctaSubmit(e){
