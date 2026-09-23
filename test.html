@@ -178,6 +178,7 @@ async function send(text) {
     const r = await api('/api/converse', { token, conversationId, message: msg, channel: 'chat', test: true });
     conversationId = r.conversationId;
     addAgent(r);
+    if (r.followUp) { await new Promise((ok) => setTimeout(ok, 900)); addAgent({ agent: r.agent, reply: r.followUp, replyType: 'conversational', citations: [] }); }
   } catch (e) { err(e.message); }
   finally { busy = false; $('sendBtn').disabled = false; $('typing').textContent = ''; $('input').focus(); }
 }

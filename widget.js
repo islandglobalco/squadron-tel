@@ -48,6 +48,7 @@
         conversationId = x.j.conversationId;
         if (x.j.agent) { agent = x.j.agent; box.querySelector('#sqw-name').textContent = agent.persona + ' · ' + agent.title; if (agent.portrait) box.querySelector('#sqw-avatar').src = (/cdn\.midjourney\.com\/([0-9a-f-]{36})\//.test(agent.portrait) ? origin + '/portraits/' + RegExp.$1 + '.webp' : agent.portrait); }
         add(x.j.reply);
+        if (x.j.followUp) { var fu = x.j.followUp; var t2 = add('…'); setTimeout(function () { t2.remove(); add(fu); }, 900); }
         if (x.j.replyType === 'transfer') add('A person will follow up with you.', 'note');
       })
       .catch(function () { typing.remove(); add('Could not reach the team. Please try again.', 'note'); })

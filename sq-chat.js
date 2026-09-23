@@ -38,7 +38,7 @@
     sqShowTyping();
     setTimeout(()=>{
       sqHideTyping();
-      sqAddMsg("Hey! I'm **Alex**, your Squadron AI assistant. Ask me about pricing, setup, agents, or anything else about Squadron. What's on your mind?",'agent');
+      sqAddMsg("Hey! I'm **Alex**, Squadron's AI assistant. I answer questions about Squadron's pricing, setup, agents and channels.",'agent');
     },800);
   }
 
@@ -62,6 +62,7 @@
       sqHideTyping();
       sqTyping=false;
       sqAddMsg(d.reply||'Thanks for your message! Our team will follow up shortly.','agent');
+      if(d.followUp){sqShowTyping();setTimeout(()=>{sqHideTyping();sqAddMsg(d.followUp,'agent');},900);}
     })
     .catch(()=>{
       sqHideTyping();
