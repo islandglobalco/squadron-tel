@@ -9,6 +9,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="/onboard.css">
+<style>
+.planpick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.planopt{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:22px;border-radius:20px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:#fff;cursor:pointer;font-family:inherit}
+.planopt:hover{border-color:var(--signal)}
+.planopt .pn{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:30px;text-transform:uppercase;line-height:1}
+.planopt .pp{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:46px;line-height:1;color:var(--signal)}
+.planopt .pm{font-size:17px;font-weight:600;color:rgba(255,255,255,0.85)}
+@media (max-width:760px){.planpick{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 <nav>
@@ -192,11 +201,11 @@ async function analyze(skipCrawl) {
     } else {
       logLine('Documents received');
     }
-    logLine('Building your Business Profile with a source on every field', true);
     const xr = await fetch('/api/ingest/extract', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token }) });
     if (xr.status === 402) { logLine('Your site is read. Your plan comes next.'); return payGate(); }
     const x = await xr.json().catch(() => ({}));
     if (!xr.ok) throw new Error(x.error || ('HTTP ' + xr.status));
+    logLine('Built your Business Profile with a source on every field');
     logLine('Profile ready');
     await load();
     show(3);
@@ -218,10 +227,11 @@ async function payGate() {
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><button class="btn" onclick="payAuth('signup')">Create account</button><button class="btn ghost" onclick="payAuth('login')">I have an account, log in</button></div></div>`;
     return;
   }
+  await api('/api/auth', { action: 'claim', token }).catch((e) => err('err2', e.message));
   const active = me.account.active;
   if (active) { box.innerHTML = ''; box.classList.add('hidden'); return reanalyze(); }
-  box.innerHTML = `<p style="font-size:20px;font-weight:700;color:#fff;margin-bottom:14px">Choose your plan. Every plan has unlimited web chat, and nothing renews automatically.</p>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">${PLAN_CHOICES.map(([k, n, p, m]) => `<button class="btn ghost" style="flex-direction:column;height:auto;padding:18px;font-size:20px" onclick="choosePlan('${k}')"><b>${n}</b><span>${p} for 30 days · ${m}</span></button>`).join('')}</div>
+  box.innerHTML = `<p style="font-size:22px;font-weight:800;color:#fff;margin-bottom:16px">Choose your plan. Every plan has unlimited web chat, and nothing renews automatically.</p>
+    <div class="planpick">${PLAN_CHOICES.map(([k, n, p, m]) => `<button class="planopt" onclick="choosePlan('${k}')"><span class="pn">${n}</span><span class="pp">${p}</span><span class="pm">30 days · ${m}</span></button>`).join('')}</div>
     <p style="font-size:17px;color:var(--slate);margin-top:14px">Your invoice shows the bank wire details. When the payment lands, come back here and press the button below.</p>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="btn" onclick="paidRetry(this)">My payment has landed, build my team</button></div>`;
 }
