@@ -33,6 +33,7 @@ h2{font-family:'Barlow Condensed',sans-serif;font-weight:800;text-transform:uppe
 .input:focus{border-color:var(--signal);box-shadow:0 0 0 4px var(--signal-dim)}
 textarea.input{min-height:220px;font-size:17px;font-weight:500;line-height:1.5;resize:vertical}
 .btn{font:inherit;font-size:17px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;padding:20px 34px;border-radius:999px;border:none;cursor:pointer;background:linear-gradient(180deg,#DEFF00 0%,#CEEB00 45%,#aac800 100%);color:var(--navy);box-shadow:0 6px 0 #8aaa00,0 8px 20px rgba(206,235,0,0.35);white-space:nowrap}
+a.btn{text-decoration:none;display:inline-block}
 .btn:disabled{opacity:0.5;cursor:wait}
 .btn.ghost{background:transparent;color:#fff;border:2px solid rgba(255,255,255,0.28);box-shadow:none}
 .btn.small{font-size:14px;padding:12px 20px}
