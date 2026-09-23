@@ -1,0 +1,19 @@
+name = "squadron-bridge"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+workers_dev = true
+
+[vars]
+SQUADRON_ORIGIN = "https://www.squadron.tel"
+REALTIME_MODEL = "gpt-realtime-2.1"
+
+[[durable_objects.bindings]]
+name = "CALLS"
+class_name = "CallSession"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["CallSession"]
+
+# Secrets (set with `wrangler secret put`): OPENAI_API_KEY, BRIDGE_SECRET,
+# TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN.
