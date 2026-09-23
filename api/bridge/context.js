@@ -4,6 +4,7 @@ import { bad } from '../_lib/db.js';
 import { loadProfile } from '../_lib/db.js';
 import { checkSecret, ensureBridgeSchema, businessForNumber } from '../_lib/bridge.js';
 import { applyCorrections } from '../_lib/profile.js';
+import { usageFor } from '../_lib/usage.js';
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
@@ -18,6 +19,7 @@ export default async function handler(req, res) {
     const profile = prow ? applyCorrections(prow.profile, prow.corrections) : null;
     const name = profile?.company?.name?.value || hit.biz.input_value;
     if (!hit.demo && !(hit.biz.channels && hit.biz.channels.phone && hit.biz.channels.phone.enabled)) return res.status(200).json({ ok: false, reason: 'phone channel off' });
+    if (!hit.demo && (await usageFor(hit.biz.id)).paused) return res.status(200).json({ ok: false, reason: 'paused' });
     return res.status(200).json({ ok: true, businessId: hit.biz.id, businessName: name, demo: hit.demo });
   } catch (e) {
     console.error('[bridge/context]', e);
