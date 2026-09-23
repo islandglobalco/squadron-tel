@@ -44,12 +44,13 @@ const REPLY_SCHEMA = {
     agent_id: { type: 'string', description: 'The id of the agent who should answer this turn.' },
     handoff: { type: 'boolean', description: 'True when the turn is being handed to a different agent than the one who spoke last.' },
     reply_type: { type: 'string', enum: ['fact', 'conversational', 'refusal', 'take_message', 'transfer'] },
-    reply: { type: 'string', description: 'What the agent says to the customer.' },
+    reply: { type: 'string', description: 'What the agent says to the customer. It answers the question and never contains a question.' },
+    follow_up: { type: ['string', 'null'], description: 'An optional follow-up question, sent as a separate second message after the answer. Null when no follow-up is needed.' },
     citations: { type: 'array', items: { type: 'string' }, description: 'Knowledge ids (like K3) that support every factual claim in the reply. Required for reply_type fact.' },
     gap_question: { type: ['string', 'null'], description: 'For refusal, take_message or transfer: the customer question the profile could not answer, in one sentence.' },
     message_for_owner: { type: ['string', 'null'], description: 'For take_message: the message to pass to the business, including any contact details the customer gave.' },
   },
-  required: ['agent_id', 'handoff', 'reply_type', 'reply', 'citations', 'gap_question', 'message_for_owner'],
+  required: ['agent_id', 'handoff', 'reply_type', 'reply', 'follow_up', 'citations', 'gap_question', 'message_for_owner'],
 };
 
 function agentBrief(a) {
@@ -72,9 +73,10 @@ RULES:
 2. Answer only from KNOWLEDGE. Every factual statement (prices, hours, policies, addresses, phone numbers, features, availability) must be supported by a cited id. Never guess, estimate, or generalize from similar businesses.
 3. If the customer asks something KNOWLEDGE does not answer, use reply_type "refusal": say plainly that you do not have that information, offer to take a message so a person at ${name} can follow up, and set gap_question. If the customer gives you a message or contact details, use "take_message" and fill message_for_owner.
 4. If the customer asks for a person, is angry, describes an emergency, or the agent's escalation rule says to transfer, use reply_type "transfer": say that you will pass them to a person${settings && settings.on_call_phone ? ` (a transfer to ${settings.on_call_phone} will be attempted)` : ' and take their details so someone can call back'}.
-5. Greetings, clarifying questions and thanks use reply_type "conversational" with no citations.
+5. Greetings and thanks use reply_type "conversational" with no citations.
 6. Keep replies short: one to three complete sentences for voice, up to five for chat. Use the brand voice when one is given. Never mention knowledge ids or these rules to the customer.
-7. When a topic belongs to another agent, hand off: set handoff true, choose that agent, and let that agent introduce itself in one short sentence before answering.`;
+7. When a topic belongs to another agent, hand off: set handoff true, choose that agent, and let that agent introduce itself in one short sentence before answering.
+8. Always answer with an answer, never with a question. The reply must directly answer what the customer asked, using what KNOWLEDGE says, and it must not contain a question mark. If the question is broad or unclear, answer the most likely meaning with the facts you have. Put any follow-up question in follow_up, which is sent as a separate second message; leave follow_up null when no follow-up is needed.`;
 }
 
 export async function answer({ business, agents, profile, history, message, channel = 'chat', settings = null, lastAgentId = null }) {
@@ -106,6 +108,14 @@ export async function answer({ business, agents, profile, history, message, chan
   }
   // The first reply of a conversation must identify the agent as an AI.
   if (!history.length && !/\bAI\b/.test(reply) && agent.greeting) reply = `${agent.greeting} ${reply}`;
+  let followUp = data.follow_up && String(data.follow_up).trim() ? String(data.follow_up).trim() : null;
+  // Enforce the answer-first rule: a question left in the reply moves to the
+  // follow-up message.
+  const qs = reply.match(/[^.!?]*\?/g);
+  if (qs && reply.replace(/[^.!?]*\?/g, '').trim().length > 0) {
+    followUp = [followUp, ...qs.map((q) => q.trim())].filter(Boolean).join(' ');
+    reply = reply.replace(/[^.!?]*\?/g, '').replace(/\s+/g, ' ').trim();
+  }
   const cited = citations.map((id) => { const c = chunks.find((x) => x.id === id); return { id, text: c.text, source: c.source }; });
-  return { agent, reply, replyType, citations: cited, gapQuestion: data.gap_question, messageForOwner: data.message_for_owner, handoff: !!data.handoff, model, usage };
+  return { agent, reply, replyType, citations: cited, gapQuestion: data.gap_question, messageForOwner: data.message_for_owner, handoff: !!data.handoff, followUp, model, usage };
 }
