@@ -65,8 +65,11 @@ export default async function handler(req, res) {
     }
     if (action === 'signup') {
       if (password.length < 8) return bad(res, 400, 'Use a password of at least 8 characters.');
+      if (body.terms !== true) return bad(res, 400, 'Please agree to the Terms of Service and Privacy Policy to create your account.');
       if (await findAccount(email)) return bad(res, 409, 'An account with that email already exists. Log in instead.');
       const id = await createAccount(email, password);
+      await sql().query('ALTER TABLE accounts ADD COLUMN IF NOT EXISTS terms_accepted_at TIMESTAMPTZ');
+      await sql().query("UPDATE accounts SET terms_accepted_at = now() WHERE id = $1", [id]);
       if (body.token) { const biz = await loadBusiness(body.token); if (biz && !biz.account_id) await sql().query('UPDATE businesses SET account_id = $2 WHERE id = $1', [biz.id, id]); }
       res.setHeader('Set-Cookie', sessionCookie(id));
       return res.status(200).json({ ok: true, accountId: id });
