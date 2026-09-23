@@ -107,7 +107,10 @@ export async function answer({ business, agents, profile, history, message, chan
     reply = `I do not have that information in what ${business.name || 'the business'} has given me. I can take a message so a person can follow up with you.`;
   }
   // The first reply of a conversation must identify the agent as an AI.
-  if (!history.length && !/\bAI\b/.test(reply) && agent.greeting) reply = `${agent.greeting} ${reply}`;
+  // The word "AI" elsewhere in an answer (for example "AI-assisted") is not a
+  // disclosure, so the greeting is always added unless the reply already
+  // opens with it.
+  const needsGreeting = !history.length;
   let followUp = data.follow_up && String(data.follow_up).trim() ? String(data.follow_up).trim() : null;
   // Enforce the answer-first rule: a question left in the reply moves to the
   // follow-up message.
@@ -115,6 +118,16 @@ export async function answer({ business, agents, profile, history, message, chan
   if (qs && reply.replace(/[^.!?]*\?/g, '').trim().length > 0) {
     followUp = [followUp, ...qs.map((q) => q.trim())].filter(Boolean).join(' ');
     reply = reply.replace(/[^.!?]*\?/g, '').replace(/\s+/g, ' ').trim();
+  }
+  if (needsGreeting) {
+    // Keep the disclosure sentence and drop any "How can I help?" question
+    // from the greeting, since the reply that follows already answers.
+    const raw = agent.greeting || `Hi, I'm ${agent.persona || 'an assistant'}, an AI agent for ${business.name || 'this business'}.`;
+    let greet = raw.replace(/[^.!?]*\?/g, '').replace(/\s+/g, ' ').trim();
+    if (!/\bAI\b/.test(greet)) greet = `Hi, I'm ${agent.persona || 'an assistant'}, an AI agent for ${business.name || 'this business'}.`;
+    const first = reply.split(/(?<=[.!])\s+/)[0] || '';
+    const alreadyDisclosed = /\b(an AI|AI agent|AI assistant)\b/i.test(first) && (!agent.persona || first.includes(agent.persona));
+    if (!alreadyDisclosed) reply = reply ? `${greet} ${reply}` : raw.trim();
   }
   const cited = citations.map((id) => { const c = chunks.find((x) => x.id === id); return { id, text: c.text, source: c.source }; });
   return { agent, reply, replyType, citations: cited, gapQuestion: data.gap_question, messageForOwner: data.message_for_owner, handoff: !!data.handoff, followUp, model, usage };
