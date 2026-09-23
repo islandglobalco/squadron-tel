@@ -122,11 +122,13 @@ function renderAccount() {
   }
   $('acctBody').innerHTML = `<p class="detail">Create your account to deploy. Squadron is prepaid: plans start at $39 for 30 days.</p>
     <div class="row2 field"><div><label>Email</label><input id="a_email" type="email" autocomplete="email"></div><div><label>Password (8+ characters)</label><input id="a_pass" type="password" autocomplete="new-password"></div></div>
-    <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn small" onclick="auth('signup')">Create account</button><button class="btn small ghost" onclick="auth('login')">I already have one, log in</button></div>`;
+    <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn small" onclick="auth('signup')">Create account</button><button class="btn small ghost" onclick="auth('login')">I already have one, log in</button></div>
+    <label style="display:flex;gap:12px;align-items:flex-start;margin-top:16px;font-size:17px;line-height:1.5;color:rgba(255,255,255,0.9);font-weight:500;cursor:pointer"><input type="checkbox" id="a_terms" style="width:22px;height:22px;margin-top:2px;flex:none;accent-color:#CEEB00">I agree to the <a href="/terms" target="_blank" style="color:var(--signal);font-weight:700">Terms of Service</a> and the <a href="/privacy" target="_blank" style="color:var(--signal);font-weight:700">Privacy Policy</a>, and I will follow the call-recording and consumer laws that apply to my business.</label>`;
 }
 async function auth(action) {
   err('');
-  try { await api('/api/auth', { action, email: $('a_email').value.trim(), password: $('a_pass').value, token }); await load(); }
+  if (action === 'signup' && !$('a_terms').checked) return err('Please agree to the Terms of Service and Privacy Policy to create your account.');
+  try { await api('/api/auth', { action, email: $('a_email').value.trim(), password: $('a_pass').value, token, terms: action === 'signup' ? true : undefined }); await load(); }
   catch (e) { err(e.message); }
 }
 async function logout() { await api('/api/auth', { action: 'logout' }); location.reload(); }

@@ -246,6 +246,14 @@
       "dest": "/api/sweep.js"
     },
     {
+      "src": "/terms",
+      "dest": "/terms.html"
+    },
+    {
+      "src": "/privacy",
+      "dest": "/privacy.html"
+    },
+    {
       "src": "/(.*)",
       "dest": "/$1"
     }
