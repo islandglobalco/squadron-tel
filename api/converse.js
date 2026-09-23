@@ -61,6 +61,7 @@ export default async function handler(req, res) {
     const now = new Date().toISOString();
     history.push({ role: 'customer', text: message.slice(0, 2000), at: now });
     history.push({ role: 'agent', agent_id: out.agent.id, agent_name: `${out.agent.persona} · ${out.agent.title}`, text: out.reply, type: out.replyType, citations: out.citations.map((c) => c.id), at: now });
+    if (out.followUp) history.push({ role: 'agent', agent_id: out.agent.id, agent_name: `${out.agent.persona} · ${out.agent.title}`, text: out.followUp, type: 'follow_up', citations: [], at: now });
     const sources = (convo.sources || []).concat(out.citations.map((c) => ({ id: c.id, text: c.text, source: c.source })));
     const outcome = out.replyType === 'transfer' ? 'transferred' : out.replyType === 'take_message' ? 'message taken' : out.replyType === 'refusal' ? 'unanswered question' : 'answered';
     await sql().query(
@@ -73,6 +74,7 @@ export default async function handler(req, res) {
       conversationId: convo.id,
       agent: { id: out.agent.id, persona: out.agent.persona, title: out.agent.title, portrait: out.agent.portrait, voice: out.agent.voice, persona_idx: out.agent.persona_idx },
       reply: out.reply,
+      followUp: out.followUp || null,
       replyType: out.replyType,
       handoff: out.handoff,
       citations: out.citations,
