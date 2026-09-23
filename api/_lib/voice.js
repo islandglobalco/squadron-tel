@@ -24,7 +24,13 @@ export const VOICE_TOOLS = [
   },
 ];
 
-export function voiceSession({ business, agents, profile, channel, settings, recordingNotice }) {
+export const LOOKUP_TOOL = {
+  type: 'function', name: 'lookup_knowledge',
+  description: 'Search the business knowledge for a topic before answering a detailed question (prices, hours, policies, procedures). Returns matching facts.',
+  parameters: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] },
+};
+
+export function voiceSession({ business, agents, profile, channel, settings, recordingNotice, withLookup = false }) {
   const { chunks, voice } = knowledgeChunks(profile);
   const front = agents[0];
   const base = buildInstructions({ business, agents, chunks, voice, channel, settings });
@@ -41,7 +47,7 @@ VOICE RULES (this is a spoken ${channel} conversation):
     type: 'realtime',
     model: REALTIME_MODEL,
     instructions,
-    tools: VOICE_TOOLS,
+    tools: withLookup ? VOICE_TOOLS.concat([LOOKUP_TOOL]) : VOICE_TOOLS,
     tool_choice: 'auto',
     audio: {
       input: { transcription: { model: 'gpt-4o-mini-transcribe' }, turn_detection: { type: 'semantic_vad', eagerness: 'auto' } },
