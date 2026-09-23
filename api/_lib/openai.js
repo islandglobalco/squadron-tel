@@ -50,6 +50,7 @@ export async function structured({ instructions, input, schema, name, model = PR
     resp = await responses(body(model), { timeoutMs });
   } catch (e) {
     if (/model|not found|does not exist|unsupported|invalid_request/i.test(e.message) && fallback && fallback !== model) {
+      console.warn('[openai] falling back to', fallback, 'because', e.message.slice(0, 300));
       resp = await responses(body(fallback), { timeoutMs });
       resp._model = fallback;
     } else throw e;
