@@ -17,6 +17,10 @@ Squadron (squadron.tel) builds a customer-service team from a business's website
 
 Deploy `bridge/` as a Node service with these variables: `OPENAI_API_KEY`, `BRIDGE_SECRET` (same value as Vercel), `SQUADRON_ORIGIN=https://squadron.tel`, `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `PUBLIC_HOST` (the service's public hostname). Point each Twilio number's voice webhook at `https://<PUBLIC_HOST>/twilio/voice` (POST). Pool numbers for demos go into the `demo_numbers` table (`INSERT INTO demo_numbers (number) VALUES ('+1...')`).
 
+### Cloudflare Workers (free plan)
+
+`bridge/worker.js` and `bridge/wrangler.toml` run the same bridge on Workers with a Durable Object per call. From `bridge/`: `npx wrangler deploy`, then `npx wrangler secret put` for `OPENAI_API_KEY`, `BRIDGE_SECRET`, `TWILIO_ACCOUNT_SID` and `TWILIO_AUTH_TOKEN`. The voice webhook is `https://squadron-bridge.<account>.workers.dev/twilio/voice`.
+
 ## Compliance defaults
 
 The AI identifies itself at the start of every conversation, every call starts with an audible recording notice, and Squadron answers inbound conversations only.
