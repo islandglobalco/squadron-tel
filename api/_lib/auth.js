@@ -20,7 +20,7 @@ export async function ensureAuthSchema() {
     id TEXT PRIMARY KEY,
     email TEXT NOT NULL UNIQUE,
     pass_hash TEXT NOT NULL,
-    plan TEXT NOT NULL DEFAULT 'trial',
+    plan TEXT NOT NULL DEFAULT 'none',
     trial_ends_at TIMESTAMPTZ NOT NULL DEFAULT (now() + interval '14 days'),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
   )`);
@@ -95,11 +95,15 @@ export async function findAccount(email) {
   return rows[0] || null;
 }
 
-// Plan allowances. The trial uses the Scout allowance. Paid allowances are
-// applied when billing ships.
+// Plans. Everything is prepaid: a plan is active only for a paid 30-day
+// period (see ledger.js). Chat has no conversation limit; voice minutes are
+// included per plan and extra minutes are sold prepaid in blocks.
 export const PLANS = {
-  trial: { name: '14-day trial', price: 0, minutes: 250, conversations: 1000 },
-  scout: { name: 'Scout', price: 99, minutes: 250, conversations: 1000 },
-  commander: { name: 'Commander', price: 299, minutes: 1000, conversations: null },
-  hq: { name: 'Command HQ', price: 799, minutes: null, conversations: null },
+  none: { name: 'No paid plan', price: 0, minutes: 0 },
+  basic: { name: 'Basic', price: 39, minutes: 250 },
+  pro: { name: 'Pro', price: 79, minutes: 650 },
+  center: { name: 'Command Center', price: 199, minutes: 2000 },
 };
+// Earlier plan ids map to the current plans.
+const ALIASES = { scout: 'basic', commander: 'pro', hq: 'center', trial: 'none' };
+export function planKey(k) { return PLANS[k] ? k : (ALIASES[k] || 'none'); }

@@ -47,7 +47,7 @@ Write every sentence as a complete sentence.`;
 export async function generateTeam(profile) {
   const knowledge = profileToKnowledge(profile);
   const gaps = (profile.gaps || []).join('\n- ');
-  const { data, model } = await structured({
+  const { data, model, usage } = await structured({
     instructions: INSTRUCTIONS,
     input: `BUSINESS PROFILE:\n${knowledge}\n\nTHINGS THE PROFILE DOES NOT SAY:\n- ${gaps}\n\nDesign the team.`,
     schema: TEAM_SCHEMA,
@@ -79,5 +79,5 @@ export async function generateTeam(profile) {
       enabled: true,
     };
   });
-  return { agents, routing_notes: data.routing_notes, model };
+  return { agents, routing_notes: data.routing_notes, model, usage };
 }

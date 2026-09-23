@@ -5,17 +5,17 @@
 
 import { sql } from './db.js';
 import { ensureAuthSchema } from './auth.js';
+import { newId } from './db.js';
 
 const API = 'https://api.mercury.com/api/v1';
 
-// Plan prices are the published $99 / $299 / $799. Packs are sold at a
-// markup over their provider cost; the owner can change these numbers.
+// Plan prices. Every item is paid before it is used. Extra minutes are sold
+// in prepaid blocks of 100 at $0.25 a minute.
 export const PRICES = {
-  scout: { kind: 'plan', label: 'Scout plan, one month', cents: 9900 },
-  commander: { kind: 'plan', label: 'Commander plan, one month', cents: 29900 },
-  hq: { kind: 'plan', label: 'Command HQ plan, one month', cents: 79900 },
-  minutes100: { kind: 'pack', label: '100 extra voice minutes', cents: 2500, minutes: 100 },
-  chats500: { kind: 'pack', label: '500 extra chat conversations', cents: 1500, conversations: 500 },
+  basic: { kind: 'plan', label: 'Basic plan, 30 days (250 voice minutes, unlimited chat)', cents: 3900 },
+  pro: { kind: 'plan', label: 'Pro plan, 30 days (650 voice minutes, unlimited chat)', cents: 7900 },
+  center: { kind: 'plan', label: 'Command Center plan, 30 days (2,000 voice minutes, unlimited chat)', cents: 19900 },
+  minutes100: { kind: 'pack', label: '100 extra voice minutes for the current period', cents: 2500, minutes: 100 },
 };
 
 export const BENEFICIARY = {
@@ -41,6 +41,9 @@ export async function ensureBillingSchema() {
     period_end TIMESTAMPTZ
   )`);
   await sql().query('ALTER TABLE accounts ADD COLUMN IF NOT EXISTS paid_through TIMESTAMPTZ');
+  await sql().query('ALTER TABLE accounts ADD COLUMN IF NOT EXISTS notices JSONB NOT NULL DEFAULT \'{}\'::jsonb');
+  await sql().query('ALTER TABLE invoices ADD COLUMN IF NOT EXISTS period_start TIMESTAMPTZ');
+  await sql().query("UPDATE invoices SET period_start = paid_at WHERE kind = 'plan' AND status = 'paid' AND period_start IS NULL AND period_end IS NOT NULL");
 }
 
 function headers() {
@@ -107,20 +110,30 @@ export async function reconcile() {
   return { checked: pending.length, paid };
 }
 
+// A paid plan opens the next 30-day period (starting when the current one
+// ends, if it is still running). A paid pack joins the period it was paid in,
+// or the next plan period if none is running.
 export async function markPaid(inv, txId) {
-  const periodEnd = new Date(Date.now() + 30 * 86400000).toISOString();
-  await sql().query("UPDATE invoices SET status = 'paid', paid_at = now(), mercury_tx_id = $2, period_end = $3 WHERE id = $1", [inv.id, txId, periodEnd]);
+  await sql().query("UPDATE invoices SET status = 'paid', paid_at = now(), mercury_tx_id = $2 WHERE id = $1 AND status = 'pending'", [inv.id, txId]);
   if (inv.kind === 'plan') {
-    await sql().query("UPDATE accounts SET plan = $2, paid_through = GREATEST(COALESCE(paid_through, now()), now()) + interval '30 days' WHERE id = $1", [inv.account_id, inv.item]);
+    const acc = (await sql().query('SELECT paid_through FROM accounts WHERE id = $1', [inv.account_id]))[0];
+    const start = acc && acc.paid_through && new Date(acc.paid_through) > new Date() ? new Date(acc.paid_through) : new Date();
+    const end = new Date(start.getTime() + 30 * 86400000);
+    await sql().query('UPDATE invoices SET period_start = $2, period_end = $3 WHERE id = $1', [inv.id, start.toISOString(), end.toISOString()]);
+    await sql().query('UPDATE accounts SET plan = $2, paid_through = $3 WHERE id = $1', [inv.account_id, inv.item, end.toISOString()]);
+    await sql().query("UPDATE invoices SET period_start = $2, period_end = $3 WHERE account_id = $1 AND kind = 'pack' AND status = 'paid' AND period_start IS NULL", [inv.account_id, start.toISOString(), end.toISOString()]);
+  } else {
+    const cur = await sql().query("SELECT period_start, period_end FROM invoices WHERE account_id = $1 AND kind = 'plan' AND status = 'paid' AND period_start <= now() AND period_end > now() ORDER BY period_start DESC LIMIT 1", [inv.account_id]);
+    if (cur[0]) await sql().query('UPDATE invoices SET period_start = $2, period_end = $3 WHERE id = $1', [inv.id, cur[0].period_start, cur[0].period_end]);
   }
 }
 
-// Extra allowance from packs paid during the current month.
-export async function packAllowance(accountId, periodStart) {
-  if (!accountId) return { minutes: 0, conversations: 0 };
-  await ensureBillingSchema();
-  const rows = await sql().query("SELECT item FROM invoices WHERE account_id = $1 AND kind = 'pack' AND status = 'paid' AND paid_at >= $2", [accountId, periodStart]);
-  let minutes = 0, conversations = 0;
-  for (const r of rows) { const p = PRICES[r.item]; if (p) { minutes += p.minutes || 0; conversations += p.conversations || 0; } }
-  return { minutes, conversations };
+// Creates a pending invoice unless one for the same item is already open.
+export async function createInvoice(accountId, item) {
+  const p = PRICES[item];
+  if (!p) throw new Error('Unknown item');
+  const open = await sql().query("SELECT * FROM invoices WHERE account_id = $1 AND item = $2 AND status = 'pending'", [accountId, item]);
+  if (open.length) return { invoice: open[0], created: false };
+  const rows = await sql().query('INSERT INTO invoices (id, account_id, item, kind, label, amount_cents, reference) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *', [newId('inv'), accountId, item, p.kind, p.label, p.cents, newReference()]);
+  return { invoice: rows[0], created: true };
 }

@@ -4,7 +4,7 @@
 
 import { knowledgeChunks, buildInstructions } from './answer.js';
 
-export const REALTIME_MODEL = process.env.REALTIME_MODEL || 'gpt-realtime-2.1';
+export const REALTIME_MODEL = process.env.REALTIME_MODEL || 'gpt-realtime-2.1-mini';
 
 export const VOICE_TOOLS = [
   {

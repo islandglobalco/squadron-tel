@@ -85,7 +85,7 @@ export async function answer({ business, agents, profile, history, message, chan
     { role: 'user', content: message },
   ];
   const prefix = lastAgentId ? `The agent who spoke last was ${lastAgentId}. ` : 'This is the first turn of the conversation. ';
-  const { data, model } = await structured({
+  const { data, model, usage } = await structured({
     instructions: instructions + `\n\n${prefix}Respond as JSON.`,
     input,
     schema: REPLY_SCHEMA,
@@ -107,5 +107,5 @@ export async function answer({ business, agents, profile, history, message, chan
   // The first reply of a conversation must identify the agent as an AI.
   if (!history.length && !/\bAI\b/.test(reply) && agent.greeting) reply = `${agent.greeting} ${reply}`;
   const cited = citations.map((id) => { const c = chunks.find((x) => x.id === id); return { id, text: c.text, source: c.source }; });
-  return { agent, reply, replyType, citations: cited, gapQuestion: data.gap_question, messageForOwner: data.message_for_owner, handoff: !!data.handoff, model };
+  return { agent, reply, replyType, citations: cited, gapQuestion: data.gap_question, messageForOwner: data.message_for_owner, handoff: !!data.handoff, model, usage };
 }
