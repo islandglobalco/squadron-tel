@@ -37,7 +37,7 @@ export default async function handler(req, res) {
     const business = { name: profile.company?.name?.value || biz.input_value };
     if (!test && !body.conversationId) {
       const u = await usageFor(biz.id);
-      if (u.paused) return bad(res, 429, `${business.name} has reached its plan allowance for this month, so the team is paused. The business has been notified.`);
+      if (u.paused) return bad(res, 429, `${business.name} has reached its plan allowance for this month, so the team is paused. Please try again later or contact the business directly.`);
     }
 
     let convo = null;
