@@ -1,7 +1,7 @@
 // api/_lib/openai.js — thin helpers around the OpenAI Responses API.
 
-export const PROFILE_MODEL = process.env.PROFILE_MODEL || 'gpt-5-mini';
-export const CHAT_MODEL = process.env.CHAT_MODEL || 'gpt-5-mini';
+export const PROFILE_MODEL = process.env.PROFILE_MODEL || 'gpt-4.1';
+export const CHAT_MODEL = process.env.CHAT_MODEL || 'gpt-4.1-mini';
 
 export function apiKey() {
   const key = process.env.OPENAI_API_KEY;

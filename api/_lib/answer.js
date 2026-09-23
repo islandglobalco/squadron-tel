@@ -2,7 +2,7 @@
 // cites knowledge chunks built from the Business Profile; a question the
 // profile does not answer gets an honest refusal, a message, or a transfer.
 
-import { structured } from './openai.js';
+import { structured, CHAT_MODEL } from './openai.js';
 
 // Flattens the profile into citable chunks: { id, text, source }.
 export function knowledgeChunks(profile) {
@@ -90,6 +90,7 @@ export async function answer({ business, agents, profile, history, message, chan
     input,
     schema: REPLY_SCHEMA,
     name: 'team_reply',
+    model: CHAT_MODEL,
     reasoning: 'low',
     timeoutMs: 50_000,
   });
@@ -103,6 +104,8 @@ export async function answer({ business, agents, profile, history, message, chan
     replyType = 'refusal';
     reply = `I do not have that information in what ${business.name || 'the business'} has given me. I can take a message so a person can follow up with you.`;
   }
+  // The first reply of a conversation must identify the agent as an AI.
+  if (!history.length && !/\bAI\b/.test(reply) && agent.greeting) reply = `${agent.greeting} ${reply}`;
   const cited = citations.map((id) => { const c = chunks.find((x) => x.id === id); return { id, text: c.text, source: c.source }; });
   return { agent, reply, replyType, citations: cited, gapQuestion: data.gap_question, messageForOwner: data.message_for_owner, handoff: !!data.handoff, model };
 }
