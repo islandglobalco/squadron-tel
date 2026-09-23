@@ -13,7 +13,7 @@ import { noticeOnce, sendEmail, accountEmail } from './_lib/email.js';
 const BILLING = 'https://www.squadron.tel/billing';
 
 function wireText(inv, w) {
-  return `Amount: $${(inv.amount_cents / 100).toFixed(2)}\nReference (put this in the wire memo): ${inv.reference}\nBank: ${w.bank}\nRouting number: ${w.routingNumber}\nAccount number: ${w.accountNumber}\nBeneficiary: ${w.beneficiaryName}, ${w.beneficiaryAddress}\n\nYou can also see these details in Billing: ${BILLING}`;
+  return `Amount: $${(inv.amount_cents / 100).toFixed(2)}\nReference (put this in the wire memo): ${inv.reference}\nBank: ${w.bank}\nRouting number: ${w.routingNumber}\nAccount number: ${w.accountNumber}\nBeneficiary: ${w.beneficiaryName}, ${w.beneficiaryAddress}\n\nTo pay by card instead, which switches your team on at once, open Billing: ${BILLING}`;
 }
 
 export async function runBilling() {
