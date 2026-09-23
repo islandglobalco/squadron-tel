@@ -74,6 +74,12 @@
     },
     "api/recording.js": {
       "maxDuration": 60
+    },
+    "api/billing.js": {
+      "maxDuration": 30
+    },
+    "api/billing-cron.js": {
+      "maxDuration": 60
     }
   },
   "routes": [
@@ -202,8 +208,26 @@
       "dest": "/api/recording.js"
     },
     {
+      "src": "/billing",
+      "dest": "/billing.html"
+    },
+    {
+      "src": "/api/billing",
+      "dest": "/api/billing.js"
+    },
+    {
+      "src": "/api/billing-cron",
+      "dest": "/api/billing-cron.js"
+    },
+    {
       "src": "/(.*)",
       "dest": "/$1"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/billing-cron",
+      "schedule": "0 * * * *"
     }
   ]
 }

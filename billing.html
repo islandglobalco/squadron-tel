@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Billing — Squadron</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="/onboard.css">
+<style>
+.card{border-radius:22px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);padding:26px 28px;margin-bottom:18px}
+.card h2{margin-bottom:10px}
+.big{font-size:20px;line-height:1.55;color:#fff;font-weight:600}
+.detail{font-size:17px;line-height:1.55;color:var(--slate);font-weight:500;margin-top:6px}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:18px}
+.plan{border-radius:22px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.12);padding:26px;display:flex;flex-direction:column;gap:10px}
+.plan.current{border-color:var(--signal);background:var(--signal-dim)}
+.plan h3{font-family:'Barlow Condensed',sans-serif;font-weight:900;text-transform:uppercase;font-size:34px;letter-spacing:0.01em}
+.price{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:52px;line-height:1}
+.price small{font-family:Inter,sans-serif;font-size:17px;font-weight:600;color:var(--slate)}
+.plan ul{list-style:none;font-size:17px;line-height:1.6;color:var(--slate);font-weight:600;flex:1}
+.plan .btn{margin-top:8px}
+.packs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.inv{border-radius:18px;border:2px solid rgba(254,188,46,0.5);background:rgba(254,188,46,0.08);padding:22px 24px;margin-bottom:14px}
+.inv.paid{border-color:rgba(34,217,90,0.4);background:rgba(34,217,90,0.08)}
+.inv h3{font-size:21px;font-weight:800;margin-bottom:12px}
+.wire{display:grid;grid-template-columns:220px 1fr;gap:8px 16px;font-size:18px;font-weight:600}
+.wire dt{color:var(--slate);font-weight:700}
+.wire dd{color:#fff;font-family:'JetBrains Mono',ui-monospace,monospace;user-select:all;word-break:break-all}
+.ref{color:var(--signal)!important;font-size:22px;font-weight:800}
+.ok{color:var(--green);font-weight:700;font-size:18px;margin-top:12px}
+.error:not(:empty){display:block}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+@media (max-width:900px){.plans{grid-template-columns:1fr}.packs{grid-template-columns:1fr}.wire{grid-template-columns:1fr}.wire dd{margin-bottom:8px}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/" aria-label="Squadron"><svg class="nav-logo-svg" viewBox="0 -430 2278 492" xmlns="http://www.w3.org/2000/svg" aria-label="Squadron">
+      <g transform="translate(0,0)" data-letter="S" data-idx="0"><g class="logo-letter">
+        <path d="M 6 -371.28125 L 75 -429.65625 L 199 -429.65625 L 268 -371.28125 L 268.5 -304.921875 L 167.5 -304.921875 L 167.5 -349.015625 L 106.5 -349.015625 L 106.5 -259.5625 L 268 -259.984375 L 270 -57.953125 L 201 0.421875 L 77 0.421875 L 8 -57.953125 L 7.5 -124.3125 L 108.5 -124.3125 L 108.5 -80.21875 L 169.5 -80.21875 L 169.5 -169.6875 L 148.5 -169.6875 L 148.5 -169.265625 L 8 -169.265625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(286,0)" data-letter="Q" data-idx="1"><g class="logo-letter">
+        <path d="M 200 0.84375 L 187.5 0.84375 L 187.5 63.421875 L 87 63.421875 L 87 0.84375 L 74.5 0.84375 L 5.5 -57.546875 L 5.5 -370.015625 L 74.5 -428.40625 L 198 -428.40625 L 268 -369.1875 L 268 -56.703125 Z M 106 -347.765625 L 106 -82.3125 L 167.5 -82.3125 L 167.5 -346.921875 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(572,0)" data-letter="U" data-idx="2"><g class="logo-letter">
+        <path d="M 6.5 -428.40625 L 108 -428.40625 L 108 -83.15625 L 169 -83.15625 L 169 -352.796875 L 169.5 -352.796875 L 169.5 -429.234375 L 269.5 -429.234375 L 269.5 -58.375 L 200.5 0 L 76.5 0 L 7.5 -58.375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(858,0)" data-letter="A" data-idx="3"><g class="logo-letter">
+        <path d="M 107.5 0 L 7 0 L 7 -199.078125 L 6.5 -199.078125 L 6.5 -372.546875 L 75.5 -430.921875 L 199.5 -430.921875 L 268.5 -372.546875 L 268.5 -325.078125 L 269.5 0 L 169.5 0 L 168.5 -172.203125 L 107.5 -172.203125 Z M 107 -257.046875 L 168 -257.046875 L 168 -347.765625 L 107 -347.765625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1144,0)" data-letter="D" data-idx="4"><g class="logo-letter">
+        <path d="M 269.5 -55.859375 L 200.5 0.84375 L 30 0.421875 L 30 0 L 7.5 0 L 6.5 -429.65625 L 199.5 -429.65625 L 268.5 -371.28125 Z M 108 -83.578125 L 169 -83.578125 L 168 -359.9375 L 107 -359.9375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1430,0)" data-letter="R" data-idx="5"><g class="logo-letter">
+        <path d="M 108 0.421875 L 7.5 0.421875 L 7 -430.5 L 200 -430.5 L 269 -372.125 L 269 -324.65625 L 270 -233.515625 L 268.5 -233.09375 L 269 -230.15625 L 250 -214.203125 L 250.5 -214.203125 L 269.5 -198.234375 L 269 -195.296875 L 270.5 -194.875 L 270 0.421875 L 170 0.421875 L 169 -171.78125 L 108 -171.78125 Z M 107.5 -256.625 L 168.5 -256.625 L 168.5 -347.34375 L 107.5 -347.34375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1716,0)" data-letter="O" data-idx="6"><g class="logo-letter">
+        <path d="M 202 0.84375 L 76.5 0.84375 L 7.5 -57.546875 L 6.5 -372.546875 L 75.5 -430.921875 L 199 -430.921875 L 269 -371.703125 L 270 -56.703125 Z M 107 -350.28125 L 108 -82.3125 L 169.5 -82.3125 L 168.5 -349.4375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(2002,0)" data-letter="N" data-idx="7"><g class="logo-letter">
+        <path d="M 109 0.421875 L 8.5 0.421875 L 8.5 -198.65625 L 8 -198.65625 L 7 -430.5 L 108.5 -430.5 L 169.5 -263.34375 L 169.5 -430.5 L 270 -430.5 L 270 -324.65625 L 271 0.421875 L 170 0.421875 L 108.5 -162.546875 Z" fill="white"/>
+      </g></g>
+    </svg></a>
+  <a class="nav-right" href="/" id="backLink" onclick="if(document.referrer.startsWith(location.origin)){history.back();return false}">← Back</a>
+</nav>
+<main>
+  <p class="eyebrow">Billing</p>
+  <h1>Plans and <em>payment.</em></h1>
+  <p class="lead">Every plan includes the full team. Pay by bank wire or ACH to our Mercury account. When your usage reaches your plan's cap, your team pauses and we tell you. You are never upgraded automatically.</p>
+  <div class="error" id="err"></div>
+  <div class="card" id="status"><p class="big">Loading your account.</p></div>
+  <div id="invoices"></div>
+  <h2 style="margin:34px 0 16px">Plans</h2>
+  <div class="plans" id="plans"></div>
+  <h2 style="margin:34px 0 16px">Extra capacity packs</h2>
+  <p class="detail" style="margin-bottom:16px">Packs add to the current month's allowance and do not renew.</p>
+  <div class="packs" id="packs"></div>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const money = (c) => '$' + (c / 100).toLocaleString('en-US', { minimumFractionDigits: c % 100 ? 2 : 0 });
+const date = (d) => d ? new Date(d).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '';
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const FEATURES = {
+  scout: ['250 voice minutes a month', '1,000 chat conversations a month', 'The full team'],
+  commander: ['1,000 voice minutes a month', 'Unlimited chat conversations', 'The full team'],
+  hq: ['Unlimited voice minutes', 'Unlimited chat conversations', 'The full team'],
+};
+let data = null;
+
+async function call(body) {
+  $('err').textContent = '';
+  const r = await fetch('/api/billing', body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {});
+  const j = await r.json().catch(() => ({}));
+  if (r.status === 401) { $('status').innerHTML = '<p class="big">Log in to see billing.</p><div class="packs" style="margin-top:14px"><input class="input" id="a_email" type="email" placeholder="Email" autocomplete="email"><input class="input" id="a_pass" type="password" placeholder="Password" autocomplete="current-password"></div><div class="actions"><button class="btn small" onclick="login()">Log in</button><a class="btn small ghost" href="/start">New here? Start a free trial</a></div>'; $('plans').innerHTML = ''; $('packs').innerHTML = ''; return null; }
+  if (!r.ok) { $('err').textContent = j.error || 'Something went wrong. Please try again.'; return null; }
+  data = j; render(); return j;
+}
+
+function render() {
+  const a = data.account;
+  const onTrial = a.plan === 'trial';
+  let s = `<p class="big">Signed in as ${esc(a.email)}. Your plan is <strong>${esc(a.planInfo.name)}</strong>.</p>`;
+  if (onTrial) s += `<p class="detail">Your trial ends on ${date(a.trialEndsAt)}. No card was taken, and nothing is charged when it ends. Choose a plan below to keep your team running.</p>`;
+  else if (a.paidThrough) s += `<p class="detail">Paid through ${date(a.paidThrough)}.</p>`;
+  if (data.notice) s += `<p class="ok">${esc(data.notice)}</p>`;
+  $('status').innerHTML = s;
+
+  const pending = data.invoices.filter((i) => i.status === 'pending');
+  const paid = data.invoices.filter((i) => i.status === 'paid');
+  let h = '';
+  if (pending.length) h += '<h2 style="margin:34px 0 16px">Waiting for payment</h2>';
+  for (const i of pending) {
+    const w = i.wire || {};
+    h += `<div class="inv"><h3>${esc(i.label)}: ${money(i.amount_cents)}</h3>
+      <p class="detail" style="margin-bottom:14px">Send a wire or ACH transfer with these details. Put the reference in the memo so we can match your payment.</p>
+      <dl class="wire">
+        <dt>Reference (memo)</dt><dd class="ref">${esc(w.reference)}</dd>
+        <dt>Amount</dt><dd>${money(i.amount_cents)}</dd>
+        <dt>Beneficiary</dt><dd>${esc(w.beneficiaryName)}</dd>
+        <dt>Beneficiary address</dt><dd>${esc(w.beneficiaryAddress)}</dd>
+        <dt>Bank</dt><dd>${esc(w.bank)}</dd>
+        <dt>Routing number</dt><dd>${esc(w.routingNumber)}</dd>
+        <dt>Account number</dt><dd>${esc(w.accountNumber)}</dd>
+      </dl>
+      <div class="actions"><button class="btn small" onclick="check(this)">I sent it, check for payment</button><button class="btn small ghost" onclick="cancelInv('${i.id}')">Cancel this invoice</button></div>
+    </div>`;
+  }
+  if (paid.length) {
+    h += '<h2 style="margin:34px 0 16px">Paid</h2>';
+    for (const i of paid) h += `<div class="inv paid"><h3>${esc(i.label)}: ${money(i.amount_cents)}</h3><p class="detail">Paid on ${date(i.paid_at)}. Reference ${esc(i.reference)}.</p></div>`;
+  }
+  $('invoices').innerHTML = h;
+
+  $('plans').innerHTML = ['scout', 'commander', 'hq'].map((k) => {
+    const p = data.prices[k];
+    const cur = a.plan === k;
+    const open = pending.some((i) => i.item === k);
+    return `<div class="plan ${cur ? 'current' : ''}"><h3>${esc(p.label.replace(' plan, one month', ''))}</h3><div class="price">${money(p.cents)}<small> / month</small></div>
+      <ul>${FEATURES[k].map((f) => `<li>${f}</li>`).join('')}</ul>
+      <button class="btn small ${cur ? 'ghost' : ''}" ${open ? 'disabled' : ''} onclick="invoice('${k}', this)">${open ? 'Invoice waiting' : cur ? 'Pay next month' : 'Choose ' + esc(p.label.replace(' plan, one month', ''))}</button></div>`;
+  }).join('');
+  $('packs').innerHTML = ['minutes100', 'chats500'].map((k) => {
+    const p = data.prices[k];
+    const open = pending.some((i) => i.item === k);
+    return `<div class="plan"><h3>${esc(p.label)}</h3><div class="price">${money(p.cents)}</div><button class="btn small ghost" ${open ? 'disabled' : ''} onclick="invoice('${k}', this)">${open ? 'Invoice waiting' : 'Buy this pack'}</button></div>`;
+  }).join('');
+}
+
+async function invoice(item, b) { b.disabled = true; await call({ action: 'invoice', item }); window.scrollTo({ top: $('invoices').offsetTop - 100, behavior: 'smooth' }); }
+async function check(b) { b.disabled = true; b.textContent = 'Checking…'; await call({ action: 'check' }); }
+async function cancelInv(id) { await call({ action: 'cancel', id }); }
+async function login() {
+  $('err').textContent = '';
+  const r = await fetch('/api/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'login', email: $('a_email').value.trim(), password: $('a_pass').value }) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) { $('err').textContent = j.error || 'Could not log in.'; return; }
+  call();
+}
+call();
+</script>
+</body>
+</html>

@@ -117,7 +117,7 @@ async function api(path, body, method) {
 function renderAccount() {
   if (account) {
     const ends = account.trialEndsAt ? new Date(account.trialEndsAt) : null;
-    $('acctBody').innerHTML = `<div class="acct">Signed in as <b style="color:#fff">${esc(account.email)}</b> · ${esc(account.planInfo.name)}${ends && account.plan === 'trial' ? ` · trial ends ${ends.toLocaleDateString()}` : ''} · <a href="#" onclick="logout();return false" style="color:var(--signal)">Log out</a></div>`;
+    $('acctBody').innerHTML = `<div class="acct">Signed in as <b style="color:#fff">${esc(account.email)}</b> · ${esc(account.planInfo.name)}${ends && account.plan === 'trial' ? ` · trial ends ${ends.toLocaleDateString()}` : ''} · <a href="/billing" style="color:var(--signal)">Billing</a> · <a href="#" onclick="logout();return false" style="color:var(--signal)">Log out</a></div>`;
     return;
   }
   $('acctBody').innerHTML = `<p class="detail">Create your account to deploy. 14-day trial, no card required.</p>
