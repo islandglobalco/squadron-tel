@@ -1,6 +1,7 @@
 // /api/ingest/extract — turns the stored sources into the Business Profile.
 import { ensureSchema, sql, loadBusiness, readJson, bad } from '../_lib/db.js';
 import { buildProfile } from '../_lib/profile.js';
+import { requireFunds, recordSpend, textCostCents, HOLD, PaymentRequired } from '../_lib/ledger.js';
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
@@ -13,7 +14,10 @@ export default async function handler(req, res) {
     if (!biz) return bad(res, 404, 'Unknown business');
     const docs = await sql().query('SELECT kind, url, title, content FROM sources WHERE business_id = $1 ORDER BY id', [biz.id]);
     if (!docs.length) return bad(res, 400, 'No sources to read yet.');
+    // Prepaid only: the profile is built after the plan is paid.
+    await requireFunds(biz.account_id, HOLD.profile, 'This account');
     const { profile, model, usage } = await buildProfile(docs);
+    await recordSpend({ accountId: biz.account_id, businessId: biz.id, kind: 'profile', cents: textCostCents(model, usage) });
     await sql().query(
       `INSERT INTO profiles (business_id, profile, model) VALUES ($1, $2, $3)
        ON CONFLICT (business_id) DO UPDATE SET profile = EXCLUDED.profile, model = EXCLUDED.model, updated_at = now()`,
@@ -21,6 +25,7 @@ export default async function handler(req, res) {
     await sql().query("UPDATE businesses SET status = 'profiled', updated_at = now() WHERE id = $1", [biz.id]);
     return res.status(200).json({ ok: true, profile, model, usage: usage ? { input: usage.input_tokens, output: usage.output_tokens } : null });
   } catch (e) {
+    if (e instanceof PaymentRequired) return res.status(402).json({ error: e.message, code: e.code });
     console.error('[extract]', e);
     return bad(res, 500, e.message);
   }
