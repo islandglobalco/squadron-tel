@@ -20,7 +20,18 @@ export default async function handler(req, res) {
     const agents = team.agents.agents.filter((a) => a.enabled !== false);
     const business = { name: profile.company?.name?.value || biz.input_value };
     const session = voiceSession({ business, agents, profile, channel: 'phone', settings: biz.settings || null, recordingNotice: true, withLookup: true });
-    return res.status(200).json({ ok: true, session, agent: { id: agents[0].id, persona: agents[0].persona, title: agents[0].title }, settings: biz.settings || {}, businessName: business.name });
+    // A short-lived OpenAI key for this one call, so the bridge never holds the real key.
+    const model = String(req.query?.model || process.env.REALTIME_MODEL || 'gpt-realtime-2.1');
+    const cs = await fetch('https://api.openai.com/v1/realtime/client_secrets', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ expires_after: { anchor: 'created_at', seconds: 600 }, session: { type: 'realtime', model } }),
+    });
+    const csText = await cs.text();
+    if (!cs.ok) throw new Error(`OpenAI client secret failed (${cs.status}): ${csText.slice(0, 200)}`);
+    const csJson = JSON.parse(csText);
+    const clientSecret = csJson.value || csJson.client_secret?.value;
+    return res.status(200).json({ ok: true, session, clientSecret, model, agent: { id: agents[0].id, persona: agents[0].persona, title: agents[0].title }, settings: biz.settings || {}, businessName: business.name });
   } catch (e) {
     console.error('[bridge/session]', e);
     return bad(res, 500, e.message);
