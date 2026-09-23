@@ -80,6 +80,9 @@
     },
     "api/billing-cron.js": {
       "maxDuration": 60
+    },
+    "api/portrait.js": {
+      "maxDuration": 15
     }
   },
   "routes": [
@@ -208,6 +211,18 @@
       "dest": "/api/recording.js"
     },
     {
+      "src": "/api/portrait",
+      "dest": "/api/portrait.js"
+    },
+    {
+      "src": "/portraits/(?<id>[0-9a-f-]{36})\\.webp",
+      "dest": "/api/portrait.js?id=$id"
+    },
+    {
+      "src": "/account",
+      "dest": "/account.html"
+    },
+    {
       "src": "/billing",
       "dest": "/billing.html"
     },
@@ -229,22 +244,5 @@
       "path": "/api/billing-cron",
       "schedule": "0 * * * *"
     }
-  ],
-  "images": {
-    "sizes": [
-      256,
-      640,
-      1080
-    ],
-    "remotePatterns": [
-      {
-        "protocol": "https",
-        "hostname": "cdn.midjourney.com"
-      }
-    ],
-    "minimumCacheTTL": 2592000,
-    "formats": [
-      "image/webp"
-    ]
-  }
+  ]
 }

@@ -68,6 +68,7 @@ nav{
   100%{left:150%;opacity:1;}
 }
 
+.nav-login{display:none;color:#fff;font-size:16px;font-weight:700;text-decoration:none;margin-left:auto;margin-right:16px}
 .nav-links{display:flex;align-items:center;gap:32px;list-style:none;}
 .nav-links a{
   color:var(--slate);text-decoration:none;
@@ -545,6 +546,7 @@ footer{
 @media(max-width:900px){
   nav{padding:0 24px;}
   .nav-links{display:none;}
+  .nav-login{display:inline-block;}
   .hero{padding:110px 24px 60px;}
   .hero-inner{grid-template-columns:1fr;gap:40px;}
   .pricing-grid,.steps-grid{grid-template-columns:1fr;}
@@ -820,7 +822,9 @@ details[open] .faq-q{color:var(--signal);}
     <li><a href="#squad">The Squad</a></li>
     <li><a href="#pricing">Pricing</a></li>
     <li><a href="mailto:info@squadron.tel">Support</a></li>
+    <li><a href="/account">Log in</a></li>
   </ul>
+  <a href="/account" class="nav-login">Log in</a>
   <a href="/start" class="nav-cta">Build my team →</a>
 </nav>
 
@@ -852,7 +856,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- LUNA - animated -->
     <div class="portrait-card" data-agent="0" data-name="Luna">
-      <video class="hover-play" loop muted playsinline preload="none" poster="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2F99aae468-d1e6-4494-a7b2-35b80472ebed%2F0_0.png&w=640&q=75" aria-label="Luna"><source src="https://cdn.midjourney.com/video/14364e4e-2e53-45d9-98d6-6730b0e3258b/0.mp4" type="video/mp4"></video>
+      <video class="hover-play" loop muted playsinline preload="none" poster="/portraits/99aae468-d1e6-4494-a7b2-35b80472ebed.webp" aria-label="Luna"><source src="https://cdn.midjourney.com/video/14364e4e-2e53-45d9-98d6-6730b0e3258b/0.mp4" type="video/mp4"></video>
       <div class="portrait-overlay"><div class="portrait-name">Luna</div><div class="portrait-role">Midnight Escalations</div></div>
       <div class="portrait-live-badge">Moves on hover</div>
       <button class="voice-btn" onclick="previewVoice(0,this)" aria-label="Preview Luna voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
@@ -861,7 +865,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- WREN -->
     <div class="portrait-card" data-agent="1" data-name="Wren">
-      <img src="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2F6f194acd-806e-47a3-a36e-adf434106937%2F0_0.png&w=640&q=75" alt="Wren" loading="lazy">
+      <img src="/portraits/6f194acd-806e-47a3-a36e-adf434106937.webp" alt="Wren" loading="lazy">
       <div class="portrait-overlay"><div class="portrait-name">Wren</div><div class="portrait-role">Live Chat</div></div>
       <button class="voice-btn" onclick="previewVoice(1,this)" aria-label="Preview Wren voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
@@ -869,7 +873,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- VERA -->
     <div class="portrait-card" data-agent="2" data-name="Vera">
-      <img src="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2F15f7b038-b8c0-4366-bad3-d48df37dded4%2F0_0.png&w=640&q=75" alt="Vera" loading="lazy">
+      <img src="/portraits/15f7b038-b8c0-4366-bad3-d48df37dded4.webp" alt="Vera" loading="lazy">
       <div class="portrait-overlay"><div class="portrait-name">Vera</div><div class="portrait-role">Returns &amp; Refunds</div></div>
       <button class="voice-btn" onclick="previewVoice(2,this)" aria-label="Preview Vera voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
@@ -877,7 +881,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- ATLAS -->
     <div class="portrait-card" data-agent="3" data-name="Atlas">
-      <img src="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2Ff1e87d13-e2ef-4832-8af4-ca17611e296c%2F0_0.png&w=640&q=75" alt="Atlas" loading="lazy">
+      <img src="/portraits/f1e87d13-e2ef-4832-8af4-ca17611e296c.webp" alt="Atlas" loading="lazy">
       <div class="portrait-overlay"><div class="portrait-name">Atlas</div><div class="portrait-role">Technical Depth</div></div>
       <button class="voice-btn" onclick="previewVoice(3,this)" aria-label="Preview Atlas voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
@@ -885,7 +889,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- ECHO -->
     <div class="portrait-card" data-agent="4" data-name="Echo">
-      <img src="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2Fc00c635d-69b4-4e40-bee5-a9cf0c6e1d1a%2F0_0.png&w=640&q=75" alt="Echo" loading="lazy">
+      <img src="/portraits/c00c635d-69b4-4e40-bee5-a9cf0c6e1d1a.webp" alt="Echo" loading="lazy">
       <div class="portrait-overlay"><div class="portrait-name">Echo</div><div class="portrait-role">FAQ Rapid-Fire</div></div>
       <button class="voice-btn" onclick="previewVoice(4,this)" aria-label="Preview Echo voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
@@ -893,7 +897,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- LYRA -->
     <div class="portrait-card" data-agent="5" data-name="Lyra">
-      <img src="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2F30415098-3861-4398-8385-76dde6bc4f62%2F0_0.png&w=640&q=75" alt="Lyra" loading="lazy">
+      <img src="/portraits/30415098-3861-4398-8385-76dde6bc4f62.webp" alt="Lyra" loading="lazy">
       <div class="portrait-overlay"><div class="portrait-name">Lyra</div><div class="portrait-role">Onboarding Flow</div></div>
       <button class="voice-btn" onclick="previewVoice(5,this)" aria-label="Preview Lyra voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
@@ -901,7 +905,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- REX - animated -->
     <div class="portrait-card" data-agent="6" data-name="Rex">
-      <video class="hover-play" loop muted playsinline preload="none" poster="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2F8a8692ed-a25f-4504-b891-aaa69bbaa1d7%2F0_0.png&w=640&q=75" aria-label="Rex"><source src="https://cdn.midjourney.com/video/d9906b53-9a82-4df5-894a-52212813a8a8/0.mp4" type="video/mp4"></video>
+      <video class="hover-play" loop muted playsinline preload="none" poster="/portraits/8a8692ed-a25f-4504-b891-aaa69bbaa1d7.webp" aria-label="Rex"><source src="https://cdn.midjourney.com/video/d9906b53-9a82-4df5-894a-52212813a8a8/0.mp4" type="video/mp4"></video>
       <div class="portrait-overlay"><div class="portrait-name">Rex</div><div class="portrait-role">Tier 1 Triage</div></div>
       <div class="portrait-live-badge">Moves on hover</div>
       <button class="voice-btn" onclick="previewVoice(6,this)" aria-label="Preview Rex voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
@@ -910,7 +914,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- IRIS -->
     <div class="portrait-card" data-agent="7" data-name="Iris">
-      <img src="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2Fdadccaca-9d6b-4427-a851-3b01f5f83f2e%2F0_0.png&w=640&q=75" alt="Iris" loading="lazy">
+      <img src="/portraits/dadccaca-9d6b-4427-a851-3b01f5f83f2e.webp" alt="Iris" loading="lazy">
       <div class="portrait-overlay"><div class="portrait-name">Iris</div><div class="portrait-role">Account Recovery</div></div>
       <button class="voice-btn" onclick="previewVoice(7,this)" aria-label="Preview Iris voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
@@ -918,7 +922,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- LEO -->
     <div class="portrait-card" data-agent="8" data-name="Leo">
-      <img src="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2F30fa7e56-8e91-4862-a833-b4bf0918b649%2F0_0.png&w=640&q=75" alt="Leo" loading="lazy">
+      <img src="/portraits/30fa7e56-8e91-4862-a833-b4bf0918b649.webp" alt="Leo" loading="lazy">
       <div class="portrait-overlay"><div class="portrait-name">Leo</div><div class="portrait-role">Billing &amp; Payments</div></div>
       <button class="voice-btn" onclick="previewVoice(8,this)" aria-label="Preview Leo voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
@@ -926,7 +930,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- NOVA -->
     <div class="portrait-card" data-agent="9" data-name="Nova">
-      <img src="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2Ff977c933-a600-4c5f-96fd-3dcfb1a5a67c%2F0_0.png&w=640&q=75" alt="Nova" loading="lazy">
+      <img src="/portraits/f977c933-a600-4c5f-96fd-3dcfb1a5a67c.webp" alt="Nova" loading="lazy">
       <div class="portrait-overlay"><div class="portrait-name">Nova</div><div class="portrait-role">Product Education</div></div>
       <button class="voice-btn" onclick="previewVoice(9,this)" aria-label="Preview Nova voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
@@ -934,7 +938,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- CRUZ -->
     <div class="portrait-card" data-agent="10" data-name="Cruz">
-      <img src="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2Fc7a06d7c-1377-46a5-8a91-ecc4775bfba5%2F0_0.png&w=640&q=75" alt="Cruz" loading="lazy">
+      <img src="/portraits/c7a06d7c-1377-46a5-8a91-ecc4775bfba5.webp" alt="Cruz" loading="lazy">
       <div class="portrait-overlay"><div class="portrait-name">Cruz</div><div class="portrait-role">Outbound Follow-up</div></div>
       <button class="voice-btn" onclick="previewVoice(10,this)" aria-label="Preview Cruz voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
@@ -942,7 +946,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- JADE -->
     <div class="portrait-card" data-agent="11" data-name="Jade">
-      <img src="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2Fc53b068f-4bad-4eea-b767-615c1e1ea9d7%2F0_0.png&w=640&q=75" alt="Jade" loading="lazy">
+      <img src="/portraits/c53b068f-4bad-4eea-b767-615c1e1ea9d7.webp" alt="Jade" loading="lazy">
       <div class="portrait-overlay"><div class="portrait-name">Jade</div><div class="portrait-role">Enterprise Tier</div></div>
       <button class="voice-btn" onclick="previewVoice(11,this)" aria-label="Preview Jade voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
@@ -950,7 +954,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- ORION -->
     <div class="portrait-card" data-agent="12" data-name="Orion">
-      <img src="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2F1d0f1df1-7b21-4243-ba56-e21a3145d197%2F0_0.png&w=640&q=75" alt="Orion" loading="lazy">
+      <img src="/portraits/1d0f1df1-7b21-4243-ba56-e21a3145d197.webp" alt="Orion" loading="lazy">
       <div class="portrait-overlay"><div class="portrait-name">Orion</div><div class="portrait-role">Scheduling &amp; Booking</div></div>
       <button class="voice-btn" onclick="previewVoice(12,this)" aria-label="Preview Orion voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
@@ -958,7 +962,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- SAGE -->
     <div class="portrait-card" data-agent="13" data-name="Sage">
-      <img src="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2F36f56290-b109-458a-a515-0fa5e140d123%2F0_0.png&w=640&q=75" alt="Sage" loading="lazy">
+      <img src="/portraits/36f56290-b109-458a-a515-0fa5e140d123.webp" alt="Sage" loading="lazy">
       <div class="portrait-overlay"><div class="portrait-name">Sage</div><div class="portrait-role">Knowledge Base</div></div>
       <button class="voice-btn" onclick="previewVoice(13,this)" aria-label="Preview Sage voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
@@ -966,7 +970,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- RIVER -->
     <div class="portrait-card" data-agent="14" data-name="River">
-      <img src="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2F22683970-8045-4b87-a235-35848114b322%2F0_0.png&w=640&q=75" alt="River" loading="lazy">
+      <img src="/portraits/22683970-8045-4b87-a235-35848114b322.webp" alt="River" loading="lazy">
       <div class="portrait-overlay"><div class="portrait-name">River</div><div class="portrait-role">Multi-language</div></div>
       <button class="voice-btn" onclick="previewVoice(14,this)" aria-label="Preview River voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
@@ -974,7 +978,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- FELIX -->
     <div class="portrait-card" data-agent="15" data-name="Felix">
-      <img src="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2F30144315-735d-4ab8-aa8f-d72582284f4d%2F0_0.png&w=640&q=75" alt="Felix" loading="lazy">
+      <img src="/portraits/30144315-735d-4ab8-aa8f-d72582284f4d.webp" alt="Felix" loading="lazy">
       <div class="portrait-overlay"><div class="portrait-name">Felix</div><div class="portrait-role">Sentiment Recovery</div></div>
       <button class="voice-btn" onclick="previewVoice(15,this)" aria-label="Preview Felix voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
@@ -982,7 +986,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- ZOE -->
     <div class="portrait-card" data-agent="16" data-name="Zoe">
-      <img src="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2F4977a62d-52e5-4caa-8dff-dbb536dcb279%2F0_0.png&w=640&q=75" alt="Zoe" loading="lazy">
+      <img src="/portraits/4977a62d-52e5-4caa-8dff-dbb536dcb279.webp" alt="Zoe" loading="lazy">
       <div class="portrait-overlay"><div class="portrait-name">Zoe</div><div class="portrait-role">Upsell &amp; Retention</div></div>
       <button class="voice-btn" onclick="previewVoice(16,this)" aria-label="Preview Zoe voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
@@ -990,7 +994,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- MARCUS -->
     <div class="portrait-card" data-agent="17" data-name="Marcus">
-      <img src="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2Fe03440c4-d348-453b-9861-a39a5ecac951%2F0_0.png&w=640&q=75" alt="Marcus" loading="lazy">
+      <img src="/portraits/e03440c4-d348-453b-9861-a39a5ecac951.webp" alt="Marcus" loading="lazy">
       <div class="portrait-overlay"><div class="portrait-name">Marcus</div><div class="portrait-role">Complex Disputes</div></div>
       <button class="voice-btn" onclick="previewVoice(17,this)" aria-label="Preview Marcus voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
@@ -998,7 +1002,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- BLAZE -->
     <div class="portrait-card" data-agent="18" data-name="Blaze">
-      <img src="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2F8bea5820-3283-46cc-8cf3-5ac157abfb71%2F0_0.png&w=640&q=75" alt="Blaze" loading="lazy">
+      <img src="/portraits/8bea5820-3283-46cc-8cf3-5ac157abfb71.webp" alt="Blaze" loading="lazy">
       <div class="portrait-overlay"><div class="portrait-name">Blaze</div><div class="portrait-role">High-Volume Spikes</div></div>
       <button class="voice-btn" onclick="previewVoice(18,this)" aria-label="Preview Blaze voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
@@ -1006,7 +1010,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- KAI -->
     <div class="portrait-card" data-agent="19" data-name="Kai">
-      <img src="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2F9cb586e9-3200-4965-81d9-e69d498ef22c%2F0_0.png&w=640&q=75" alt="Kai" loading="lazy">
+      <img src="/portraits/9cb586e9-3200-4965-81d9-e69d498ef22c.webp" alt="Kai" loading="lazy">
       <div class="portrait-overlay"><div class="portrait-name">Kai</div><div class="portrait-role">After-Hours Cover</div></div>
       <button class="voice-btn" onclick="previewVoice(19,this)" aria-label="Preview Kai voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
@@ -1014,7 +1018,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- PRIYA -->
     <div class="portrait-card" data-agent="20" data-name="Priya">
-      <img src="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2F2bd157cc-cc18-471b-99eb-5245f3b2e7ea%2F0_0.png&w=640&q=75" alt="Priya" loading="lazy">
+      <img src="/portraits/2bd157cc-cc18-471b-99eb-5245f3b2e7ea.webp" alt="Priya" loading="lazy">
       <div class="portrait-overlay"><div class="portrait-name">Priya</div><div class="portrait-role">VIP Concierge</div></div>
       <button class="voice-btn" onclick="previewVoice(20,this)" aria-label="Preview Priya voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
@@ -1022,7 +1026,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- ALEX -->
     <div class="portrait-card" data-agent="21" data-name="Alex">
-      <img src="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2F99aae468-d1e6-4494-a7b2-35b80472ebed%2F0_0.png&w=640&q=75" alt="Alex" loading="lazy">
+      <img src="/portraits/99aae468-d1e6-4494-a7b2-35b80472ebed.webp" alt="Alex" loading="lazy">
       <div class="portrait-overlay"><div class="portrait-name">Alex</div><div class="portrait-role">The Problem-Solver</div></div>
       <button class="voice-btn" onclick="previewVoice(21,this)" aria-label="Preview Alex voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
@@ -1030,7 +1034,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- MAYA -->
     <div class="portrait-card" data-agent="22" data-name="Maya">
-      <img src="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2F6f194acd-806e-47a3-a36e-adf434106937%2F0_0.png&w=640&q=75" alt="Maya" loading="lazy">
+      <img src="/portraits/6f194acd-806e-47a3-a36e-adf434106937.webp" alt="Maya" loading="lazy">
       <div class="portrait-overlay"><div class="portrait-name">Maya</div><div class="portrait-role">The Energizer</div></div>
       <button class="voice-btn" onclick="previewVoice(22,this)" aria-label="Preview Maya voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
@@ -1038,7 +1042,7 @@ details[open] .faq-q{color:var(--signal);}
 
     <!-- SAM -->
     <div class="portrait-card" data-agent="23" data-name="Sam">
-      <img src="/_vercel/image?url=https%3A%2F%2Fcdn.midjourney.com%2F15f7b038-b8c0-4366-bad3-d48df37dded4%2F0_0.png&w=640&q=75" alt="Sam" loading="lazy">
+      <img src="/portraits/15f7b038-b8c0-4366-bad3-d48df37dded4.webp" alt="Sam" loading="lazy">
       <div class="portrait-overlay"><div class="portrait-name">Sam</div><div class="portrait-role">The Expert</div></div>
       <button class="voice-btn" onclick="previewVoice(23,this)" aria-label="Preview Sam voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
@@ -1170,7 +1174,7 @@ details[open] .faq-q{color:var(--signal);}
     <div class="footer-copy">© 2026 Squadron. All rights reserved.</div>
   </div>
   <div class="footer-links">
-    <a href="mailto:info@squadron.tel">Support</a><a href="mailto:hello@squadron.tel">hello@squadron.tel</a>
+    <a href="/account">Log in</a><a href="/billing">Billing</a><a href="mailto:info@squadron.tel">Support: info@squadron.tel</a>
   </div>
 </footer>
 

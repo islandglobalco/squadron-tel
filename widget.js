@@ -46,7 +46,7 @@
         typing.remove();
         if (!x.ok) { add(x.j.error || 'Something went wrong. Please try again.', 'note'); return; }
         conversationId = x.j.conversationId;
-        if (x.j.agent) { agent = x.j.agent; box.querySelector('#sqw-name').textContent = agent.persona + ' · ' + agent.title; if (agent.portrait) box.querySelector('#sqw-avatar').src = agent.portrait.indexOf('cdn.midjourney.com') > -1 ? origin + '/_vercel/image?url=' + encodeURIComponent(agent.portrait) + '&w=256&q=75' : agent.portrait; }
+        if (x.j.agent) { agent = x.j.agent; box.querySelector('#sqw-name').textContent = agent.persona + ' · ' + agent.title; if (agent.portrait) box.querySelector('#sqw-avatar').src = (/cdn\.midjourney\.com\/([0-9a-f-]{36})\//.test(agent.portrait) ? origin + '/portraits/' + RegExp.$1 + '.webp' : agent.portrait); }
         add(x.j.reply);
         if (x.j.replyType === 'transfer') add('A person will follow up with you.', 'note');
       })

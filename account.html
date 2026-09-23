@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your account — Squadron</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="/onboard.css">
+<style>
+.card{border-radius:22px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);padding:26px 28px;margin-bottom:18px}
+.big{font-size:20px;line-height:1.55;color:#fff;font-weight:600}
+.detail{font-size:17px;line-height:1.55;color:var(--slate);font-weight:500;margin-top:6px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.biz h3{font-size:24px;font-weight:800;margin-bottom:6px;word-break:break-word}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.error:not(:empty){display:block}
+.tag{display:inline-block;font-size:13px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;padding:6px 12px;border-radius:999px;border:1px solid rgba(255,255,255,0.25);color:var(--slate);margin-left:8px;vertical-align:middle}
+.tag.on{color:var(--green);border-color:rgba(34,217,90,0.5)}
+@media (max-width:720px){.two{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/" aria-label="Squadron"><svg class="nav-logo-svg" viewBox="0 -430 2278 492" xmlns="http://www.w3.org/2000/svg" aria-label="Squadron">
+      <g transform="translate(0,0)" data-letter="S" data-idx="0"><g class="logo-letter">
+        <path d="M 6 -371.28125 L 75 -429.65625 L 199 -429.65625 L 268 -371.28125 L 268.5 -304.921875 L 167.5 -304.921875 L 167.5 -349.015625 L 106.5 -349.015625 L 106.5 -259.5625 L 268 -259.984375 L 270 -57.953125 L 201 0.421875 L 77 0.421875 L 8 -57.953125 L 7.5 -124.3125 L 108.5 -124.3125 L 108.5 -80.21875 L 169.5 -80.21875 L 169.5 -169.6875 L 148.5 -169.6875 L 148.5 -169.265625 L 8 -169.265625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(286,0)" data-letter="Q" data-idx="1"><g class="logo-letter">
+        <path d="M 200 0.84375 L 187.5 0.84375 L 187.5 63.421875 L 87 63.421875 L 87 0.84375 L 74.5 0.84375 L 5.5 -57.546875 L 5.5 -370.015625 L 74.5 -428.40625 L 198 -428.40625 L 268 -369.1875 L 268 -56.703125 Z M 106 -347.765625 L 106 -82.3125 L 167.5 -82.3125 L 167.5 -346.921875 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(572,0)" data-letter="U" data-idx="2"><g class="logo-letter">
+        <path d="M 6.5 -428.40625 L 108 -428.40625 L 108 -83.15625 L 169 -83.15625 L 169 -352.796875 L 169.5 -352.796875 L 169.5 -429.234375 L 269.5 -429.234375 L 269.5 -58.375 L 200.5 0 L 76.5 0 L 7.5 -58.375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(858,0)" data-letter="A" data-idx="3"><g class="logo-letter">
+        <path d="M 107.5 0 L 7 0 L 7 -199.078125 L 6.5 -199.078125 L 6.5 -372.546875 L 75.5 -430.921875 L 199.5 -430.921875 L 268.5 -372.546875 L 268.5 -325.078125 L 269.5 0 L 169.5 0 L 168.5 -172.203125 L 107.5 -172.203125 Z M 107 -257.046875 L 168 -257.046875 L 168 -347.765625 L 107 -347.765625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1144,0)" data-letter="D" data-idx="4"><g class="logo-letter">
+        <path d="M 269.5 -55.859375 L 200.5 0.84375 L 30 0.421875 L 30 0 L 7.5 0 L 6.5 -429.65625 L 199.5 -429.65625 L 268.5 -371.28125 Z M 108 -83.578125 L 169 -83.578125 L 168 -359.9375 L 107 -359.9375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1430,0)" data-letter="R" data-idx="5"><g class="logo-letter">
+        <path d="M 108 0.421875 L 7.5 0.421875 L 7 -430.5 L 200 -430.5 L 269 -372.125 L 269 -324.65625 L 270 -233.515625 L 268.5 -233.09375 L 269 -230.15625 L 250 -214.203125 L 250.5 -214.203125 L 269.5 -198.234375 L 269 -195.296875 L 270.5 -194.875 L 270 0.421875 L 170 0.421875 L 169 -171.78125 L 108 -171.78125 Z M 107.5 -256.625 L 168.5 -256.625 L 168.5 -347.34375 L 107.5 -347.34375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1716,0)" data-letter="O" data-idx="6"><g class="logo-letter">
+        <path d="M 202 0.84375 L 76.5 0.84375 L 7.5 -57.546875 L 6.5 -372.546875 L 75.5 -430.921875 L 199 -430.921875 L 269 -371.703125 L 270 -56.703125 Z M 107 -350.28125 L 108 -82.3125 L 169.5 -82.3125 L 168.5 -349.4375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(2002,0)" data-letter="N" data-idx="7"><g class="logo-letter">
+        <path d="M 109 0.421875 L 8.5 0.421875 L 8.5 -198.65625 L 8 -198.65625 L 7 -430.5 L 108.5 -430.5 L 169.5 -263.34375 L 169.5 -430.5 L 270 -430.5 L 270 -324.65625 L 271 0.421875 L 170 0.421875 L 108.5 -162.546875 Z" fill="white"/>
+      </g></g>
+    </svg></a>
+  <a class="nav-right" href="/billing">Billing</a>
+</nav>
+<main>
+  <p class="eyebrow">Your account</p>
+  <h1>Welcome <em>back.</em></h1>
+  <div class="error" id="err"></div>
+  <div id="body"><p class="big">Loading.</p></div>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+async function api(body) {
+  const r = await fetch('/api/auth', body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {});
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || 'Something went wrong. Please try again.');
+  return j;
+}
+function loginForm() {
+  $('body').innerHTML = `<div class="card"><p class="big">Log in to see your teams, Squadron HQ and billing.</p>
+    <form class="two" onsubmit="event.preventDefault();login()"><input class="input" id="email" type="email" placeholder="Email" autocomplete="email" required><input class="input" id="pass" type="password" placeholder="Password" autocomplete="current-password" required><button class="btn" type="submit" style="grid-column:1/-1">Log in</button></form>
+    <p class="detail" style="margin-top:18px">New to Squadron? <a href="/start" style="color:var(--signal);font-weight:700">Build your team with a 14-day trial</a>. No card is required.</p></div>`;
+}
+async function login() {
+  $('err').textContent = '';
+  try { await api({ action: 'login', email: $('email').value.trim(), password: $('pass').value }); load(); } catch (e) { $('err').textContent = e.message; }
+}
+async function logout() { await api({ action: 'logout' }); load(); }
+async function load() {
+  $('err').textContent = '';
+  let me; try { me = await api(); } catch (e) { $('err').textContent = e.message; return; }
+  if (!me.account) return loginForm();
+  const a = me.account;
+  const trial = a.plan === 'trial' && a.trialEndsAt ? ` Your trial ends on ${new Date(a.trialEndsAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}.` : '';
+  let h = `<div class="card"><p class="big">Signed in as ${esc(a.email)}. Your plan is <strong>${esc(a.planInfo.name)}</strong>.${trial}</p>
+    <div class="actions"><a class="btn small" href="/billing">Billing</a><a class="btn small ghost" href="/start">Build another team</a><button class="btn small ghost" onclick="logout()">Log out</button></div></div>`;
+  if (!me.businesses.length) h += `<div class="card"><p class="big">You have no teams yet.</p><div class="actions"><a class="btn small" href="/start">Build your team</a></div></div>`;
+  for (const b of me.businesses) {
+    const chat = b.channels && b.channels.chat && b.channels.chat.enabled;
+    const t = encodeURIComponent(b.token);
+    h += `<div class="card biz"><h3>${esc(b.input_value)}<span class="tag ${chat ? 'on' : ''}">${chat ? 'Chat live' : 'Not live'}</span></h3>
+      <p class="detail">Created ${new Date(b.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}.</p>
+      <div class="actions"><a class="btn small" href="/hq?t=${t}">Open Squadron HQ</a><a class="btn small ghost" href="/test?t=${t}">Test the team</a><a class="btn small ghost" href="/deploy?t=${t}">Channels and settings</a></div></div>`;
+  }
+  $('body').innerHTML = h;
+}
+load();
+</script>
+</body>
+</html>

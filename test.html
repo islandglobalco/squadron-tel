@@ -137,7 +137,7 @@
   </div>
 </main>
 <script>
-const thumb = (u) => (u && u.includes('cdn.midjourney.com')) ? '/_vercel/image?url=' + encodeURIComponent(u) + '&w=256&q=75' : (u || '');
+const thumb = (u) => { const m = String(u || '').match(/cdn\.midjourney\.com\/([0-9a-f-]{36})\/0_0\.png/); return m ? '/portraits/' + m[1] + '.webp' : (u || ''); };
 
 const $ = (id) => document.getElementById(id);
 const token = new URLSearchParams(location.search).get('t');
