@@ -448,12 +448,12 @@ nav{
 .compare-sub,.compare-note{font-size:18px;line-height:1.55;color:rgba(255,255,255,0.85);text-align:center;max-width:760px;margin:0 auto 24px}
 .compare-note{margin-top:20px;font-size:16px}
 .compare-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.compare-table{width:100%;border-collapse:collapse;font-size:19px;min-width:640px}
-.compare-table th{font-size:14px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.8);text-align:left;padding:14px 16px;border-bottom:2px solid rgba(255,255,255,0.25)}
-.compare-table td{padding:16px;border-bottom:1px solid rgba(255,255,255,0.12);color:#fff;font-weight:600}
-.compare-table td a{color:#fff;text-decoration:underline;text-underline-offset:3px}
-.compare-table tr.us td{background:var(--signal);color:var(--navy);font-weight:900;border-bottom:2px solid var(--navy)}
-.compare-table td:nth-child(4){font-weight:900;font-size:22px}
+.ppm-table{width:100%;border-collapse:collapse;min-width:680px}
+.ppm-table th{font-size:16px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.8);text-align:left;padding:14px 16px;border-bottom:2px solid rgba(255,255,255,0.25)}
+.ppm-table td{font-size:20px;padding:18px 16px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.12);color:#fff;font-weight:600}
+.ppm-table td a{color:#fff;text-decoration:underline;text-underline-offset:3px}
+.ppm-table tr.us td{background:var(--signal);color:var(--navy);font-weight:900;border-bottom:2px solid var(--navy)}
+.ppm-table td:nth-child(4){font-weight:900;font-size:26px}
 
 /* PRICING */
 .pricing-section{padding:120px 48px;}
@@ -475,8 +475,8 @@ nav{
 .price-card.featured .price-plan{color:var(--navy);}
 .price-amount{font-family:'Barlow Condensed',sans-serif;font-size:72px;font-weight:900;line-height:1;margin-bottom:4px;}
 .price-card.featured .price-amount{color:var(--navy);}
-.price-period{font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:32px;}
-.price-card.featured .price-period{color:rgba(7,16,43,0.5);}
+.price-period{font-size:17px;font-weight:600;color:rgba(255,255,255,0.85);margin-bottom:32px;line-height:1.4;}
+.price-card.featured .price-period{color:rgba(7,16,43,0.85);}
 .price-divider{height:1px;background:rgba(255,255,255,0.07);margin-bottom:24px;}
 .price-card.featured .price-divider{background:rgba(7,16,43,0.15);}
 .price-features{list-style:none;margin-bottom:36px;}
@@ -1108,20 +1108,21 @@ details[open] .faq-q{color:var(--signal);}
     <div class="compare" id="compare">
       <h3 class="compare-title">How the price per minute compares</h3>
       <p class="compare-sub">Monthly prices from each company's own pricing page, checked on September 23, 2026. Price per minute is the plan price divided by the minutes it includes.</p>
-      <div class="compare-scroll"><table class="compare-table">
+      <div class="compare-scroll"><table class="ppm-table">
         <thead><tr><th>Service</th><th>Plan</th><th>Minutes included</th><th>Price per minute</th><th>Web chat</th></tr></thead>
         <tbody>
           <tr class="us"><td>Squadron</td><td>Command Center, $199</td><td>2,000</td><td>10¢</td><td>Unlimited</td></tr>
           <tr class="us"><td>Squadron</td><td>Pro, $79</td><td>650</td><td>12¢</td><td>Unlimited</td></tr>
+          <tr><td><a href="https://heyrosie.com/pricing" rel="nofollow noopener" target="_blank">Rosie</a></td><td>Scale, $149</td><td>1,000</td><td>15¢</td><td>$50 add-on, 25 chats</td></tr>
+          <tr><td><a href="https://heyrosie.com/pricing" rel="nofollow noopener" target="_blank">Rosie</a></td><td>Growth, $299</td><td>2,000</td><td>15¢</td><td>$50 add-on, 25 chats</td></tr>
           <tr class="us"><td>Squadron</td><td>Basic, $39</td><td>250</td><td>16¢</td><td>Unlimited</td></tr>
-          <tr><td><a href="https://heyrosie.com/pricing" rel="nofollow noopener" target="_blank">Rosie</a></td><td>$149</td><td>1,000</td><td>15¢</td><td>Included</td></tr>
-          <tr><td><a href="https://heyrosie.com/pricing" rel="nofollow noopener" target="_blank">Rosie</a></td><td>$49</td><td>250</td><td>20¢</td><td>Included</td></tr>
-          <tr><td><a href="https://dialzara.com/pricing" rel="nofollow noopener" target="_blank">Dialzara</a></td><td>$349</td><td>1,000</td><td>35¢</td><td>Extra cost</td></tr>
+          <tr><td><a href="https://heyrosie.com/pricing" rel="nofollow noopener" target="_blank">Rosie</a></td><td>Professional, $49</td><td>250</td><td>20¢</td><td>$50 add-on, 25 chats</td></tr>
+          <tr><td><a href="https://dialzara.com/pricing" rel="nofollow noopener" target="_blank">Dialzara</a></td><td>$349</td><td>1,000</td><td>35¢</td><td>Paid add-on</td></tr>
           <tr><td><a href="https://www.myaifrontdesk.com/pricing" rel="nofollow noopener" target="_blank">My AI Front Desk</a></td><td>$99</td><td>200</td><td>50¢</td><td>100 chats</td></tr>
           <tr><td><a href="https://frontdesk.care/pricing" rel="nofollow noopener" target="_blank">Front Desk</a></td><td>$299</td><td>500</td><td>60¢</td><td>500 chats</td></tr>
         </tbody>
       </table></div>
-      <p class="compare-note">Competitor prices change; follow each link to check the current price. Rosie also sells a $299 plan with 2,000 minutes, which works out to 15¢ a minute.</p>
+      <p class="compare-note">Sorted from the lowest price per minute. At the same 2,000 minutes, Squadron Command Center costs $199 and Rosie Growth costs $299. Competitor prices change, so follow each link to check the current price.</p>
     </div>
   </div>
 </section>
