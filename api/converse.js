@@ -7,16 +7,26 @@ import { answer } from './_lib/answer.js';
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return bad(res, 405, 'POST only');
   const body = readJson(req);
-  const { token, message } = body;
+  const { token, message, businessId } = body;
   const channel = ['chat', 'voice-web', 'phone', 'sms', 'email'].includes(body.channel) ? body.channel : 'chat';
-  const test = body.test !== false;
-  if (!token) return bad(res, 400, 'token required');
+  const test = token ? body.test !== false : false;
+  if (!token && !businessId) return bad(res, 400, 'token required');
   if (!message || typeof message !== 'string') return bad(res, 400, 'message required');
   try {
     await ensureSchema();
-    const biz = await loadBusiness(token);
+    let biz = null;
+    if (token) biz = await loadBusiness(token);
+    else {
+      // Public widget access: only a business whose chat channel is turned on.
+      const rows = await sql().query('SELECT * FROM businesses WHERE id = $1', [String(businessId)]);
+      biz = rows[0] || null;
+      if (biz && !(biz.channels && biz.channels.chat && biz.channels.chat.enabled)) return bad(res, 403, 'Chat is not turned on for this business.');
+    }
     if (!biz) return bad(res, 404, 'Unknown business');
     const [prow, team] = await Promise.all([loadProfile(biz.id), loadTeam(biz.id)]);
     if (!prow || !team) return bad(res, 400, 'Build the profile and the team first.');
@@ -36,7 +46,7 @@ export default async function handler(req, res) {
     }
     const history = convo.transcript || [];
     const lastAgentId = [...history].reverse().find((h) => h.role === 'agent')?.agent_id || null;
-    const out = await answer({ business, agents, profile, history, message: message.slice(0, 2000), channel, lastAgentId });
+    const out = await answer({ business, agents, profile, history, message: message.slice(0, 2000), channel, lastAgentId, settings: biz.settings || null });
 
     const now = new Date().toISOString();
     history.push({ role: 'customer', text: message.slice(0, 2000), at: now });
