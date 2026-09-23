@@ -137,6 +137,8 @@
   </div>
 </main>
 <script>
+const thumb = (u) => (u && u.includes('cdn.midjourney.com')) ? '/_vercel/image?url=' + encodeURIComponent(u) + '&w=256&q=75' : (u || '');
+
 const $ = (id) => document.getElementById(id);
 const token = new URLSearchParams(location.search).get('t');
 let agents = [], conversationId = null, busy = false;
@@ -150,7 +152,7 @@ async function api(path, body, method) {
   return j;
 }
 function roster(activeId) {
-  $('roster').innerHTML = agents.map((a) => `<div class="r ${a.id === activeId ? 'on' : ''}"><img src="${esc(a.portrait)}" alt=""><div><b>${esc(a.persona)}</b><small>${esc(a.title)}</small></div></div>`).join('');
+  $('roster').innerHTML = agents.map((a) => `<div class="r ${a.id === activeId ? 'on' : ''}"><img src="${esc(thumb(a.portrait))}" alt=""><div><b>${esc(a.persona)}</b><small>${esc(a.title)}</small></div></div>`).join('');
 }
 function addMe(text) {
   const d = document.createElement('div'); d.className = 'm me'; d.innerHTML = `<div class="b">${esc(text)}</div>`; $('msgs').appendChild(d); scroll();
@@ -159,7 +161,7 @@ function addAgent(r) {
   const d = document.createElement('div'); d.className = 'm ' + (r.replyType === 'refusal' || r.replyType === 'take_message' ? 'refusal' : r.replyType === 'transfer' ? 'transfer' : '');
   const cits = (r.citations || []).map((c, i) => `<span class="cit" onclick="this.parentNode.nextElementSibling.style.display='block';this.parentNode.nextElementSibling.innerHTML=${JSON.stringify(citHtml(c)).replace(/"/g, '&quot;')}">Source ${i + 1}</span>`).join('');
   const gap = r.replyType === 'refusal' || r.replyType === 'take_message' ? `<span class="cit gap">Not in your profile · added to your knowledge queue</span>` : r.replyType === 'transfer' ? `<span class="cit gap">Transfer to a person</span>` : '';
-  d.innerHTML = `<img src="${esc(r.agent.portrait)}" alt=""><div><div class="who">${esc(r.agent.persona)} · ${esc(r.agent.title)}${r.handoff ? ' · handoff' : ''}</div><div class="b">${esc(r.reply)}</div><div class="cits">${cits}${gap}</div><div class="citbox"></div></div>`;
+  d.innerHTML = `<img src="${esc(thumb(r.agent.portrait))}" alt=""><div><div class="who">${esc(r.agent.persona)} · ${esc(r.agent.title)}${r.handoff ? ' · handoff' : ''}</div><div class="b">${esc(r.reply)}</div><div class="cits">${cits}${gap}</div><div class="citbox"></div></div>`;
   $('msgs').appendChild(d); scroll(); roster(r.agent.id);
 }
 function citHtml(c) {
@@ -202,7 +204,7 @@ let vAgentLine = null, vUserLine = null, vTranscript = [], vGaps = [], vMessages
 function vStatus(t, live) { const e = $('vStatus'); e.textContent = t; e.classList.toggle('live', !!live); }
 function vLine(role, text, agentName) {
   const d = document.createElement('div'); d.className = 'm' + (role === 'customer' ? ' me' : '');
-  d.innerHTML = role === 'customer' ? `<div class="b"><span class="t">${esc(text)}</span></div>` : `<img src="${esc(vAgent ? vAgent.portrait : '')}" alt=""><div><div class="who">${esc(agentName || (vAgent ? vAgent.persona + ' · ' + vAgent.title : 'Team'))}</div><div class="b"><span class="t">${esc(text)}</span></div></div>`;
+  d.innerHTML = role === 'customer' ? `<div class="b"><span class="t">${esc(text)}</span></div>` : `<img src="${esc(thumb(vAgent ? vAgent.portrait : ''))}" alt=""><div><div class="who">${esc(agentName || (vAgent ? vAgent.persona + ' · ' + vAgent.title : 'Team'))}</div><div class="b"><span class="t">${esc(text)}</span></div></div>`;
   $('vmsgs').appendChild(d); $('vmsgs').scrollTop = 1e9; return d;
 }
 function vTool(text) { const d = document.createElement('div'); d.className = 'm tool'; d.innerHTML = `<div class="b">${esc(text)}</div>`; $('vmsgs').appendChild(d); $('vmsgs').scrollTop = 1e9; }

@@ -97,6 +97,8 @@
   </section>
 </main>
 <script>
+const thumb = (u) => (u && u.includes('cdn.midjourney.com')) ? '/_vercel/image?url=' + encodeURIComponent(u) + '&w=256&q=75' : (u || '');
+
 const $ = (id) => document.getElementById(id);
 const token = new URLSearchParams(location.search).get('t');
 let agents = [], notes = '';
@@ -112,7 +114,7 @@ async function api(path, body, method) {
 }
 function card(a) {
   return `<div class="agent ${a.enabled === false ? 'off' : ''}" id="card_${a.id}">
-    <div class="head"><img src="${esc(a.portrait)}" alt="${esc(a.persona)}"><div><div class="title">${esc(a.title)}</div><div class="who">${esc(a.persona)} · ${esc(a.tone)}</div></div></div>
+    <div class="head"><img src="${esc(thumb(a.portrait))}" alt="${esc(a.persona)}"><div><div class="title">${esc(a.title)}</div><div class="who">${esc(a.persona)} · ${esc(a.tone)}</div></div></div>
     <div class="body">
       <p>${esc(a.job_description)}</p>
       <div><div class="lbl">Handles</div><div class="chips">${(a.scope || []).map((s) => `<span class="chip">${esc(s)}</span>`).join('')}</div></div>
