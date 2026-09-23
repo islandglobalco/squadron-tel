@@ -96,7 +96,7 @@
   <div class="modes">
     <button class="mode on" id="modeChat" onclick="setMode('chat')">Chat</button>
     <button class="mode" id="modeVoice" onclick="setMode('voice')">Voice</button>
-    <button class="mode soon" id="modePhone" title="A demo number arrives in the next update">Call a demo number · next update</button>
+    <button class="mode" id="modePhone" onclick="setMode('phone')">Call a demo number</button>
   </div>
   <div class="error" id="err"></div>
   <div class="wrap">
@@ -112,6 +112,10 @@
       </div>
       <div class="msgs" id="vmsgs"></div>
       <div class="vnote">The team speaks with the Front Desk voice for the whole call and says out loud when it hands off. Messages, transfer requests and unanswered questions are recorded when you end the call.</div>
+    </div>
+    <div class="chat hidden" id="phonePanel">
+      <div class="vhead"><div class="vstatus" id="pStatus">Get a real phone number for fifteen minutes and call your team from any phone.</div><div class="vacts"><button class="btn" id="pGet" onclick="getNumber()">Get a demo number</button></div></div>
+      <div class="msgs" id="pmsgs"><div class="vnote" style="border:none;padding:0">The call is answered by your Front Desk agent. It says it is an AI and that the call is recorded, answers from your profile, takes messages, and the transcript and recording appear in Squadron HQ as a test call.</div></div>
     </div>
     <div class="chat" id="chatPanel">
       <div class="msgs" id="msgs"></div>
@@ -177,10 +181,20 @@ async function send(text) {
 }
 function reset() { conversationId = null; $('msgs').innerHTML = ''; roster(null); }
 function setMode(m) {
-  $('modeChat').classList.toggle('on', m === 'chat'); $('modeVoice').classList.toggle('on', m === 'voice');
-  $('chatPanel').classList.toggle('hidden', m !== 'chat'); $('voicePanel').classList.toggle('hidden', m !== 'voice');
+  $('modeChat').classList.toggle('on', m === 'chat'); $('modeVoice').classList.toggle('on', m === 'voice'); $('modePhone').classList.toggle('on', m === 'phone');
+  $('chatPanel').classList.toggle('hidden', m !== 'chat'); $('voicePanel').classList.toggle('hidden', m !== 'voice'); $('phonePanel').classList.toggle('hidden', m !== 'phone');
+  if (m === 'phone') checkNumber();
   if (m !== 'voice' && rtc) stopVoice(true);
 }
+
+// ---- Demo number ----
+function showNumber(r) {
+  if (!r.available) { $('pStatus').textContent = r.reason || 'No demo numbers are available right now.'; $('pGet').style.display = 'none'; return; }
+  if (r.number) { const until = r.expiresAt ? new Date(r.expiresAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''; $('pStatus').innerHTML = `Call <b style="color:#fff;font-size:26px">${esc(r.number)}</b> from any phone. It is yours until ${esc(until)}.`; $('pGet').textContent = 'Extend fifteen minutes'; }
+  else { $('pStatus').textContent = 'Get a real phone number for fifteen minutes and call your team from any phone.'; $('pGet').textContent = 'Get a demo number'; }
+}
+async function checkNumber() { try { showNumber(await api('/api/demo-number?token=' + encodeURIComponent(token))); } catch (e) { $('pStatus').textContent = e.message; } }
+async function getNumber() { $('pGet').disabled = true; try { showNumber(await api('/api/demo-number', { token })); } catch (e) { $('pStatus').textContent = e.message; } finally { $('pGet').disabled = false; } }
 
 // ---- Voice test: WebRTC to the team's Realtime session ----
 let rtc = null, rtcDc = null, rtcMic = null, rtcAudio = null, rtcQueue = [], muted = false, micGain = null, duckTimer = null;

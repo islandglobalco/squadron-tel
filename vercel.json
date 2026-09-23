@@ -53,6 +53,27 @@
     },
     "api/hq.js": {
       "maxDuration": 30
+    },
+    "api/bridge/context.js": {
+      "maxDuration": 15
+    },
+    "api/bridge/session.js": {
+      "maxDuration": 15
+    },
+    "api/bridge/event.js": {
+      "maxDuration": 15
+    },
+    "api/bridge/call-ended.js": {
+      "maxDuration": 30
+    },
+    "api/bridge/recording.js": {
+      "maxDuration": 60
+    },
+    "api/demo-number.js": {
+      "maxDuration": 15
+    },
+    "api/recording.js": {
+      "maxDuration": 60
     }
   },
   "routes": [
@@ -151,6 +172,34 @@
     {
       "src": "/api/hq",
       "dest": "/api/hq.js"
+    },
+    {
+      "src": "/api/bridge/context",
+      "dest": "/api/bridge/context.js"
+    },
+    {
+      "src": "/api/bridge/session",
+      "dest": "/api/bridge/session.js"
+    },
+    {
+      "src": "/api/bridge/event",
+      "dest": "/api/bridge/event.js"
+    },
+    {
+      "src": "/api/bridge/call-ended",
+      "dest": "/api/bridge/call-ended.js"
+    },
+    {
+      "src": "/api/bridge/recording",
+      "dest": "/api/bridge/recording.js"
+    },
+    {
+      "src": "/api/demo-number",
+      "dest": "/api/demo-number.js"
+    },
+    {
+      "src": "/api/recording",
+      "dest": "/api/recording.js"
     },
     {
       "src": "/(.*)",
