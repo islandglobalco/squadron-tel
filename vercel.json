@@ -41,16 +41,24 @@
     },
     "api/conversations.js": {
       "maxDuration": 30
+    },
+    "api/auth.js": {
+      "maxDuration": 15
+    },
+    "api/settings.js": {
+      "maxDuration": 15
+    },
+    "api/gaps.js": {
+      "maxDuration": 15
+    },
+    "api/hq.js": {
+      "maxDuration": 30
     }
   },
   "routes": [
     {
       "src": "/",
       "dest": "/index.html"
-    },
-    {
-      "src": "/deploy",
-      "dest": "/deploy.html"
     },
     {
       "src": "/api/voice",
@@ -119,6 +127,30 @@
     {
       "src": "/api/conversations",
       "dest": "/api/conversations.js"
+    },
+    {
+      "src": "/deploy",
+      "dest": "/deploy.html"
+    },
+    {
+      "src": "/hq",
+      "dest": "/hq.html"
+    },
+    {
+      "src": "/api/auth",
+      "dest": "/api/auth.js"
+    },
+    {
+      "src": "/api/settings",
+      "dest": "/api/settings.js"
+    },
+    {
+      "src": "/api/gaps",
+      "dest": "/api/gaps.js"
+    },
+    {
+      "src": "/api/hq",
+      "dest": "/api/hq.js"
     },
     {
       "src": "/(.*)",

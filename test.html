@@ -47,6 +47,7 @@
 .vacts{display:flex;gap:8px;flex-wrap:wrap}
 .vnote{padding:16px 24px;font-size:14px;color:var(--muted);line-height:1.5;font-weight:500;border-top:1px solid rgba(255,255,255,0.1)}
 .m.tool .b{background:rgba(206,235,0,0.1);border:1px solid rgba(206,235,0,0.35);font-size:15px}
+.chat.hidden{display:none}
 @media (max-width:860px){.wrap{grid-template-columns:1fr}.roster{flex-direction:row;flex-wrap:wrap}}
 </style>
 </head>
@@ -127,7 +128,7 @@
     <span class="saved"></span>
     <div style="display:flex;gap:12px;flex-wrap:wrap">
       <button class="btn ghost" onclick="location.href='/team?t='+encodeURIComponent(token)">Edit the team</button>
-      <button class="btn" disabled title="Deployment arrives in the next update">Deploy · next update</button>
+      <button class="btn" onclick="location.href='/deploy?t='+encodeURIComponent(token)">Deploy →</button>
     </div>
   </div>
 </main>

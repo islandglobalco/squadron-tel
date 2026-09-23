@@ -3,131 +3,168 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deploy Your Squad — Squadron</title>
-<meta name="description" content="Request access to Squadron. 14-day trial, no credit card required.">
+<title>Deploy your team — Squadron</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="/onboard.css">
 <style>
-  :root { --navy: #0a0e1a; --navy2: #111827; --gold: #DEFF00; --gold2: #FFD700; --white: #fff; --mid: #8b9ab0; --card: #141c2e; --border: #1e2d45; --success: #22c55e; --radius: 12px; }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:var(--navy); color:var(--white); font-family:'Inter',system-ui,sans-serif; min-height:100vh; }
-  nav { display:flex; align-items:center; justify-content:space-between; padding:20px 40px; border-bottom:1px solid var(--border); }
-  .nav-logo { font-family:'JetBrains Mono','Fira Code',monospace; font-weight:800; font-size:18px; letter-spacing:2px; color:var(--white); text-decoration:none; }
-  .nav-back { color:var(--mid); text-decoration:none; font-size:14px; }
-  .nav-back:hover { color:var(--white); }
-  .deploy-hero { text-align:center; padding:64px 24px 40px; }
-  .deploy-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(222,255,0,0.1); border:1px solid rgba(222,255,0,0.3); color:var(--gold); border-radius:99px; padding:6px 16px; font-size:13px; font-weight:600; margin-bottom:28px; }
-  .deploy-badge::before { content:''; width:8px; height:8px; background:var(--gold); border-radius:50%; animation:pulse 2s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
-  .deploy-hero h1 { font-size:clamp(36px,6vw,64px); font-weight:900; line-height:1.05; letter-spacing:-1px; margin-bottom:16px; }
-  .deploy-hero h1 span { color:var(--gold); }
-  .deploy-hero p { font-size:18px; color:var(--mid); max-width:520px; margin:0 auto 48px; line-height:1.6; }
-  .steps { display:flex; justify-content:center; gap:0; max-width:700px; margin:0 auto 56px; }
-  .step-item { flex:1; text-align:center; position:relative; }
-  .step-item:not(:last-child)::after { content:''; position:absolute; top:16px; left:50%; width:100%; height:2px; background:linear-gradient(90deg, var(--gold) 0%, var(--border) 100%); }
-  .step-num { width:32px; height:32px; border-radius:50%; background:var(--gold); color:var(--navy); font-weight:800; font-size:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 8px; position:relative; z-index:1; }
-  .step-label { font-size:12px; color:var(--mid); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
-  .step-item.active .step-label { color:var(--gold); }
-  .form-card { background:var(--card); border:1px solid var(--border); border-radius:20px; max-width:520px; margin:0 auto; padding:40px; }
-  .plan-toggle { display:flex; gap:12px; margin-bottom:32px; }
-  .plan-opt { flex:1; border:2px solid var(--border); border-radius:var(--radius); padding:16px; cursor:pointer; transition:all 0.2s; text-align:center; }
-  .plan-opt:hover { border-color:rgba(222,255,0,0.4); }
-  .plan-opt.selected { border-color:var(--gold); background:rgba(222,255,0,0.05); }
-  .plan-name { font-weight:800; font-size:16px; margin-bottom:4px; }
-  .plan-price { color:var(--gold); font-weight:700; font-size:20px; }
-  .plan-detail { color:var(--mid); font-size:12px; margin-top:4px; }
-  .plan-opt.selected .plan-name { color:var(--gold); }
-  .plan-free-badge { display:inline-block; background:var(--gold); color:var(--navy); font-size:10px; font-weight:800; padding:2px 8px; border-radius:99px; margin-top:6px; }
-  .form-group { margin-bottom:20px; }
-  label { display:block; font-size:13px; font-weight:600; color:var(--mid); margin-bottom:8px; letter-spacing:0.5px; text-transform:uppercase; }
-  input, select { width:100%; background:#0d1527; border:1.5px solid var(--border); color:var(--white); border-radius:var(--radius); padding:14px 16px; font-size:16px; outline:none; transition:border-color 0.2s; }
-  input::placeholder { color:#3a4a65; }
-  input:focus, select:focus { border-color:var(--gold); }
-  select option { background:var(--navy2); }
-  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-  .submit-btn { width:100%; background:var(--gold); color:var(--navy); font-weight:900; font-size:18px; border:none; border-radius:var(--radius); padding:18px; cursor:pointer; margin-top:8px; transition:all 0.2s; box-shadow:0 6px 0 #8aaa00; letter-spacing:-0.5px; }
-  .submit-btn:hover { transform:translateY(-2px); box-shadow:0 8px 0 #8aaa00; }
-  .submit-btn.loading { opacity:0.7; cursor:not-allowed; }
-  .form-note { text-align:center; color:var(--mid); font-size:13px; margin-top:16px; }
-  .proof-strip { display:flex; justify-content:center; gap:32px; flex-wrap:wrap; max-width:520px; margin:32px auto 0; padding-top:24px; border-top:1px solid var(--border); }
-  .proof-item { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--mid); }
-  .success-state { display:none; text-align:center; padding:48px 40px; }
-  .success-icon { font-size:64px; margin-bottom:24px; }
-  .success-state h2 { font-size:32px; font-weight:900; margin-bottom:12px; }
-  .success-state h2 span { color:var(--gold); }
-  .success-state p { color:var(--mid); font-size:16px; line-height:1.6; margin-bottom:32px; }
-  .success-code { background:#0d1527; border:1px solid var(--border); border-radius:var(--radius); padding:20px; text-align:left; margin-bottom:24px; }
-  .success-code pre { font-family:'JetBrains Mono','Fira Code',monospace; font-size:13px; color:var(--gold); white-space:pre-wrap; line-height:1.6; }
-  .copy-btn { background:transparent; border:1.5px solid var(--border); color:var(--mid); border-radius:8px; padding:8px 16px; font-size:13px; cursor:pointer; margin-top:12px; }
-  .next-steps { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:24px; }
-  .next-step-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:20px; text-align:left; text-decoration:none; color:var(--white); }
-  .next-step-num { color:var(--gold); font-weight:800; font-size:12px; margin-bottom:8px; }
-  .next-step-title { font-weight:700; font-size:15px; margin-bottom:4px; }
-  .next-step-desc { color:var(--mid); font-size:13px; }
-  @media(max-width:540px) { nav { padding:16px 20px; } .form-card { padding:24px 20px; } .form-row { grid-template-columns:1fr; } .next-steps { grid-template-columns:1fr; } }
+.card{border-radius:22px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);padding:26px 28px;margin-bottom:18px}
+.card h2{margin-bottom:8px}
+.chan{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:start}
+.state{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;padding:8px 14px;border-radius:999px;white-space:nowrap}
+.state::before{content:'';width:10px;height:10px;border-radius:50%;background:currentColor}
+.state.live{background:rgba(34,217,90,0.14);color:var(--green);border:1px solid rgba(34,217,90,0.4)}
+.state.ready{background:rgba(206,235,0,0.14);color:var(--signal);border:1px solid rgba(206,235,0,0.4)}
+.state.unavailable{background:rgba(255,255,255,0.06);color:var(--slate);border:1px solid rgba(255,255,255,0.18)}
+.state.pending{background:rgba(254,188,46,0.12);color:var(--amber);border:1px solid rgba(254,188,46,0.4)}
+.detail{font-size:17px;line-height:1.55;color:var(--slate);font-weight:500;margin-top:6px}
+.snippet{margin-top:14px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:14px;padding:14px 16px;border-radius:12px;background:#040A1C;border:1px solid rgba(255,255,255,0.12);color:#fff;word-break:break-all;user-select:all}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field label{display:block;font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin:12px 0 6px}
+.field input,.field select{width:100%;font:inherit;font-size:17px;font-weight:600;padding:14px 16px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#fff;outline:none}
+.field input:focus{border-color:var(--signal)}
+.ok{color:var(--green);font-weight:700;font-size:15px;margin-top:10px}
+.acct{font-size:16px;color:var(--slate);font-weight:600}
+@media (max-width:720px){.chan,.row2{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <nav>
-  <a class="nav-logo" href="/">SQUADRON</a>
-  <a class="nav-back" href="/">← Back to site</a>
+  <a class="nav-logo" href="/" aria-label="Squadron"><svg class="nav-logo-svg" viewBox="0 -430 2278 492" xmlns="http://www.w3.org/2000/svg" aria-label="Squadron">
+      <g transform="translate(0,0)" data-letter="S" data-idx="0"><g class="logo-letter">
+        <path d="M 6 -371.28125 L 75 -429.65625 L 199 -429.65625 L 268 -371.28125 L 268.5 -304.921875 L 167.5 -304.921875 L 167.5 -349.015625 L 106.5 -349.015625 L 106.5 -259.5625 L 268 -259.984375 L 270 -57.953125 L 201 0.421875 L 77 0.421875 L 8 -57.953125 L 7.5 -124.3125 L 108.5 -124.3125 L 108.5 -80.21875 L 169.5 -80.21875 L 169.5 -169.6875 L 148.5 -169.6875 L 148.5 -169.265625 L 8 -169.265625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(286,0)" data-letter="Q" data-idx="1"><g class="logo-letter">
+        <path d="M 200 0.84375 L 187.5 0.84375 L 187.5 63.421875 L 87 63.421875 L 87 0.84375 L 74.5 0.84375 L 5.5 -57.546875 L 5.5 -370.015625 L 74.5 -428.40625 L 198 -428.40625 L 268 -369.1875 L 268 -56.703125 Z M 106 -347.765625 L 106 -82.3125 L 167.5 -82.3125 L 167.5 -346.921875 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(572,0)" data-letter="U" data-idx="2"><g class="logo-letter">
+        <path d="M 6.5 -428.40625 L 108 -428.40625 L 108 -83.15625 L 169 -83.15625 L 169 -352.796875 L 169.5 -352.796875 L 169.5 -429.234375 L 269.5 -429.234375 L 269.5 -58.375 L 200.5 0 L 76.5 0 L 7.5 -58.375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(858,0)" data-letter="A" data-idx="3"><g class="logo-letter">
+        <path d="M 107.5 0 L 7 0 L 7 -199.078125 L 6.5 -199.078125 L 6.5 -372.546875 L 75.5 -430.921875 L 199.5 -430.921875 L 268.5 -372.546875 L 268.5 -325.078125 L 269.5 0 L 169.5 0 L 168.5 -172.203125 L 107.5 -172.203125 Z M 107 -257.046875 L 168 -257.046875 L 168 -347.765625 L 107 -347.765625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1144,0)" data-letter="D" data-idx="4"><g class="logo-letter">
+        <path d="M 269.5 -55.859375 L 200.5 0.84375 L 30 0.421875 L 30 0 L 7.5 0 L 6.5 -429.65625 L 199.5 -429.65625 L 268.5 -371.28125 Z M 108 -83.578125 L 169 -83.578125 L 168 -359.9375 L 107 -359.9375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1430,0)" data-letter="R" data-idx="5"><g class="logo-letter">
+        <path d="M 108 0.421875 L 7.5 0.421875 L 7 -430.5 L 200 -430.5 L 269 -372.125 L 269 -324.65625 L 270 -233.515625 L 268.5 -233.09375 L 269 -230.15625 L 250 -214.203125 L 250.5 -214.203125 L 269.5 -198.234375 L 269 -195.296875 L 270.5 -194.875 L 270 0.421875 L 170 0.421875 L 169 -171.78125 L 108 -171.78125 Z M 107.5 -256.625 L 168.5 -256.625 L 168.5 -347.34375 L 107.5 -347.34375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1716,0)" data-letter="O" data-idx="6"><g class="logo-letter">
+        <path d="M 202 0.84375 L 76.5 0.84375 L 7.5 -57.546875 L 6.5 -372.546875 L 75.5 -430.921875 L 199 -430.921875 L 269 -371.703125 L 270 -56.703125 Z M 107 -350.28125 L 108 -82.3125 L 169.5 -82.3125 L 168.5 -349.4375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(2002,0)" data-letter="N" data-idx="7"><g class="logo-letter">
+        <path d="M 109 0.421875 L 8.5 0.421875 L 8.5 -198.65625 L 8 -198.65625 L 7 -430.5 L 108.5 -430.5 L 169.5 -263.34375 L 169.5 -430.5 L 270 -430.5 L 270 -324.65625 L 271 0.421875 L 170 0.421875 L 108.5 -162.546875 Z" fill="white"/>
+      </g></g>
+    </svg></a>
+  <a class="nav-right" href="#" id="backLink">← Back to testing</a>
 </nav>
-<div style="padding:32px 24px 0;">
+<main>
   <div class="steps">
-    <div class="step-item active"><div class="step-num">1</div><div class="step-label">Your info</div></div>
-    <div class="step-item"><div class="step-num">2</div><div class="step-label">Pick a plan</div></div>
-    <div class="step-item"><div class="step-num">3</div><div class="step-label">Deploy agents</div></div>
+    <span class="step done">1 · Enter your business</span>
+    <span class="step done">2 · Analyze</span>
+    <span class="step done">3 · Review profile</span>
+    <span class="step done">4 · Build the team</span>
+    <span class="step done">5 · Test</span>
+    <span class="step on">6 · Deploy</span>
   </div>
-</div>
-<div class="deploy-hero">
-  <div class="deploy-badge">14-day trial · No card required</div>
-  <h1>Launch Your<br><span>AI Support Squad</span></h1>
-  <p>Tell us about your business and pick a plan. Onboarding is being rebuilt around your business profile, and we will email you when your team is ready to build.</p>
-</div>
-<div id="formCard" class="form-card">
-  <div class="plan-toggle">
-    <div class="plan-opt selected" onclick="selectPlan('scout',this)"><div class="plan-name">Scout</div><div class="plan-price">$99<span style="font-size:14px;font-weight:400;color:var(--mid)">/mo</span></div><div class="plan-detail">250 voice min · full team</div><div class="plan-free-badge">14-DAY TRIAL</div></div>
-    <div class="plan-opt" onclick="selectPlan('commander',this)"><div class="plan-name">Commander</div><div class="plan-price">$299<span style="font-size:14px;font-weight:400;color:var(--mid)">/mo</span></div><div class="plan-detail">1,000 voice min · full team</div></div>
-    <div class="plan-opt" onclick="selectPlan('hq',this)"><div class="plan-name">HQ</div><div class="plan-price">$799<span style="font-size:14px;font-weight:400;color:var(--mid)">/mo</span></div><div class="plan-detail">Largest allowance · full team</div></div>
+  <p class="eyebrow">Step 6</p>
+  <h1>Deploy your <em>team.</em></h1>
+  <p class="lead">One screen, every channel, with the true status of each. Nothing is switched on until you switch it on.</p>
+  <div class="error" id="err"></div>
+
+  <div class="card" id="acctCard">
+    <h2>Your account</h2>
+    <div id="acctBody"></div>
   </div>
-  <form id="deployForm" onsubmit="handleDeploy(event)">
-    <div class="form-row">
-      <div class="form-group"><label>First name</label><input type="text" id="firstName" placeholder="Alex" required autocomplete="given-name"></div>
-      <div class="form-group"><label>Last name</label><input type="text" id="lastName" placeholder="Rivera" required autocomplete="family-name"></div>
+
+  <div id="channels"></div>
+
+  <div class="card">
+    <h2>On-call and hours</h2>
+    <p class="detail">When a customer asks for a person, is upset, or hits something the profile does not cover, the team transfers or takes a message for the on-call contact.</p>
+    <div class="row2 field">
+      <div><label>On-call name</label><input id="s_name" placeholder="Who takes escalations"></div>
+      <div><label>On-call phone</label><input id="s_phone" placeholder="+1 555 555 5555"></div>
+      <div><label>Notify email for messages</label><input id="s_email" placeholder="you@yourbusiness.com"></div>
+      <div><label>Business hours (as customers should hear them)</label><input id="s_hours" placeholder="Monday to Friday, 9am to 5pm Central"></div>
     </div>
-    <div class="form-group"><label>Work email</label><input type="email" id="workEmail" placeholder="alex@yourcompany.com" required autocomplete="email"></div>
-    <div class="form-group"><label>Company name</label><input type="text" id="company" placeholder="Acme Corp" required autocomplete="organization"></div>
-    <div class="form-row">
-      <div class="form-group"><label>Monthly call volume</label><select id="callVolume"><option value="under500">Under 500</option><option value="500-2000" selected>500 – 2,000</option><option value="2000-10000">2,000 – 10,000</option><option value="10000+">10,000+</option></select></div>
-      <div class="form-group"><label>Primary use case</label><select id="useCase"><option value="support" selected>Customer support</option><option value="sales">Sales & outreach</option><option value="scheduling">Scheduling</option><option value="other">Other</option></select></div>
-    </div>
-    <button type="submit" class="submit-btn" id="submitBtn">Request access → No credit card needed</button>
-  </form>
-  <div class="proof-strip">
-    <div class="proof-item">💳 No card required</div>
-    <div class="proof-item">🔄 Cancel anytime</div>
+    <div class="field"><label>Outside business hours</label><select id="s_after"><option value="answer">Answer questions and take messages</option><option value="message">Take messages only</option></select></div>
+    <div style="margin-top:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn small" onclick="saveSettings()">Save settings</button><span class="ok" id="saved"></span></div>
   </div>
-</div>
-<div id="successCard" class="form-card success-state">
-  <div class="success-icon">🚀</div>
-  <h2>Request <span>received</span></h2>
-  <p id="successMsg">Your request has been recorded. We will contact you when your team is ready to build.</p>
-</div>
-<div style="height:80px;"></div>
+
+  <div class="bar">
+    <span class="saved"></span>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <button class="btn ghost" onclick="location.href='/test?t='+encodeURIComponent(token)">Back to testing</button>
+      <button class="btn" onclick="location.href='/hq?t='+encodeURIComponent(token)">Open Squadron HQ →</button>
+    </div>
+  </div>
+</main>
 <script>
-let selectedPlan = 'scout';
-function selectPlan(plan, el) { selectedPlan = plan; document.querySelectorAll('.plan-opt').forEach(o => o.classList.remove('selected')); el.classList.add('selected'); }
-(function() { const params = new URLSearchParams(window.location.search); const email = params.get('email'); if (email) document.getElementById('workEmail').value = decodeURIComponent(email); })();
-async function handleDeploy(e) {
-  e.preventDefault();
-  const btn = document.getElementById('submitBtn');
-  btn.textContent = 'Sending…'; btn.classList.add('loading'); btn.disabled = true;
-  const data = { firstName: document.getElementById('firstName').value, lastName: document.getElementById('lastName').value, email: document.getElementById('workEmail').value, company: document.getElementById('company').value, callVolume: document.getElementById('callVolume').value, useCase: document.getElementById('useCase').value, plan: selectedPlan, ts: new Date().toISOString() };
-  fetch('/api/signup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }).catch(() => {});
-  await new Promise(r => setTimeout(r, 1800));
-  document.getElementById("successMsg").textContent = `Your request has been recorded for ${data.email}. We will contact you when your team is ready to build.`;
-  document.getElementById('formCard').style.display = 'none';
-  document.getElementById('successCard').style.display = 'block';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+const $ = (id) => document.getElementById(id);
+const token = new URLSearchParams(location.search).get('t');
+let data = null, account = null;
+$('backLink').href = '/test?t=' + encodeURIComponent(token || '');
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+function err(msg) { const e = $('err'); e.textContent = msg || ''; e.style.display = msg ? 'block' : 'none'; }
+async function api(path, body, method) {
+  const r = await fetch(path, { method: method || (body ? 'POST' : 'GET'), headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined, credentials: 'same-origin' });
+  const j = await r.json().catch(() => ({ error: 'Bad response from server' }));
+  if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+  return j;
 }
+function renderAccount() {
+  if (account) {
+    const ends = account.trialEndsAt ? new Date(account.trialEndsAt) : null;
+    $('acctBody').innerHTML = `<div class="acct">Signed in as <b style="color:#fff">${esc(account.email)}</b> · ${esc(account.planInfo.name)}${ends && account.plan === 'trial' ? ` · trial ends ${ends.toLocaleDateString()}` : ''} · <a href="#" onclick="logout();return false" style="color:var(--signal)">Log out</a></div>`;
+    return;
+  }
+  $('acctBody').innerHTML = `<p class="detail">Create your account to deploy. 14-day trial, no card required.</p>
+    <div class="row2 field"><div><label>Email</label><input id="a_email" type="email" autocomplete="email"></div><div><label>Password (8+ characters)</label><input id="a_pass" type="password" autocomplete="new-password"></div></div>
+    <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn small" onclick="auth('signup')">Create account</button><button class="btn small ghost" onclick="auth('login')">I already have one, log in</button></div>`;
+}
+async function auth(action) {
+  err('');
+  try { await api('/api/auth', { action, email: $('a_email').value.trim(), password: $('a_pass').value, token }); await load(); }
+  catch (e) { err(e.message); }
+}
+async function logout() { await api('/api/auth', { action: 'logout' }); location.reload(); }
+function chanCard(key, title, st) {
+  const cls = st.state === 'live' ? 'live' : st.state === 'ready' ? 'ready' : st.state === 'pending' ? 'pending' : 'unavailable';
+  const enabled = data.channels[key] && data.channels[key].enabled;
+  let action = '';
+  if (key === 'chat') action = account ? `<button class="btn small ${enabled ? 'ghost' : ''}" onclick="toggle('chat', ${!enabled})">${enabled ? 'Turn chat off' : 'Turn chat on'}</button>` : `<span class="detail">Create your account to turn chat on.</span>`;
+  return `<div class="card"><div class="chan"><div><h2>${esc(title)}</h2><div class="detail">${esc(st.detail)}</div>${st.snippet ? `<div class="snippet">${esc(st.snippet)}</div>` : ''}${action ? `<div style="margin-top:14px">${action}</div>` : ''}</div><span class="state ${cls}">${esc(st.label)}</span></div></div>`;
+}
+function render() {
+  const s = data.status;
+  $('channels').innerHTML = chanCard('phone', 'Phone', s.phone) + chanCard('chat', 'Chat', s.chat) + chanCard('email', 'Email', s.email) + chanCard('sms', 'SMS', s.sms);
+  const st = data.settings || {};
+  $('s_name').value = st.on_call_name || ''; $('s_phone').value = st.on_call_phone || ''; $('s_email').value = st.notify_email || ''; $('s_hours').value = st.hours || ''; $('s_after').value = st.after_hours || 'answer';
+}
+async function toggle(key, enabled) {
+  err('');
+  try { data = await api('/api/settings', { token, channels: { [key]: { enabled } } }); render(); } catch (e) { err(e.message); }
+}
+async function saveSettings() {
+  $('saved').textContent = 'Saving…';
+  try {
+    data = await api('/api/settings', { token, settings: { on_call_name: $('s_name').value, on_call_phone: $('s_phone').value, notify_email: $('s_email').value, hours: $('s_hours').value, after_hours: $('s_after').value } });
+    $('saved').textContent = 'Saved.'; setTimeout(() => ($('saved').textContent = ''), 2500);
+  } catch (e) { $('saved').textContent = 'Could not save: ' + e.message; }
+}
+async function load() {
+  const me = await api('/api/auth');
+  account = me.account;
+  renderAccount();
+  data = await api('/api/settings?token=' + encodeURIComponent(token));
+  render();
+}
+(async () => {
+  if (!token) { location.href = '/start'; return; }
+  try { await load(); } catch (e) { err(e.message); }
+})();
 </script>
 </body>
 </html>

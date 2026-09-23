@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Squadron HQ</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="/onboard.css">
+<style>
+main{max-width:1240px}
+.tabs2{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:28px}
+.tab2{font-size:15px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;padding:12px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.14);background:transparent;color:var(--slate);cursor:pointer}
+.tab2.on{border-color:var(--signal);color:var(--navy);background:var(--signal)}
+.tab2 .n{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:999px;background:rgba(0,0,0,0.25);font-size:12px}
+.tab2.on .n{background:rgba(7,16,43,0.2)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:30px}
+.stat{border-radius:18px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);padding:18px 20px}
+.stat .k{font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)}
+.stat .v{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:44px;line-height:1;margin-top:6px}
+.stat .s{font-size:14px;color:var(--slate);font-weight:600;margin-top:6px}
+.meter{height:10px;border-radius:999px;background:rgba(255,255,255,0.1);margin-top:10px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--signal)}
+.meter i.hot{background:var(--amber)}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th{font-size:12px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:10px 12px;border-bottom:2px solid rgba(255,255,255,0.12)}
+td{padding:12px;border-bottom:1px solid rgba(255,255,255,0.08);vertical-align:top;font-weight:500}
+tr.row-c{cursor:pointer}
+tr.row-c:hover td{background:rgba(255,255,255,0.04)}
+.pill{display:inline-block;font-size:12px;font-weight:800;letter-spacing:0.04em;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,0.08);color:#fff;white-space:nowrap}
+.pill.esc{background:rgba(255,95,87,0.15);color:#ffb3af}
+.pill.gap{background:rgba(254,188,46,0.15);color:var(--amber)}
+.pill.ok{background:rgba(34,217,90,0.14);color:var(--green)}
+.pill.test{background:rgba(206,235,0,0.12);color:var(--signal)}
+.panel{border-radius:22px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);padding:22px 24px;margin-bottom:18px}
+.tr{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.t{max-width:82%;padding:12px 16px;border-radius:16px;font-size:16px;line-height:1.5;background:rgba(255,255,255,0.08)}
+.t.me{align-self:flex-end;background:var(--signal);color:var(--navy);font-weight:600}
+.t small{display:block;font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--signal);margin-bottom:4px}
+.src{cursor:default}
+.gapq{font-size:17px;font-weight:600;line-height:1.5}
+.gapa{width:100%;font:inherit;font-size:16px;font-weight:500;padding:12px 14px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#fff;outline:none;margin-top:10px;min-height:70px}
+.gapa:focus{border-color:var(--signal)}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.empty{font-size:18px;color:var(--slate);font-weight:600;padding:30px 0}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.f{font-size:13px;font-weight:800;padding:8px 12px;border-radius:999px;border:2px solid rgba(255,255,255,0.18);background:transparent;color:#fff;cursor:pointer}
+.f.on{border-color:var(--signal);color:var(--signal)}
+.field label{display:block;font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin:12px 0 6px}
+.field input,.field select{width:100%;font:inherit;font-size:17px;font-weight:600;padding:14px 16px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#fff;outline:none}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:720px){.row2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/" aria-label="Squadron"><svg class="nav-logo-svg" viewBox="0 -430 2278 492" xmlns="http://www.w3.org/2000/svg" aria-label="Squadron">
+      <g transform="translate(0,0)" data-letter="S" data-idx="0"><g class="logo-letter">
+        <path d="M 6 -371.28125 L 75 -429.65625 L 199 -429.65625 L 268 -371.28125 L 268.5 -304.921875 L 167.5 -304.921875 L 167.5 -349.015625 L 106.5 -349.015625 L 106.5 -259.5625 L 268 -259.984375 L 270 -57.953125 L 201 0.421875 L 77 0.421875 L 8 -57.953125 L 7.5 -124.3125 L 108.5 -124.3125 L 108.5 -80.21875 L 169.5 -80.21875 L 169.5 -169.6875 L 148.5 -169.6875 L 148.5 -169.265625 L 8 -169.265625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(286,0)" data-letter="Q" data-idx="1"><g class="logo-letter">
+        <path d="M 200 0.84375 L 187.5 0.84375 L 187.5 63.421875 L 87 63.421875 L 87 0.84375 L 74.5 0.84375 L 5.5 -57.546875 L 5.5 -370.015625 L 74.5 -428.40625 L 198 -428.40625 L 268 -369.1875 L 268 -56.703125 Z M 106 -347.765625 L 106 -82.3125 L 167.5 -82.3125 L 167.5 -346.921875 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(572,0)" data-letter="U" data-idx="2"><g class="logo-letter">
+        <path d="M 6.5 -428.40625 L 108 -428.40625 L 108 -83.15625 L 169 -83.15625 L 169 -352.796875 L 169.5 -352.796875 L 169.5 -429.234375 L 269.5 -429.234375 L 269.5 -58.375 L 200.5 0 L 76.5 0 L 7.5 -58.375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(858,0)" data-letter="A" data-idx="3"><g class="logo-letter">
+        <path d="M 107.5 0 L 7 0 L 7 -199.078125 L 6.5 -199.078125 L 6.5 -372.546875 L 75.5 -430.921875 L 199.5 -430.921875 L 268.5 -372.546875 L 268.5 -325.078125 L 269.5 0 L 169.5 0 L 168.5 -172.203125 L 107.5 -172.203125 Z M 107 -257.046875 L 168 -257.046875 L 168 -347.765625 L 107 -347.765625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1144,0)" data-letter="D" data-idx="4"><g class="logo-letter">
+        <path d="M 269.5 -55.859375 L 200.5 0.84375 L 30 0.421875 L 30 0 L 7.5 0 L 6.5 -429.65625 L 199.5 -429.65625 L 268.5 -371.28125 Z M 108 -83.578125 L 169 -83.578125 L 168 -359.9375 L 107 -359.9375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1430,0)" data-letter="R" data-idx="5"><g class="logo-letter">
+        <path d="M 108 0.421875 L 7.5 0.421875 L 7 -430.5 L 200 -430.5 L 269 -372.125 L 269 -324.65625 L 270 -233.515625 L 268.5 -233.09375 L 269 -230.15625 L 250 -214.203125 L 250.5 -214.203125 L 269.5 -198.234375 L 269 -195.296875 L 270.5 -194.875 L 270 0.421875 L 170 0.421875 L 169 -171.78125 L 108 -171.78125 Z M 107.5 -256.625 L 168.5 -256.625 L 168.5 -347.34375 L 107.5 -347.34375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1716,0)" data-letter="O" data-idx="6"><g class="logo-letter">
+        <path d="M 202 0.84375 L 76.5 0.84375 L 7.5 -57.546875 L 6.5 -372.546875 L 75.5 -430.921875 L 199 -430.921875 L 269 -371.703125 L 270 -56.703125 Z M 107 -350.28125 L 108 -82.3125 L 169.5 -82.3125 L 168.5 -349.4375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(2002,0)" data-letter="N" data-idx="7"><g class="logo-letter">
+        <path d="M 109 0.421875 L 8.5 0.421875 L 8.5 -198.65625 L 8 -198.65625 L 7 -430.5 L 108.5 -430.5 L 169.5 -263.34375 L 169.5 -430.5 L 270 -430.5 L 270 -324.65625 L 271 0.421875 L 170 0.421875 L 108.5 -162.546875 Z" fill="white"/>
+      </g></g>
+    </svg></a>
+  <a class="nav-right" href="#" id="deployLink">Deploy screen →</a>
+</nav>
+<main>
+  <p class="eyebrow">Squadron HQ</p>
+  <h1 id="title">Your <em>team</em> at work.</h1>
+  <p class="lead" id="lead"></p>
+  <div class="error" id="err"></div>
+  <div class="stats" id="stats"></div>
+  <div class="tabs2">
+    <button class="tab2 on" data-t="conversations" onclick="setTab('conversations')">Conversations <span class="n" id="nConv">0</span></button>
+    <button class="tab2" data-t="escalations" onclick="setTab('escalations')">Escalations <span class="n" id="nEsc">0</span></button>
+    <button class="tab2" data-t="queue" onclick="setTab('queue')">Knowledge queue <span class="n" id="nGap">0</span></button>
+    <button class="tab2" data-t="settings" onclick="setTab('settings')">Settings</button>
+    <button class="tab2" data-t="export" onclick="setTab('export')">Export</button>
+  </div>
+  <div id="view"></div>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const token = new URLSearchParams(location.search).get('t');
+let d = null, tab = 'conversations', filter = 'all', openId = null, convoCache = {};
+$('deployLink').href = '/deploy?t=' + encodeURIComponent(token || '');
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+function err(msg) { const e = $('err'); e.textContent = msg || ''; e.style.display = msg ? 'block' : 'none'; }
+async function api(path, body, method) {
+  const r = await fetch(path, { method: method || (body ? 'POST' : 'GET'), headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined, credentials: 'same-origin' });
+  const j = await r.json().catch(() => ({ error: 'Bad response from server' }));
+  if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+  return j;
+}
+function fmtDate(s) { const x = new Date(s); return x.toLocaleDateString() + ' ' + x.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
+function fmtDur(s) { if (!s) return '—'; const m = Math.floor(s / 60), r = Math.round(s % 60); return m ? `${m}m ${r}s` : `${r}s`; }
+function setTab(t) { tab = t; document.querySelectorAll('.tab2').forEach((b) => b.classList.toggle('on', b.dataset.t === t)); render(); }
+function stats() {
+  const u = d.usage, p = d.plan;
+  const pctM = p.minutes ? Math.min(100, Math.round(u.minutes / p.minutes * 100)) : 0;
+  const pctC = p.conversations ? Math.min(100, Math.round(u.conversations / p.conversations * 100)) : 0;
+  $('stats').innerHTML = `
+    <div class="stat"><div class="k">Voice minutes this month</div><div class="v">${u.minutes}</div><div class="s">${p.minutes != null ? `of ${p.minutes} in ${esc(p.name)}` : esc(p.name)}</div>${p.minutes != null ? `<div class="meter"><i class="${pctM >= 80 ? 'hot' : ''}" style="width:${pctM}%"></i></div>` : ''}</div>
+    <div class="stat"><div class="k">Conversations this month</div><div class="v">${u.conversations}</div><div class="s">${p.conversations != null ? `of ${p.conversations} in ${esc(p.name)}` : esc(p.name)}</div>${p.conversations != null ? `<div class="meter"><i class="${pctC >= 80 ? 'hot' : ''}" style="width:${pctC}%"></i></div>` : ''}</div>
+    <div class="stat"><div class="k">Escalations</div><div class="v">${u.escalations}</div><div class="s">this month, live channels</div></div>
+    <div class="stat"><div class="k">Test conversations</div><div class="v">${u.testConversations}</div><div class="s">not counted against your plan</div></div>
+    <div class="stat"><div class="k">Status</div><div class="v" style="font-size:30px;color:${u.paused ? 'var(--amber)' : 'var(--green)'}">${u.paused ? 'Paused' : 'Active'}</div><div class="s">${u.paused ? 'Allowance reached. Add a pack to resume.' : 'When you reach your allowance, Squadron pauses and notifies you.'}</div></div>`;
+  $('nConv').textContent = d.conversations.length; $('nEsc').textContent = d.conversations.filter((c) => c.escalated).length; $('nGap').textContent = d.gaps.filter((g) => g.status === 'open' || g.status === 'message').length;
+  $('lead').textContent = `${d.business.name} · ${d.account ? d.account.email : 'no account yet'} · ${d.channels.phone.label} · Chat ${d.channels.chat.label.toLowerCase()}`;
+}
+function convRows(list) {
+  if (!list.length) return `<div class="empty">Nothing here yet. Test conversations appear as soon as you run one.</div>`;
+  return `<table><thead><tr><th>When</th><th>Channel</th><th>Agent</th><th>Outcome</th><th>Length</th><th>First question</th></tr></thead><tbody>` +
+    list.map((c) => `<tr class="row-c" onclick="openConv('${c.id}')"><td>${fmtDate(c.started_at)}${c.test ? ' <span class="pill test">test</span>' : ''}</td><td>${esc(c.channel)}</td><td>${esc(c.agent_name || '—')}</td><td><span class="pill ${c.escalated ? 'esc' : c.outcome === 'unanswered question' ? 'gap' : c.outcome === 'answered' ? 'ok' : ''}">${esc(c.outcome || '—')}</span></td><td>${c.channel === 'chat' ? `${c.turns} turns` : fmtDur(c.duration_s)}</td><td>${esc(c.summary || '')}</td></tr>` +
+      (openId === c.id ? `<tr><td colspan="6" id="conv_${c.id}">Loading…</td></tr>` : '')).join('') + `</tbody></table>`;
+}
+function openConv(id) { openId = openId === id ? null : id; render(); }
+async function loadConv(id) {
+  try {
+    const r = convoCache[id] || (convoCache[id] = await api('/api/conversations?token=' + encodeURIComponent(token) + '&id=' + encodeURIComponent(id)));
+    const c = r.conversation; const cell = $('conv_' + id); if (!cell) return;
+    const srcs = (c.sources || []);
+    cell.innerHTML = `<div class="panel"><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><span class="pill">${esc(c.channel)}</span><span class="pill">${esc(c.agent_name || '')}</span>${c.recording_url ? `<a class="pill ok" href="${esc(c.recording_url)}" target="_blank" rel="noopener">Recording</a>` : '<span class="pill">No recording</span>'}<span class="pill">${srcs.length} source${srcs.length === 1 ? '' : 's'} cited</span></div>
+      <div class="tr">${(c.transcript || []).map((t) => t.role === 'customer' ? `<div class="t me">${esc(t.text)}</div>` : `<div class="t"><small>${esc(t.agent_name || 'Agent')}${t.type ? ' · ' + esc(t.type) : ''}</small>${esc(t.text)}</div>`).join('')}</div>
+      ${srcs.length ? `<div style="margin-top:16px"><div class="stat" style="padding:14px 16px"><div class="k">Sources used</div>${srcs.map((s) => `<div style="font-size:14px;margin-top:8px;color:var(--slate)"><b style="color:#fff">${esc(s.text)}</b>${s.source && s.source.url ? ` · <a href="${esc(s.source.url)}" target="_blank" rel="noopener" style="color:var(--signal)">${esc(s.source.url)}</a>` : s.source && s.source.kind === 'owner' ? ' · corrected by you' : ''}</div>`).join('')}</div></div>` : ''}</div>`;
+  } catch (e) { const cell = $('conv_' + id); if (cell) cell.textContent = e.message; }
+}
+function queue() {
+  const open = d.gaps.filter((g) => g.status === 'open' || g.status === 'message');
+  const done = d.gaps.filter((g) => !(g.status === 'open' || g.status === 'message'));
+  const item = (g) => `<div class="panel"><div class="gapq">${esc(g.question)}</div><div style="font-size:13px;color:var(--muted);margin-top:4px">${fmtDate(g.created_at)}${g.proposed_answer ? ' · ' + esc(g.proposed_answer) : ''}</div>
+    ${g.status === 'open' ? `<textarea class="gapa" id="ans_${g.id}" placeholder="Write the answer your team should give from now on"></textarea><div class="acts"><button class="btn small" onclick="gap(${g.id},'approve')">Approve and add to profile</button><button class="btn small ghost" onclick="gap(${g.id},'dismiss')">Dismiss</button></div>` : g.status === 'message' ? `<div class="acts"><button class="btn small" onclick="gap(${g.id},'done')">Mark handled</button></div>` : `<div style="margin-top:8px"><span class="pill ${g.status === 'approved' ? 'ok' : ''}">${esc(g.status)}</span></div>`}</div>`;
+  return (open.length ? open.map(item).join('') : `<div class="empty">The queue is empty. Unanswered questions and messages land here.</div>`) + (done.length ? `<h2 style="margin-top:30px">Resolved</h2>` + done.slice(0, 30).map(item).join('') : '');
+}
+async function gap(id, action) {
+  err('');
+  try {
+    const answer = action === 'approve' ? $('ans_' + id).value.trim() : undefined;
+    const r = await api('/api/gaps', { token, id, action, answer });
+    d.gaps = r.gaps; stats(); render();
+  } catch (e) { err(e.message); }
+}
+function settingsView() {
+  const s = d.settings || {}, ch = d.channels;
+  return `<div class="panel"><h2>Channels</h2>${['phone', 'chat', 'email', 'sms'].map((k) => `<div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:16px;font-weight:600"><span style="text-transform:capitalize">${k}</span><span class="pill ${ch[k].state === 'live' ? 'ok' : ch[k].state === 'ready' ? 'test' : ''}">${esc(ch[k].label)}</span></div>`).join('')}<div class="acts"><button class="btn small ghost" onclick="location.href='/deploy?t='+encodeURIComponent(token)">Change on the deploy screen</button></div></div>
+    <div class="panel"><h2>On-call and business hours</h2><div class="row2 field"><div><label>On-call name</label><input id="s_name" value="${esc(s.on_call_name || '')}"></div><div><label>On-call phone</label><input id="s_phone" value="${esc(s.on_call_phone || '')}"></div><div><label>Notify email</label><input id="s_email" value="${esc(s.notify_email || '')}"></div><div><label>Business hours</label><input id="s_hours" value="${esc(s.hours || '')}"></div></div><div class="field"><label>Outside business hours</label><select id="s_after"><option value="answer" ${s.after_hours !== 'message' ? 'selected' : ''}>Answer questions and take messages</option><option value="message" ${s.after_hours === 'message' ? 'selected' : ''}>Take messages only</option></select></div><div class="acts"><button class="btn small" onclick="saveSettings()">Save</button><span id="saved" style="color:var(--green);font-weight:700;align-self:center"></span></div></div>
+    <div class="panel"><h2>Plan</h2><p style="font-size:17px;color:var(--slate);font-weight:500;line-height:1.55">${esc(d.plan.name)}${d.plan.price ? ` · $${d.plan.price} a month` : ''}${d.plan.minutes != null ? ` · ${d.plan.minutes} voice minutes` : ''}${d.plan.conversations != null ? ` · ${d.plan.conversations} conversations` : ''}. When you reach the allowance Squadron pauses and notifies you; you can add a one-click pack. There is no automatic upgrade. Billing arrives in the next update.</p></div>`;
+}
+async function saveSettings() {
+  $('saved').textContent = 'Saving…';
+  try { await api('/api/settings', { token, settings: { on_call_name: $('s_name').value, on_call_phone: $('s_phone').value, notify_email: $('s_email').value, hours: $('s_hours').value, after_hours: $('s_after').value } }); $('saved').textContent = 'Saved.'; }
+  catch (e) { $('saved').textContent = e.message; }
+}
+function render() {
+  const v = $('view');
+  if (tab === 'conversations') {
+    const list = d.conversations.filter((c) => filter === 'all' ? true : filter === 'live' ? !c.test : filter === 'test' ? c.test : c.channel === filter);
+    v.innerHTML = `<div class="filters">${[['all', 'All'], ['live', 'Live'], ['test', 'Tests'], ['chat', 'Chat'], ['voice-web', 'Voice'], ['phone', 'Phone']].map(([k, l]) => `<button class="f ${filter === k ? 'on' : ''}" onclick="filter='${k}';render()">${l}</button>`).join('')}</div>` + convRows(list);
+  } else if (tab === 'escalations') v.innerHTML = convRows(d.conversations.filter((c) => c.escalated));
+  else if (tab === 'queue') v.innerHTML = queue();
+  else if (tab === 'settings') v.innerHTML = settingsView();
+  else if (tab === 'export') v.innerHTML = `<div class="panel"><h2>Export</h2><p style="font-size:17px;color:var(--slate);font-weight:500;line-height:1.55;margin-bottom:14px">Download every conversation as a CSV, or the full JSON including transcripts and cited sources.</p><div class="acts"><a class="btn small" href="/api/hq?token=${encodeURIComponent(token)}&export=csv">Download CSV</a><a class="btn small ghost" href="/api/conversations?token=${encodeURIComponent(token)}" target="_blank" rel="noopener">Open JSON</a></div></div>`;
+  if (openId && (tab === 'conversations' || tab === 'escalations')) loadConv(openId);
+}
+(async () => {
+  if (!token) { location.href = '/start'; return; }
+  try { d = await api('/api/hq?token=' + encodeURIComponent(token)); stats(); render(); } catch (e) { err(e.message); }
+})();
+</script>
+</body>
+</html>
