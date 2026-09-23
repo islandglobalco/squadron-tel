@@ -2,7 +2,7 @@
 
 export function channelStatus(biz) {
   const ch = biz.channels || {};
-  const origin = process.env.PUBLIC_ORIGIN || 'https://squadron.tel';
+  const origin = process.env.PUBLIC_ORIGIN || 'https://www.squadron.tel';
   return {
     phone: biz.phone_number
       ? { state: 'live', label: `Live on ${biz.phone_number}`, detail: 'Inbound calls are answered by your team. The AI identifies itself and every call starts with a recording notice.' }
