@@ -9,12 +9,12 @@ export default function handler(req, res) {
   const twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Say voice="${VOICE}">
-    Hey there, you've reached Squadron support. I'm Alex — an AI support agent.
-    I can help you right now with billing, setup, agent voices, integrations, or anything else on your mind.
+    Hey there, you've reached Squadron support. I'm Alex, an AI agent, and this call is recorded.
+    I can help you right now with pricing, setup, agent voices, or anything else on your mind.
     Go ahead and tell me what you need.
   </Say>
   <Gather input="speech" action="/api/gather" speechTimeout="auto" language="en-US"
-    hints="billing, setup, agents, pricing, cancel, help, support, account, trial, integrate, Twilio, deploy, phone number, escalate, human">
+    hints="billing, setup, agents, pricing, cancel, help, support, account, trial, deploy, phone number, escalate, human">
     <Say voice="${VOICE}">I'm listening.</Say>
   </Gather>
   <Say voice="${VOICE}">I didn't catch that — let me get someone from our team for you.</Say>

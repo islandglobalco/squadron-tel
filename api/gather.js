@@ -2,14 +2,14 @@
 const VOICE = 'Polly.Joanna-Generative';
 
 const RESPONSES = {
-  billing: { match: /bill|charge|invoice|payment|refund|cost|price|subscription|pay|credit/i, say: `For billing questions, your current plan details are in your Squadron dashboard at app dot squadron dot tel. Refunds process within 5 business days. Is there a specific charge you want to look into?` },
-  setup: { match: /setup|install|deploy|start|configure|connect|integrate|phone number|get started/i, say: `Setup is about five minutes. Log into your dashboard, upload your knowledge base, pick an agent voice, and hit Deploy. Your phone number is assigned instantly. Do you need help with a specific step?` },
-  agents: { match: /agent|voice|personality|alex|maya|choose|switch|change agent/i, say: `Squadron has 24 agents — each with a distinct voice and personality. You can preview all of them in the dashboard under Agent Settings. Would you like recommendations based on your industry?` },
+  billing: { match: /bill|charge|invoice|payment|refund|cost|price|subscription|pay|credit/i, say: `For billing questions, email hello at squadron dot tel and a person will reply. Is there anything else I can help with?` },
+  setup: { match: /setup|install|deploy|start|configure|connect|integrate|phone number|get started/i, say: `You enter your business, a website or App Store listing or documents. Squadron builds a profile you review, generates your team, and lets you test it before you deploy. Do you need help with a specific step?` },
+  agents: { match: /agent|voice|personality|alex|maya|choose|switch|change agent/i, say: `Squadron has a library of 24 voices, each with a distinct personality, and assigns them to the agents it builds for your business. You can preview them on squadron dot tel.` },
   escalate: { match: /human|person|real|transfer|manager|supervisor|speak to someone/i, say: `Of course. Connecting you with a team member now.` },
-  cancel: { match: /cancel|quit|stop|end|close account/i, say: `I'm sorry to hear you're considering leaving. Our retention team can offer plan adjustments or credits. Let me connect you with them.` },
-  hours: { match: /hour|open|available|when|schedule/i, say: `Squadron AI agents run 24-7 with no downtime. For human support, our team is available Monday through Friday, 9am to 6pm Eastern.` },
-  pricing: { match: /price|plan|tier|scout|commander|enterprise/i, say: `Scout is $99 a month — 250 voice minutes and 3 agents. Commander is $299 a month with 1,000 minutes and API access. Command HQ is $799 a month — unlimited everything, including white-label. Want me to walk you through which fits your volume?` },
-  trial: { match: /trial|free|try|test|demo/i, say: `The Scout plan includes 250 free voice minutes — enough to run real calls. No credit card required. You can deploy at squadron dot tel slash deploy and be live in minutes.` }
+  cancel: { match: /cancel|quit|stop|end|close account/i, say: `I'm sorry to hear that. Let me connect you with a person who can help.` },
+  hours: { match: /hour|open|available|when|schedule/i, say: `Squadron AI agents answer around the clock. For a person, email hello at squadron dot tel.` },
+  pricing: { match: /price|plan|tier|scout|commander|enterprise/i, say: `Scout is $99 a month with 250 voice minutes included. Commander is $299 a month with 1,000 voice minutes included. Command HQ is $799 a month with the largest allowances. Every plan includes the full team. Want me to walk you through which fits your volume?` },
+  trial: { match: /trial|free|try|test|demo/i, say: `Every plan starts with a 14-day trial that includes a real phone number, and no card is required. Start at squadron dot tel.` }
 };
 
 const FOLLOWUP = `Anything else I can help with?`;
