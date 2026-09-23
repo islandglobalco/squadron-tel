@@ -20,10 +20,8 @@ export default async function handler(req, res) {
     }
     const id = String(req.query?.id || '');
     if (!ID.test(id)) return bad(res, 400, 'bad id');
-    const found = await blob.list({ prefix: `portraits/${id}.webp`, limit: 1, token });
-    const item = found.blobs && found.blobs[0];
-    if (!item) return bad(res, 404, 'Portrait not found');
-    const r = await blob.get(item.url, { access: 'private', token });
+    let r = null;
+    try { r = await blob.get(`portraits/${id}.webp`, { access: 'private', token }); } catch (e) { if (!(e instanceof blob.BlobNotFoundError)) throw e; }
     if (!r || !r.stream) return bad(res, 404, 'Portrait not found');
     res.setHeader('Content-Type', 'image/webp');
     res.setHeader('Cache-Control', 'public, max-age=31536000, s-maxage=31536000, immutable');
