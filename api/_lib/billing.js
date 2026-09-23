@@ -114,7 +114,10 @@ export async function reconcile() {
 // ends, if it is still running). A paid pack joins the period it was paid in,
 // or the next plan period if none is running.
 export async function markPaid(inv, txId) {
-  await sql().query("UPDATE invoices SET status = 'paid', paid_at = now(), mercury_tx_id = $2 WHERE id = $1 AND status = 'pending'", [inv.id, txId]);
+  // Only the first confirmation of an invoice counts, so a payment seen twice
+  // (for example by the redirect and by the sweep) never opens two periods.
+  const won = await sql().query("UPDATE invoices SET status = 'paid', paid_at = now(), mercury_tx_id = $2 WHERE id = $1 AND status = 'pending' RETURNING id", [inv.id, txId]);
+  if (!won.length) return false;
   if (inv.kind === 'plan') {
     const acc = (await sql().query('SELECT paid_through FROM accounts WHERE id = $1', [inv.account_id]))[0];
     const start = acc && acc.paid_through && new Date(acc.paid_through) > new Date() ? new Date(acc.paid_through) : new Date();
@@ -126,6 +129,7 @@ export async function markPaid(inv, txId) {
     const cur = await sql().query("SELECT period_start, period_end FROM invoices WHERE account_id = $1 AND kind = 'plan' AND status = 'paid' AND period_start <= now() AND period_end > now() ORDER BY period_start DESC LIMIT 1", [inv.account_id]);
     if (cur[0]) await sql().query('UPDATE invoices SET period_start = $2, period_end = $3 WHERE id = $1', [inv.id, cur[0].period_start, cur[0].period_end]);
   }
+  return true;
 }
 
 // Creates a pending invoice unless one for the same item is already open.
