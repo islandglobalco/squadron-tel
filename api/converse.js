@@ -4,7 +4,7 @@
 import { ensureSchema, sql, loadBusiness, loadProfile, loadTeam, newId, readJson, bad } from './_lib/db.js';
 import { applyCorrections } from './_lib/profile.js';
 import { answer } from './_lib/answer.js';
-import { usageFor } from './_lib/usage.js';
+import { requireFunds, recordSpend, textCostCents, HOLD, PaymentRequired } from './_lib/ledger.js';
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
@@ -35,9 +35,12 @@ export default async function handler(req, res) {
     const agents = team.agents.agents.filter((a) => a.enabled !== false);
     if (!agents.length) return bad(res, 400, 'Every agent is turned off.');
     const business = { name: profile.company?.name?.value || biz.input_value };
-    if (!test && !body.conversationId) {
-      const u = await usageFor(biz.id);
-      if (u.paused) return bad(res, 429, `${business.name} has reached its plan allowance for this month, so the team is paused. Please try again later or contact the business directly.`);
+    // Prepaid only: every turn, test or live, needs an active paid plan with
+    // budget left. Chat has no conversation limit beyond the prepaid budget.
+    try { await requireFunds(biz.account_id, HOLD.chatTurn, business.name); }
+    catch (e) {
+      if (!(e instanceof PaymentRequired)) throw e;
+      return res.status(402).json({ error: test ? e.message : `${business.name} cannot take chat messages right now. Please contact the business directly.`, code: e.code });
     }
 
     let convo = null;
@@ -50,9 +53,11 @@ export default async function handler(req, res) {
       await sql().query('INSERT INTO conversations (id, business_id, channel, transcript, test) VALUES ($1,$2,$3,$4,$5)', [convo.id, biz.id, channel, '[]', test]);
     }
     const history = convo.transcript || [];
+    if (history.length >= 80) return bad(res, 429, 'This conversation has reached its length limit. Please start a new one.');
     const lastAgentId = [...history].reverse().find((h) => h.role === 'agent')?.agent_id || null;
     const out = await answer({ business, agents, profile, history, message: message.slice(0, 2000), channel, lastAgentId, settings: biz.settings || null });
 
+    await recordSpend({ accountId: biz.account_id, businessId: biz.id, kind: test ? 'chat-test' : 'chat', cents: textCostCents(out.model, out.usage), ref: convo.id });
     const now = new Date().toISOString();
     history.push({ role: 'customer', text: message.slice(0, 2000), at: now });
     history.push({ role: 'agent', agent_id: out.agent.id, agent_name: `${out.agent.persona} · ${out.agent.title}`, text: out.reply, type: out.replyType, citations: out.citations.map((c) => c.id), at: now });

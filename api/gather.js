@@ -8,8 +8,8 @@ const RESPONSES = {
   escalate: { match: /human|person|real|transfer|manager|supervisor|speak to someone/i, say: `Of course. Connecting you with a team member now.` },
   cancel: { match: /cancel|quit|stop|end|close account/i, say: `I'm sorry to hear that. Let me connect you with a person who can help.` },
   hours: { match: /hour|open|available|when|schedule/i, say: `Squadron AI agents answer around the clock. For a person, email hello at squadron dot tel.` },
-  pricing: { match: /price|plan|tier|scout|commander|enterprise/i, say: `Scout is $99 a month with 250 voice minutes included. Commander is $299 a month with 1,000 voice minutes included. Command HQ is $799 a month with the largest allowances. Every plan includes the full team. Want me to walk you through which fits your volume?` },
-  trial: { match: /trial|free|try|test|demo/i, say: `Every plan starts with a 14-day trial, and no card is required. Start at squadron dot tel.` }
+  pricing: { match: /price|plan|tier|basic|pro|command|enterprise/i, say: `Plans are prepaid for thirty days. Basic is 39 dollars with 250 voice minutes. Pro is 79 dollars with 650 minutes. Command Center is 199 dollars with 2,000 minutes. Every plan includes unlimited web chat. Want me to walk you through which fits your volume?` },
+  trial: { match: /trial|free|try|test|demo/i, say: `There is no free trial. Squadron is prepaid with no contract, starting at 39 dollars for thirty days. Start at squadron dot tel.` }
 };
 
 const FOLLOWUP = `Anything else I can help with?`;

@@ -2,6 +2,7 @@
 // minutes so the owner can call their team from a real phone.
 import { sql, bad, loadBusiness, readJson } from './_lib/db.js';
 import { ensureBridgeSchema } from './_lib/bridge.js';
+import { ledgerStatus } from './_lib/ledger.js';
 
 const MINUTES = 15;
 
@@ -18,6 +19,8 @@ export default async function handler(req, res) {
     if (!pool.length) return res.status(200).json({ available: false, reason: 'No demo numbers are configured yet.' });
     const mine = pool.find((n) => n.business_id === biz.id && n.expires_at && new Date(n.expires_at) > new Date());
     if (req.method === 'GET') return res.status(200).json({ available: true, number: mine ? mine.number : null, expiresAt: mine ? mine.expires_at : null });
+    // Prepaid only: demo calls draw on the account's prepaid balance.
+    if (!(await ledgerStatus(biz.account_id)).active) return res.status(402).json({ available: false, reason: 'Demo calls use your prepaid balance, so they need an active paid plan. Choose one in Billing.' });
     if (mine) {
       await sql().query(`UPDATE demo_numbers SET expires_at = now() + interval '${MINUTES} minutes' WHERE number = $1`, [mine.number]);
       return res.status(200).json({ available: true, number: mine.number, expiresAt: new Date(Date.now() + MINUTES * 60000).toISOString() });

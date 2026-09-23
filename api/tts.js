@@ -29,54 +29,54 @@ const AGENTS = [
   { name: 'Sam', voice: 'alloy', tone: 'Versatile, even-keeled and reliable, an all-round utility player.', text: "Hey there, I'm Sam. I'm your all-around utility agent — handling overflow, special requests, and anything that needs a versatile, reliable hand." },
 ];
 
+// Each preview is generated once, stored in Vercel Blob, and served from
+// there forever after, so visitors never cause new OpenAI spend.
+const VERSION = 'v2';
+
+async function stream(res, r, agent) {
+  res.setHeader('Content-Type', 'audio/wav');
+  res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=31536000, immutable');
+  res.setHeader('X-Agent-Name', agent.name);
+  const reader = r.stream.getReader();
+  for (;;) { const { done, value } = await reader.read(); if (done) break; res.write(Buffer.from(value)); }
+  res.end();
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Cache-Control', 'no-store');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   if (req.method === 'OPTIONS') { res.status(200).end(); return; }
-
-  const idx = Math.max(0, Math.min(23, parseInt(req.query.agent || '0', 10)));
+  const idx = Math.max(0, Math.min(AGENTS.length - 1, parseInt(req.query.agent || '0', 10) || 0));
   const agent = AGENTS[idx];
-
-  if (!process.env.OPENAI_API_KEY) {
-    res.status(500).json({ error: 'OPENAI_API_KEY not configured' });
-    return;
-  }
-
+  const blob = await import('@vercel/blob');
+  const token = process.env.BLOB_READ_WRITE_TOKEN;
+  const path = `voices/agent-${idx}-${VERSION}.wav`;
   try {
+    let r = null;
+    try { r = await blob.get(path, { access: 'private', token }); } catch (e) { if (!(e instanceof blob.BlobNotFoundError)) throw e; }
+    if (r && r.stream) return stream(res, r, agent);
+    // First request for this voice ever: generate it once and keep it.
     const ttsRes = await fetch('https://api.openai.com/v1/audio/speech', {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
+      headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'gpt-4o-mini-tts',
         voice: agent.voice,
         input: agent.text,
         instructions: `Voice direction: ${agent.tone} Natural, human, conversational pacing with real warmth; smooth, even delivery with steady pitch and no rushed or clipped words. This is a short self-introduction for a customer-support product demo.`,
-        // Lossless 24 kHz PCM — no codec artifacts; cached at the edge per agent.
         response_format: 'wav',
         speed: 1.0,
       }),
     });
-
-    if (!ttsRes.ok) {
-      const err = await ttsRes.text();
-      console.error('OpenAI TTS error:', err);
-      res.setHeader('Cache-Control', 'no-store');
-      res.status(502).json({ error: 'TTS upstream error', detail: err.slice(0, 300) });
-      return;
-    }
-
-    const buffer = await ttsRes.arrayBuffer();
+    if (!ttsRes.ok) { res.setHeader('Cache-Control', 'no-store'); res.status(502).json({ error: 'Voice preview is unavailable right now.' }); return; }
+    const buf = Buffer.from(await ttsRes.arrayBuffer());
+    await blob.put(path, buf, { access: 'private', contentType: 'audio/wav', addRandomSuffix: false, allowOverwrite: false, token }).catch((e) => console.error('[tts store]', e.message));
     res.setHeader('Content-Type', 'audio/wav');
     res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=31536000, immutable');
-    res.setHeader('X-Agent-Name', agent.name);
-    res.setHeader('X-Agent-Voice', agent.voice);
-    res.status(200).send(Buffer.from(buffer));
+    res.status(200).send(buf);
   } catch (err) {
-    console.error('TTS handler error:', err);
+    console.error('[tts]', err);
+    res.setHeader('Cache-Control', 'no-store');
     res.status(500).json({ error: 'Internal error' });
   }
 }

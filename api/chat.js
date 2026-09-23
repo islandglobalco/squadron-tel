@@ -1,7 +1,7 @@
 // /api/chat.js — Squadron live chat API
 const AGENT = { name: 'Alex', title: 'Squadron AI Support' };
 const KB = [
-  { match: /price|cost|plan|how much|billing|invoice|pay|subscription/, reply: `Plans are **Scout at $99/month** (250 voice minutes and 1,000 chat conversations included), **Commander at $299/month** (1,000 voice minutes and unlimited chat), and **Command HQ at $799/month** (unlimited voice and chat). Every plan includes the full team, and every plan starts with a 14-day trial with no card required. When you reach your allowance, your team pauses and Squadron HQ shows a notice; you can buy an extra pack on the Billing page, and there is no automatic upgrade.` },
+  { match: /price|cost|plan|how much|billing|invoice|pay|subscription/, reply: `Plans are prepaid for 30 days: **Basic at $39** (250 AI voice minutes), **Pro at $79** (650 minutes) and **Command Center at $199** (2,000 minutes). Every plan includes the full team and unlimited web chat, and extra minutes are 25¢ each, prepaid in blocks of 100. You pay by bank wire or ACH, and Squadron never bills you after the fact.` },
   { match: /setup|start|how do i|get started|deploy|install|begin|launch/, reply: `Here is how it works:\n1. Enter your business: a website URL, an iOS App Store URL, or your documents\n2. Review the Business Profile Squadron builds, with a source on every fact\n3. Review the team Squadron generates for your business\n4. Test it by chat and voice, then deploy to phone and chat\n\nWant me to walk you through any step?` },
   { match: /agent|voice|personality|24|how many|choose|demo/, reply: `Squadron has **24 AI agents** — each with a distinct voice and personality. You can preview any of them on the homepage. Mix and match for your support stack.` },
   { match: /phone|number|twilio|call|inbound|route|forward/, reply: `Web chat is live today. Phone lines are opening soon; when they do, you will get a number to publish directly or to forward your existing business line to.` },
@@ -9,7 +9,7 @@ const KB = [
   { match: /cancel|quit|stop|close account/, reply: `I'd hate to see you go. Before anything, is there something specific that's not working? Our team can offer plan adjustments, extra credits, or a strategy call.` },
   { match: /integrat|crm|salesforce|hubspot|zapier|webhook|api/, reply: `Squadron does not offer CRM integrations or a public API today. Every conversation, transcript and recording is available in Squadron HQ, and you can export them.` },
   { match: /latency|fast|slow|lag|delay|response time/, reply: `The fastest way to judge it is to try it: click **Talk to Alex live** on the homepage and have a conversation.` },
-  { match: /trial|free|demo|try|test/, reply: `Every plan starts with a **14-day trial**, and no card is required to start.` },
+  { match: /trial|free|demo|try|test/, reply: `There is no free trial. Squadron is prepaid instead, with no contract: pay for 30 days from $39, and simply do not renew if it is not for you.` },
   { match: /secure|gdpr|soc|compliance|data|privacy/, reply: `Every Squadron agent identifies itself as an AI at the start of every conversation, every call begins with an audible recording notice, and Squadron answers inbound conversations only. For anything else about data handling, email info@squadron.tel.` },
 ];
 const GREETING = `Hey! I'm **Alex**, your Squadron AI assistant. I can help with pricing, setup, agent voices, and anything else about Squadron. What's on your mind?`;
