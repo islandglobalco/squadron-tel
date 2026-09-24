@@ -6,25 +6,25 @@
   if (!business) return;
   // squadron.tel redirects to www, and a redirected preflight fails, so the API is always called on www.
   var origin = ((script.src || '').replace(/\/widget\.js.*$/, '') || 'https://www.squadron.tel').replace('https://squadron.tel', 'https://www.squadron.tel');
-  var accent = script.getAttribute('data-color') || '#CEEB00';
+  var accent = script.getAttribute('data-color') || '#FF7A1A';
   var conversationId = null, open = false, busy = false, agent = null;
 
   var css = '\
 .sqw-btn{position:fixed;right:20px;bottom:20px;z-index:2147483000;width:64px;height:64px;border-radius:50%;border:none;cursor:pointer;background:' + accent + ';box-shadow:0 8px 28px rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center}\
-.sqw-btn svg{width:30px;height:30px;fill:#07102B}\
-.sqw-box{position:fixed;right:20px;bottom:96px;z-index:2147483000;width:380px;max-width:calc(100vw - 40px);height:560px;max-height:calc(100vh - 120px);background:#07102B;color:#fff;border-radius:22px;box-shadow:0 20px 60px rgba(0,0,0,0.5);display:none;flex-direction:column;overflow:hidden;font-family:Inter,system-ui,sans-serif}\
+.sqw-btn svg{width:30px;height:30px;fill:#0A0E17}\
+.sqw-box{position:fixed;right:20px;bottom:96px;z-index:2147483000;width:380px;max-width:calc(100vw - 40px);height:560px;max-height:calc(100vh - 120px);background:#0A0E17;color:#fff;border-radius:3px;box-shadow:0 20px 60px rgba(0,0,0,0.5);display:none;flex-direction:column;overflow:hidden;font-family:Inter,system-ui,sans-serif}\
 .sqw-box.open{display:flex}\
 .sqw-head{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,0.1)}\
-.sqw-head img{width:40px;height:40px;border-radius:10px;object-fit:cover;background:#0E1A3F}\
+.sqw-head img{width:40px;height:40px;border-radius:3px;object-fit:cover;background:#121826}\
 .sqw-head b{display:block;font-size:18px;font-weight:800}\
 .sqw-head small{font-size:14px;color:#D2D8EA;font-weight:600}\
 .sqw-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}\
-.sqw-m{max-width:88%;padding:11px 14px;border-radius:16px;font-size:17px;line-height:1.45;background:rgba(255,255,255,0.09);white-space:pre-wrap;word-break:break-word}\
-.sqw-m.me{align-self:flex-end;background:' + accent + ';color:#07102B;font-weight:600}\
+.sqw-m{max-width:88%;padding:11px 14px;border-radius:3px;font-size:17px;line-height:1.45;background:rgba(255,255,255,0.09);white-space:pre-wrap;word-break:break-word}\
+.sqw-m.me{align-self:flex-end;background:' + accent + ';color:#0A0E17;font-weight:600}\
 .sqw-m.note{background:rgba(254,188,46,0.15);border:1px solid rgba(254,188,46,0.5);font-size:15px}\
 .sqw-form{display:flex;gap:8px;padding:12px;border-top:1px solid rgba(255,255,255,0.1)}\
-.sqw-form input{flex:1;font:inherit;font-size:17px;padding:12px 14px;border-radius:999px;border:2px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.06);color:#fff;outline:none}\
-.sqw-form button{font:inherit;font-weight:800;font-size:16px;padding:0 18px;border-radius:999px;border:none;background:' + accent + ';color:#07102B;cursor:pointer}\
+.sqw-form input{flex:1;font:inherit;font-size:17px;padding:12px 14px;border-radius:3px;border:2px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.06);color:#fff;outline:none}\
+.sqw-form button{font:inherit;font-weight:800;font-size:16px;padding:0 18px;border-radius:3px;border:none;background:' + accent + ';color:#0A0E17;cursor:pointer}\
 .sqw-foot{font-size:13px;color:#C3CAE0;text-align:center;padding:0 12px 10px}';
   var style = document.createElement('style'); style.textContent = css; document.head.appendChild(style);
 

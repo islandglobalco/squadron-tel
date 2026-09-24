@@ -7,17 +7,18 @@
 <meta name="description" content="Enter your business and Squadron builds a customer-service team around it.">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700;800;900&family=Saira+Stencil+One&family=Inter:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="/onboard.css">
 <style>
 .planpick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.planopt{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:22px;border-radius:20px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:#fff;cursor:pointer;font-family:inherit}
+.planopt{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:22px;border-radius:3px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:#fff;cursor:pointer;font-family:inherit}
 .planopt:hover{border-color:var(--signal)}
-.planopt .pn{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:30px;text-transform:uppercase;line-height:1}
-.planopt .pp{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:46px;line-height:1;color:var(--signal)}
+.planopt .pn{font-family:'Saira Condensed',sans-serif;font-weight:900;font-size:30px;text-transform:uppercase;line-height:1}
+.planopt .pp{font-family:'Saira Condensed',sans-serif;font-weight:900;font-size:46px;line-height:1;color:var(--signal)}
 .planopt .pm{font-size:17px;font-weight:600;color:rgba(255,255,255,0.85)}
 @media (max-width:760px){.planpick{grid-template-columns:1fr}}
 </style>
+<link rel="stylesheet" href="/theme.css">
 </head>
 <body>
 <nav>
@@ -222,10 +223,10 @@ async function payGate() {
   $('s2lead').textContent = 'Your site is read. Squadron is prepaid, so your profile and team are built as soon as your first 30 days are paid.';
   const me = await api('/api/auth').catch(() => ({ account: null }));
   if (!me.account) {
-    box.innerHTML = `<div class="card" style="padding:24px;border-radius:20px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.12)"><p style="font-size:20px;font-weight:700;color:#fff;margin-bottom:12px">Create your account to choose a plan.</p>
+    box.innerHTML = `<div class="card" style="padding:24px;border-radius:3px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.12)"><p style="font-size:20px;font-weight:700;color:#fff;margin-bottom:12px">Create your account to choose a plan.</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><input class="input" id="p_email" type="email" placeholder="Email" autocomplete="email"><input class="input" id="p_pass" type="password" placeholder="Password (8+ characters)" autocomplete="new-password"></div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><button class="btn" onclick="payAuth('signup')">Create account</button><button class="btn ghost" onclick="payAuth('login')">I have an account, log in</button></div>
-      <label style="display:flex;gap:12px;align-items:flex-start;margin-top:16px;font-size:17px;line-height:1.5;color:rgba(255,255,255,0.9);font-weight:500;cursor:pointer"><input type="checkbox" id="p_terms" style="width:22px;height:22px;margin-top:2px;flex:none;accent-color:#CEEB00">I agree to the <a href="/terms" target="_blank" style="color:var(--signal);font-weight:700">Terms of Service</a> and the <a href="/privacy" target="_blank" style="color:var(--signal);font-weight:700">Privacy Policy</a>, and I will follow the call-recording and consumer laws that apply to my business.</label></div>`;
+      <label style="display:flex;gap:12px;align-items:flex-start;margin-top:16px;font-size:17px;line-height:1.5;color:rgba(255,255,255,0.9);font-weight:500;cursor:pointer"><input type="checkbox" id="p_terms" style="width:22px;height:22px;margin-top:2px;flex:none;accent-color:#FF7A1A">I agree to the <a href="/terms" target="_blank" style="color:var(--signal);font-weight:700">Terms of Service</a> and the <a href="/privacy" target="_blank" style="color:var(--signal);font-weight:700">Privacy Policy</a>, and I will follow the call-recording and consumer laws that apply to my business.</label></div>`;
     return;
   }
   await api('/api/auth', { action: 'claim', token }).catch((e) => err('err2', e.message));

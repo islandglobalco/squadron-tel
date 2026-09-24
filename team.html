@@ -6,34 +6,35 @@
 <title>Your team — Squadron</title>
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700;800;900&family=Saira+Stencil+One&family=Inter:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="/onboard.css">
 <style>
 .team{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;margin-bottom:30px}
-.agent{border-radius:22px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);overflow:hidden;display:flex;flex-direction:column}
+.agent{border-radius:3px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);overflow:hidden;display:flex;flex-direction:column}
 .agent.off{opacity:0.45}
 .agent .head{display:flex;gap:16px;align-items:center;padding:18px 18px 0}
-.agent img{width:84px;height:84px;border-radius:16px;object-fit:cover;background:#0E1A3F;flex:none}
-.agent .title{font-family:'Barlow Condensed',sans-serif;font-weight:900;text-transform:uppercase;font-size:30px;line-height:1;letter-spacing:0.01em}
+.agent img{width:84px;height:84px;border-radius:3px;object-fit:cover;background:#121826;flex:none}
+.agent .title{font-family:'Saira Condensed',sans-serif;font-weight:900;text-transform:uppercase;font-size:30px;line-height:1;letter-spacing:0.01em}
 .agent .who{font-size:17px;font-weight:700;color:var(--signal);margin-top:6px;letter-spacing:0.04em;text-transform:uppercase}
 .agent .body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:14px;flex:1}
 .agent p{font-size:16px;line-height:1.55;color:#E5E9F5;font-weight:500}
 .agent .lbl{font-size:14px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{font-size:15px;font-weight:700;padding:6px 10px;border-radius:999px;background:rgba(206,235,0,0.12);color:var(--signal);border:1px solid rgba(206,235,0,0.3)}
+.chip{font-size:15px;font-weight:700;padding:6px 10px;border-radius:3px;background:rgba(255,122,26,0.12);color:var(--signal);border:1px solid rgba(255,122,26,0.3)}
 .chip.out{background:rgba(255,255,255,0.06);color:var(--slate);border-color:rgba(255,255,255,0.15)}
-.esc{font-size:17px;line-height:1.55;color:#fff;font-weight:500;padding:12px 14px;border-radius:12px;background:rgba(254,188,46,0.1);border:1px solid rgba(254,188,46,0.4)}
+.esc{font-size:17px;line-height:1.55;color:#fff;font-weight:500;padding:12px 14px;border-radius:3px;background:rgba(254,188,46,0.1);border:1px solid rgba(254,188,46,0.4)}
 .greet{font-size:17px;line-height:1.55;color:var(--slate);font-style:italic}
 .why{font-size:16px;color:var(--slate);line-height:1.5}
 .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
-.play{display:inline-flex;align-items:center;gap:8px;font-size:16px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;padding:10px 16px;border-radius:999px;border:2px solid rgba(255,255,255,0.28);background:transparent;color:#fff;cursor:pointer}
+.play{display:inline-flex;align-items:center;gap:8px;font-size:16px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;padding:10px 16px;border-radius:3px;border:2px solid rgba(255,255,255,0.28);background:transparent;color:#fff;cursor:pointer}
 .play.on{border-color:var(--signal);color:var(--signal)}
-.notes{font-size:18px;line-height:1.6;color:var(--slate);font-weight:500;padding:20px 24px;border-radius:16px;background:rgba(255,255,255,0.05);margin-bottom:30px;max-width:900px}
+.notes{font-size:18px;line-height:1.6;color:var(--slate);font-weight:500;padding:20px 24px;border-radius:3px;background:rgba(255,255,255,0.05);margin-bottom:30px;max-width:900px}
 .editform{display:none;padding:0 18px 18px}
 .editform label{display:block;font-size:14px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin:10px 0 4px}
-.editform textarea,.editform input{width:100%;font:inherit;font-size:17px;font-weight:500;padding:10px 12px;border-radius:10px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#fff;outline:none}
+.editform textarea,.editform input{width:100%;font:inherit;font-size:17px;font-weight:500;padding:10px 12px;border-radius:3px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#fff;outline:none}
 .editform textarea:focus,.editform input:focus{border-color:var(--signal)}
 </style>
+<link rel="stylesheet" href="/theme.css">
 </head>
 <body>
 <nav>

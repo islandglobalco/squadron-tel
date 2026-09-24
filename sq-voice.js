@@ -1,6 +1,6 @@
 // ── CONFETTI ──────────────────────────────────────────────────────────────────
 (function(){
-  const COLORS=['#DEFF00','#FFD700','#FFF0A0','#CEEB00','#ffffff','#aac800','#ffe066'];
+  const COLORS=['#FF9A45','#FFD700','#FFF0A0','#FF7A1A','#ffffff','#E0600C','#ffe066'];
   let particles=[], raf=null, canvas, ctx, running=false;
 
   function initCanvas(){
@@ -101,7 +101,7 @@ function appendTo(line, delta){
 function alexDelta(delta){
   if(!delta) return;
   liveUserLine=null;
-  if(!liveAlexLine) liveAlexLine=addLine('Alex','', 'var(--signal)');
+  if(!liveAlexLine) liveAlexLine=addLine('Ace','', 'var(--signal)');
   appendTo(liveAlexLine, delta);
 }
 function userDelta(delta){
@@ -146,7 +146,7 @@ function handleRtcEvent(e){
 
 async function startLive(){
   if(rtc||rtcConnecting) return;
-  rtcConnecting=true; setMicBtn(); vStatus('Connecting to Alex…');
+  rtcConnecting=true; setMicBtn(); vStatus('Connecting to Ace…');
   try{
     const pc=new RTCPeerConnection();
     rtc=pc;
@@ -175,7 +175,7 @@ async function startLive(){
     rtcEngine=data.engine;
     await pc.setRemoteDescription({type:'answer',sdp:data.sdp});
     const tag=document.getElementById('voiceEngineTag'); if(tag) tag.textContent='Live · OpenAI '+(data.model||'');
-    vStatus(rtcMic?'Connected · speak any time':'Mic unavailable · type below and Alex will answer out loud');
+    vStatus(rtcMic?'Connected · speak any time':'Mic unavailable · type below and Ace will answer out loud');
   }catch(err){
     console.error('[voice] start failed',err);
     vStatus('Could not connect to the live agent. Please try again.');

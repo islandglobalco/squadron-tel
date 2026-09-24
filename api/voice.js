@@ -9,7 +9,7 @@ export default function handler(req, res) {
   const twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Say voice="${VOICE}">
-    Hey there, you've reached Squadron support. I'm Alex, an AI agent, and this call is recorded.
+    Hey there, you've reached Squadron support. I'm Ace, an AI agent, and this call is recorded.
     I can help you right now with pricing, setup, agent voices, or anything else on your mind.
     Go ahead and tell me what you need.
   </Say>

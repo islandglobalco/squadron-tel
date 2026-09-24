@@ -6,23 +6,23 @@
 <title>Billing — Squadron</title>
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700;800;900&family=Saira+Stencil+One&family=Inter:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="/onboard.css">
 <style>
-.card{border-radius:22px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);padding:26px 28px;margin-bottom:18px}
+.card{border-radius:3px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);padding:26px 28px;margin-bottom:18px}
 .card h2{margin-bottom:10px}
 .big{font-size:20px;line-height:1.55;color:#fff;font-weight:600}
 .detail{font-size:17px;line-height:1.55;color:var(--slate);font-weight:500;margin-top:6px}
 .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:18px}
-.plan{border-radius:22px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.12);padding:26px;display:flex;flex-direction:column;gap:10px}
+.plan{border-radius:3px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.12);padding:26px;display:flex;flex-direction:column;gap:10px}
 .plan.current{border-color:var(--signal);background:var(--signal-dim)}
-.plan h3{font-family:'Barlow Condensed',sans-serif;font-weight:900;text-transform:uppercase;font-size:34px;letter-spacing:0.01em}
-.price{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:52px;line-height:1}
+.plan h3{font-family:'Saira Condensed',sans-serif;font-weight:900;text-transform:uppercase;font-size:34px;letter-spacing:0.01em}
+.price{font-family:'Saira Condensed',sans-serif;font-weight:900;font-size:52px;line-height:1}
 .price small{font-family:Inter,sans-serif;font-size:17px;font-weight:600;color:var(--slate)}
 .plan ul{list-style:none;font-size:17px;line-height:1.6;color:var(--slate);font-weight:600;flex:1}
 .plan .btn{margin-top:8px}
 .packs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.inv{border-radius:18px;border:2px solid rgba(254,188,46,0.5);background:rgba(254,188,46,0.08);padding:22px 24px;margin-bottom:14px}
+.inv{border-radius:3px;border:2px solid rgba(254,188,46,0.5);background:rgba(254,188,46,0.08);padding:22px 24px;margin-bottom:14px}
 .inv.paid{border-color:rgba(34,217,90,0.4);background:rgba(34,217,90,0.08)}
 .inv h3{font-size:21px;font-weight:800;margin-bottom:12px}
 .wire{display:grid;grid-template-columns:220px 1fr;gap:8px 16px;font-size:18px;font-weight:600}
@@ -34,6 +34,7 @@
 .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
 @media (max-width:900px){.plans{grid-template-columns:1fr}.packs{grid-template-columns:1fr}.wire{grid-template-columns:1fr}.wire dd{margin-bottom:8px}}
 </style>
+<link rel="stylesheet" href="/theme.css">
 </head>
 <body>
 <nav>
