@@ -4,7 +4,7 @@
 // password. 'forgot' answers the same way whether or not the email exists.
 import { sql, loadBusiness, readJson, bad } from './_lib/db.js';
 import crypto from 'node:crypto';
-import { ensureAuthSchema, createAccount, findAccount, verifyPassword, hashPassword, sessionCookie, clearCookie, currentAccount } from './_lib/auth.js';
+import { ADMIN_EMAILS, ensureAuthSchema, createAccount, findAccount, verifyPassword, hashPassword, sessionCookie, clearCookie, currentAccount } from './_lib/auth.js';
 import { ledgerStatus } from './_lib/ledger.js';
 import { sendEmail } from './_lib/email.js';
 
@@ -13,9 +13,19 @@ const sha = (t) => crypto.createHash('sha256').update(t).digest('hex');
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   const body = req.method === 'GET' ? {} : readJson(req);
-  const action = req.method === 'GET' ? 'me' : body.action;
+  const action = req.method === 'GET' ? (req.query?.signin ? 'signin' : 'me') : body.action;
   try {
     await ensureAuthSchema();
+    if (action === 'signin') {
+      // One-time sign-in link for BOSS admins, sent by 'admin_link'.
+      await sql().query(`CREATE TABLE IF NOT EXISTS password_resets (
+        token_hash TEXT PRIMARY KEY, account_id TEXT NOT NULL, expires_at TIMESTAMPTZ NOT NULL, used_at TIMESTAMPTZ, created_at TIMESTAMPTZ NOT NULL DEFAULT now())`);
+      const rows = await sql().query('UPDATE password_resets SET used_at = now() WHERE token_hash = $1 AND used_at IS NULL AND expires_at > now() RETURNING account_id', [sha('signin:' + String(req.query.signin))]);
+      if (!rows.length) { res.setHeader('Location', '/admin?link=expired'); return res.status(302).end(); }
+      res.setHeader('Set-Cookie', sessionCookie(rows[0].account_id));
+      res.setHeader('Location', '/admin');
+      return res.status(302).end();
+    }
     if (action === 'me') {
       const acc = await currentAccount(req);
       if (!acc) return res.status(200).json({ account: null });
@@ -87,6 +97,22 @@ export default async function handler(req, res) {
     const email = String(body.email || '').trim().toLowerCase();
     const password = String(body.password || '');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return bad(res, 400, 'Enter a valid email address.');
+    if (action === 'admin_link') {
+      // Admin addresses get a 15-minute sign-in link by email; no password is
+      // involved. The account is opened on first use. Other addresses get the
+      // same answer and no email.
+      if (ADMIN_EMAILS.includes(email)) {
+        let acc = await findAccount(email);
+        if (!acc) { await createAccount(email, crypto.randomBytes(32).toString('base64url')); acc = await findAccount(email); }
+        const recent = await sql().query("SELECT COUNT(*)::int AS n FROM password_resets WHERE account_id = $1 AND created_at > now() - interval '1 hour'", [acc.id]);
+        if (recent[0].n < 8) {
+          const token = crypto.randomBytes(32).toString('base64url');
+          await sql().query("INSERT INTO password_resets (token_hash, account_id, expires_at) VALUES ($1, $2, now() + interval '15 minutes')", [sha('signin:' + token), acc.id]);
+          await sendEmail({ to: acc.email, subject: 'Your BOSS sign-in link', text: `Open this link within 15 minutes to sign in to BOSS, Squadron's admin:\n\nhttps://www.squadron.tel/api/auth?signin=${token}\n\nIf you did not ask for this, ignore this email.` });
+        }
+      }
+      return res.status(200).json({ ok: true, message: 'If that address is a BOSS admin, a sign-in link is on its way. It works for 15 minutes.' });
+    }
     if (action === 'forgot') {
       const acc = await findAccount(email);
       if (acc) {

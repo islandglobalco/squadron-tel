@@ -12,15 +12,14 @@
 
 import crypto from 'node:crypto';
 import { ensureSchema, sql, newId, newToken, readJson, bad } from './_lib/db.js';
-import { currentAccount } from './_lib/auth.js';
+import { currentAccount, ADMIN_EMAILS } from './_lib/auth.js';
 import { crawlSite, normalizeUrl } from './_lib/crawl.js';
 import { buildProfile, applyCorrections } from './_lib/profile.js';
 import { generateTeam } from './_lib/team.js';
 import { responses, outputText } from './_lib/openai.js';
 import { PERSONAS } from './_lib/personas.js';
 
-const ADMINS = (process.env.ADMIN_EMAILS || 'info@island.contact,h@squadron.tel,info@squadron.tel,h@relic.earth')
-  .split(',').map((s) => s.trim().toLowerCase()).filter(Boolean);
+const ADMINS = ADMIN_EMAILS;
 const FROM = process.env.COLD_FROM || process.env.EMAIL_FROM || 'Squadron <alerts@relic.earth>';
 const REPLY_TO = process.env.COLD_REPLY_TO || 'info@squadron.tel';
 const POSTAL = process.env.COLD_POSTAL || 'Island Global Co DBA Squadron, 548 Market St PMB 35309, San Francisco, CA 94104';

@@ -5,6 +5,11 @@ import crypto from 'node:crypto';
 import { sql, ensureSchema, newId } from './db.js';
 
 const COOKIE = 'sq_session';
+
+// Accounts allowed into BOSS (/admin). They can also sign in with an emailed
+// link instead of a password.
+export const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'info@island.contact,h@squadron.tel,info@squadron.tel,h@relic.earth')
+  .split(',').map((s) => s.trim().toLowerCase()).filter(Boolean);
 const DAYS = 30;
 
 function secret() {

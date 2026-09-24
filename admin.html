@@ -164,7 +164,11 @@ async function api(body, q) {
 async function load() {
   try { D = await api(null, '?action=list'); }
   catch (e) {
-    if (e.status === 401 || e.status === 403) { $('gate').innerHTML = `<div class="panel"><p class="lead" style="margin:0 0 16px">${esc(e.message)}</p><a class="btn" href="/account">Log in</a></div>`; return; }
+    if (e.status === 401 || e.status === 403) {
+      const expired = /link=expired/.test(location.search);
+      $('gate').innerHTML = `<div class="panel"><h2>Sign in to BOSS</h2><p class="lead" style="margin:0 0 18px">${expired ? 'That sign-in link expired or was already used. Send a new one.' : esc(e.message) + ' Enter your admin email and we will send you a sign-in link. No password is needed.'}</p><form class="row" onsubmit="event.preventDefault();sendLink()"><input class="grow" id="le" type="email" placeholder="h@relic.earth" autocomplete="email" required><button class="btn" type="submit">Email me a sign-in link</button></form><p class="note" id="lm" style="margin-top:12px"></p><p class="note" style="margin-top:6px">Prefer a password? <a href="/account">Log in here</a>.</p></div>`;
+      return;
+    }
     return err(e.message);
   }
   $('app').style.display = 'block'; err('');
@@ -194,6 +198,10 @@ function row(p) {
     </div></td></tr>`;
 }
 function readyList() { return D.prospects.filter((p) => p.status === 'ready' && p.email && !p.sends); }
+async function sendLink() {
+  try { const r = await fetch('/api/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'admin_link', email: $('le').value.trim() }) }); const j = await r.json(); $('lm').textContent = j.message || j.error; }
+  catch (e) { $('lm').textContent = 'That did not send. Please try again.'; }
+}
 async function find() {
   const q = $('q').value.trim(); if (!q) return;
   const b = $('findBtn'); b.disabled = true; b.textContent = 'Searching';
