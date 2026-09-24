@@ -25,7 +25,7 @@ body.home .nav-cta:hover{background:var(--blue)!important;transform:none!importa
 body.home .hero-h1,body.home .section-title,body.home .how-title,body.home .cta-title,body.home .compare-title,body.home .price-plan,body.home .step-title,body.home .portrait-name,body.home h1,body.home h2,body.home h3{
   font-family:var(--display)!important;color:var(--ink)!important;text-transform:none!important;font-style:normal!important;text-shadow:none!important}
 body.home .hero-h1{font-size:clamp(56px,6.4vw,96px)!important;font-weight:600!important;line-height:0.98!important;letter-spacing:-0.045em!important}
-body.home .hero-h1 em{color:var(--blue)!important;transform:none!important;display:inline}
+body.home .hero-h1 em{color:var(--blue)!important;text-shadow:none!important;transform:none!important;display:inline}
 body.home .section-title,body.home .how-title,body.home .cta-title{font-size:clamp(44px,5vw,76px)!important;font-weight:600!important;line-height:1!important;letter-spacing:-0.04em!important}
 body.home .compare-title{font-size:40px!important;font-weight:600!important;letter-spacing:-0.03em!important}
 body.home .section-label,body.home .hero-eyebrow{
@@ -163,3 +163,8 @@ body.home #voiceModal>div{background:#fff!important;border:1px solid var(--line)
 body.home #voiceModal [style*="color:#fff"],body.home #voiceModal [style*="color: #fff"]{color:var(--ink)!important}
 body.home #voiceModal [style*="rgba(255,255,255"]{color:var(--ink-2)!important;border-color:var(--line)!important}
 body.home #voiceTranscript{background:var(--gray)!important}
+
+/* Fit-and-finish from the prod check */
+body.home .cta-form{max-width:640px!important}
+body.home .cta-email{min-width:300px!important}
+@media(min-width:900px){body.home footer{padding-right:130px!important}}
