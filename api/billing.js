@@ -60,7 +60,7 @@ export default async function handler(req, res) {
       status: {
         active: st.active, plan: st.planKey, planInfo: st.plan, periodStart: st.periodStart, periodEnd: st.periodEnd,
         minutesIncluded: st.minutesIncluded, minutesUsed: st.minutesUsed, minutesRemaining: st.minutesRemaining,
-        prepaidCents: st.prepaidCents, metered: st.metered, overageMinutes: st.overageMinutes, creditCents: st.creditCents, balancePercent: st.budgetCents ? Math.max(0, Math.round((st.remainingCents / st.budgetCents) * 100)) : 0,
+        prepaidCents: st.prepaidCents, metered: st.metered, overageMinutes: st.overageMinutes, creditCents: st.creditCents, creditUsedCents: st.creditUsedCents, balancePercent: st.budgetCents ? Math.max(0, Math.round((st.remainingCents / st.budgetCents) * 100)) : 0,
       },
       plans: PLANS, prices: PRICES, invoices: out, notice, cards: stripeEnabled(),
     });

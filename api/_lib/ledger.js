@@ -30,7 +30,7 @@ export const HOLD = {
 
 // Provider prices in US cents per 1M tokens (or per minute where noted),
 // multiplied by SAFETY so recorded cost errs high.
-const SAFETY = 1.15;
+const SAFETY = 1; // costs are recorded at the providers' published prices; worst-case holds (HOLD) carry the safety margin
 const TEXT = {
   'gpt-4.1': { in: 200, cached: 50, out: 800 },
   'gpt-4.1-mini': { in: 40, cached: 10, out: 160 },
@@ -115,6 +115,7 @@ export async function ledgerStatus(accountId) {
     remainingCents: Math.max(0, budget - spent),
     minutesIncluded, minutesUsed, minutesRemaining: Math.max(0, minutesIncluded - minutesUsed),
     metered: !!plan.metered, overageMinutes, creditCents: credit,
+    creditUsedCents: plan.metered ? Math.min(credit, Math.max(0, Math.round((spent - Math.floor((prepaid - credit) * COST_SHARE)) * 100) / 100)) : 0,
   };
 }
 
