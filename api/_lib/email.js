@@ -5,13 +5,13 @@ import { sql } from './db.js';
 
 const FROM = process.env.EMAIL_FROM || 'Squadron <alerts@squadron.tel>';
 
-export async function sendEmail({ to, subject, text, html }) {
+export async function sendEmail({ to, subject, text, html, replyTo }) {
   const key = process.env.RESEND_API_KEY;
   if (!key) { console.warn('[email] RESEND_API_KEY is not set; not sent:', subject, '→', to); return { sent: false }; }
   const r = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: FROM, to: [to], subject, text, html: html || textToHtml(text) }),
+    body: JSON.stringify({ from: FROM, to: [to], subject, text, html: html || textToHtml(text), ...(replyTo ? { reply_to: replyTo } : {}) }),
   });
   const body = await r.text();
   if (!r.ok) throw new Error(`Resend ${r.status}: ${body.slice(0, 300)}`);

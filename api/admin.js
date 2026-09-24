@@ -253,6 +253,19 @@ export default async function handler(req, res) {
       return res.status(200).json({ me: me.email, prospects: rows, counts, sentToday: await sentToday(), dailyCap: DAILY_CAP, from: FROM, replyTo: REPLY_TO });
     }
 
+    if (action === 'tickets') {
+      await sql().query(`CREATE TABLE IF NOT EXISTS support_tickets (id TEXT PRIMARY KEY, email TEXT NOT NULL, name TEXT, topic TEXT, message TEXT NOT NULL, page TEXT, transcript JSONB, ip_hash TEXT, status TEXT NOT NULL DEFAULT 'open', created_at TIMESTAMPTZ NOT NULL DEFAULT now(), closed_at TIMESTAMPTZ)`);
+      const t = await sql().query('SELECT id, email, name, topic, message, page, transcript, status, created_at FROM support_tickets ORDER BY (status = \'open\') DESC, created_at DESC LIMIT 300');
+      const v = await sql().query('SELECT article, yes, no FROM help_votes ORDER BY no DESC, yes DESC LIMIT 50').catch(() => []);
+      return res.status(200).json({ tickets: t, votes: v });
+    }
+
+    if (action === 'ticket_status') {
+      const st = body.status === 'closed' ? 'closed' : 'open';
+      await sql().query(`UPDATE support_tickets SET status = $2, closed_at = ${st === 'closed' ? 'now()' : 'NULL'} WHERE id = $1`, [String(body.id || ''), st]);
+      return res.status(200).json({ ok: true });
+    }
+
     if (action === 'find') {
       const query = String(body.query || '').trim().slice(0, 200);
       if (!query) return bad(res, 400, 'Describe the businesses to find, for example: dentists in Austin, TX.');
@@ -276,7 +289,7 @@ export default async function handler(req, res) {
     }
 
     const id = String(body.id || '');
-    if (!id && !['send_batch'].includes(action)) return bad(res, 400, 'id required');
+    if (!id && !['send_batch', 'tickets'].includes(action)) return bad(res, 400, 'id required');
 
     if (action === 'update') {
       const allowed = ['name', 'email', 'city', 'category', 'notes', 'status', 'subject', 'body'];

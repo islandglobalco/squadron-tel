@@ -89,6 +89,9 @@
     },
     "api/admin.js": {
       "maxDuration": 300
+    },
+    "api/support.js": {
+      "maxDuration": 30
     }
   },
   "routes": [
@@ -271,6 +274,18 @@
     {
       "src": "/demo/(?<slug>[a-z0-9-]+)/?",
       "dest": "/demo.html"
+    },
+    {
+      "src": "/help",
+      "dest": "/help.html"
+    },
+    {
+      "src": "/support",
+      "dest": "/help.html"
+    },
+    {
+      "src": "/api/support",
+      "dest": "/api/support.js"
     },
     {
       "src": "/(.*)",

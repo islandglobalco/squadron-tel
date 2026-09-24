@@ -128,6 +128,10 @@ dialog::backdrop{background:rgba(11,30,69,0.4)}
       <div style="overflow-x:auto"><table><thead><tr><th>Business</th><th style="width:300px">Email</th><th>Status</th><th>Actions</th></tr></thead><tbody id="rows"></tbody></table></div>
     </div>
     <div class="panel">
+      <div class="row" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0">Support requests</h2><button class="btn ghost sm" onclick="loadTickets()">Refresh</button></div>
+      <div id="tickets" class="note">Loading.</div>
+    </div>
+    <div class="panel">
       <h2>Build log</h2>
       <div class="log" id="log">Nothing has run yet.</div>
     </div>
@@ -265,7 +269,17 @@ async function sendAll() {
   }
   await load();
 }
-load();
+async function loadTickets() {
+  try {
+    const r = await api(null, '?action=tickets');
+    const open = r.tickets.filter((t) => t.status === 'open').length;
+    const votes = (r.votes || []).filter((v) => v.no > 0);
+    $('tickets').innerHTML = (r.tickets.length ? `<p class="note" style="margin-bottom:10px">${open} open of ${r.tickets.length}.</p><table><thead><tr><th>Reference</th><th>From</th><th>Request</th><th>Status</th></tr></thead><tbody>` + r.tickets.map((t) => `<tr><td><strong>${esc(t.id)}</strong><div class="sub">${new Date(t.created_at).toLocaleString()}</div></td><td>${esc(t.name || '')}<div class="sub"><a href="mailto:${esc(t.email)}?subject=${encodeURIComponent('Re: ' + t.id)}">${esc(t.email)}</a></div></td><td><strong>${esc(t.topic)}</strong><div class="sub" style="white-space:pre-wrap;word-break:normal">${esc(t.message)}</div>${t.transcript ? `<div class="sub">Chatted with Ace first (${t.transcript.length} messages).</div>` : ''}</td><td><span class="pill ${t.status === 'open' ? 'failed' : 'ready'}">${esc(t.status)}</span><div style="margin-top:6px"><button class="btn ghost sm" onclick="tStatus('${t.id}','${t.status === 'open' ? 'closed' : 'open'}')">${t.status === 'open' ? 'Close' : 'Reopen'}</button></div></td></tr>`).join('') + '</tbody></table>' : '<p class="note">No support requests yet.</p>')
+      + (votes.length ? `<p class="note" style="margin-top:16px"><strong>Help articles people marked unhelpful:</strong> ${votes.map((v) => `${esc(v.article)} (${v.no} no, ${v.yes} yes)`).join(' · ')}</p>` : '');
+  } catch (e) { $('tickets').textContent = e.message; }
+}
+async function tStatus(id, status) { try { await api({ action: 'ticket_status', id, status }); loadTickets(); } catch (e) { err(e.message); } }
+load().then(() => { if (D) loadTickets(); });
 </script>
 </body>
 </html>

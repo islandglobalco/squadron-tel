@@ -674,6 +674,11 @@ footer{
 .faq-section{padding:120px 48px;}
 .faq-inner{max-width:800px;margin:0 auto;}
 .faq-list{margin-top:64px;}
+.faq-more{margin-top:28px;font-size:20px;font-weight:700}
+.faq-more a{color:inherit}
+.sqchat-sugg{display:flex;flex-wrap:wrap;gap:6px;align-self:flex-start;max-width:92%}
+.sqchat-sugg button{font:inherit;font-size:14px;font-weight:600;padding:8px 12px;border-radius:999px;border:1px solid #DCE4EF;background:#fff;color:#1F5FD1;cursor:pointer;text-align:left}
+.sqchat-bubble a{font-weight:700;color:#1F5FD1}
 .faq-item{border-bottom:1px solid rgba(255,255,255,0.08);}
 .faq-q{
   padding:24px 0;font-size:17px;font-weight:700;color:#fff;
@@ -835,7 +840,7 @@ details[open] .faq-q{color:var(--signal);}
     <li><a href="#how">How it works</a></li>
     <li><a href="#squad">The crew</a></li>
     <li><a href="#pricing">Pricing</a></li>
-    <li><a href="mailto:info@squadron.tel">Support</a></li>
+    <li><a href="/help">Help</a></li>
     <li><a href="/account">Log in</a></li>
   </ul>
   <a href="/account" class="nav-login">Log in</a>
@@ -1181,7 +1186,24 @@ details[open] .faq-q{color:var(--signal);}
         <summary class="faq-q">How is pricing calculated? <span class="faq-chevron">+</span></summary>
         <p class="faq-a">Each plan is a flat prepaid price for 30 days, with a set number of AI voice minutes and unlimited web chat. Extra voice minutes cost 25¢ each, prepaid in blocks of 100. Squadron never bills after the fact: when a period's prepaid amount is used, your team pauses and we email you a top-up invoice. There is no automatic upgrade and no per-agent fee.</p>
       </details>
+      <details class="faq-item">
+        <summary class="faq-q">How do I cancel? <span class="faq-chevron">+</span></summary>
+        <p class="faq-a">There is nothing to cancel. Squadron has no contract and nothing renews automatically, so if you do not pay for another 30 days, your team stops at the end of the current period. You can also delete your account from your account page in one step.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">Can I test my team before customers see it? <span class="faq-chevron">+</span></summary>
+        <p class="faq-a">Yes. Test it by chat, by voice in your browser, and by calling a fifteen-minute demo number from any phone. Every answer shows its source, and nothing goes live until you switch it on.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">How do I add the chat to my website? <span class="faq-chevron">+</span></summary>
+        <p class="faq-a">Turn chat on in the Deploy screen and paste one line of code before the closing body tag, or into your site builder's custom code area on Shopify, WordPress, Squarespace or Wix.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">How do I reach a person at Squadron? <span class="faq-chevron">+</span></summary>
+        <p class="faq-a">Ask Ace in the chat, open the Help Center, or send your question with the form at squadron.tel/help. A person replies by email, and every request gets a reference number.</p>
+      </details>
     </div>
+    <p class="faq-more"><a href="/help">Browse every answer in the Help Center →</a></p>
   </div>
 </section>
 
@@ -1228,7 +1250,7 @@ details[open] .faq-q{color:var(--signal);}
     <div class="footer-copy">© 2026 Squadron. All rights reserved.</div>
   </div>
   <div class="footer-links">
-    <a href="/account">Log in</a><a href="/billing">Billing</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="mailto:info@squadron.tel">Support: info@squadron.tel</a>
+    <a href="/account">Log in</a><a href="/billing">Billing</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="/help">Help Center</a><a href="mailto:info@squadron.tel">info@squadron.tel</a>
   </div>
 </footer>
 
@@ -1542,7 +1564,8 @@ document.addEventListener('click',e=>{
     const bubble=document.createElement('div');
     bubble.className='sqchat-bubble';
     // render **bold** markdown
-    bubble.innerHTML=text.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+    const safe=String(text).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    bubble.innerHTML=safe.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
     wrap.appendChild(bubble);
     msgs.appendChild(wrap);
     msgs.scrollTop=msgs.scrollHeight;
@@ -1568,12 +1591,24 @@ document.addEventListener('click',e=>{
     if(sqOpen && msgs.children.length===0) sqGreet();
   };
 
+  function sqChips(list){
+    if(!list||!list.length) return;
+    const w=document.createElement('div'); w.className='sqchat-sugg';
+    list.forEach(t=>{const b=document.createElement('button');b.type='button';b.textContent=t;b.onclick=()=>{w.remove();document.getElementById('sqChatInput').value=t;sqSendMsg();};w.appendChild(b);});
+    msgs.appendChild(w); msgs.scrollTop=msgs.scrollHeight;
+  }
+  function sqLink(href){
+    const last=msgs.lastElementChild; if(!last) return;
+    const b=last.querySelector('.sqchat-bubble'); if(!b) return;
+    const a=document.createElement('a'); a.href=href; a.target='_blank'; a.rel='noopener';
+    a.textContent=href.indexOf('contact')>-1?'Contact a person at Squadron':'Read the full answer';
+    b.appendChild(document.createElement('br')); b.appendChild(a);
+  }
   function sqGreet(){
     sqShowTyping();
-    setTimeout(()=>{
-      sqHideTyping();
-      sqAddMsg("I'm **Ace**, Squadron's AI assistant. I can answer questions about pricing, setup, agents and channels.",'agent');
-    },800);
+    fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:'hi'})})
+    .then(r=>r.json()).then(d=>{sqSession=d.sessionId;sqHideTyping();sqAddMsg(d.reply,'agent');sqChips(d.suggestions);})
+    .catch(()=>{sqHideTyping();sqAddMsg("I'm **Ace**, Squadron's AI support agent. The Help Center is at squadron.tel/help.",'agent');});
   }
 
   window.sqSendMsg=function(){
@@ -1595,13 +1630,15 @@ document.addEventListener('click',e=>{
       sqSession=d.sessionId;
       sqHideTyping();
       sqTyping=false;
-      sqAddMsg(d.reply||'Thanks for your message! Our team will follow up shortly.','agent');
-      if(d.followUp){sqShowTyping();setTimeout(()=>{sqHideTyping();sqAddMsg(d.followUp,'agent');},900);}
+      sqAddMsg(d.reply||'I could not answer that. The Help Center is at squadron.tel/help.','agent');
+      if(d.link) sqLink(d.link);
+      if(d.followUp){sqShowTyping();setTimeout(()=>{sqHideTyping();sqAddMsg(d.followUp,'agent');sqChips(d.suggestions);},700);}
+      else sqChips(d.suggestions);
     })
     .catch(()=>{
       sqHideTyping();
       sqTyping=false;
-      sqAddMsg('Thanks! Our team will get back to you shortly at info@squadron.tel','agent');
+      sqAddMsg('I could not reach the server. The Help Center is at squadron.tel/help, and a person answers at info@squadron.tel.','agent');
     });
   };
 })();

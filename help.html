@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Help Center · Squadron</title>
+<meta name="description" content="Answers about setting up, testing, going live, billing and troubleshooting your Squadron customer-service team, plus Ace, the AI support agent, and a direct line to a person.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--pale:#EAF2FC;--gray:#F5F7FA;--ink:#0B1E45;--ink-2:#3D4C68;--blue:#1F5FD1;--blue-2:#174BAA;--line:#DCE4EF;--green:#127A3A;--red:#B42318}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:96px}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--gray);color:var(--ink);-webkit-font-smoothing:antialiased}
+a{color:var(--blue)}
+nav{position:sticky;top:0;z-index:50;background:rgba(245,247,250,0.94);backdrop-filter:blur(18px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 32px;height:72px}
+.nav-logo{background:var(--ink);padding:9px 14px;border-radius:8px;line-height:0;display:inline-flex}
+.nav-logo svg{height:20px;width:auto}
+.nav-right{display:flex;gap:24px;align-items:center;font-size:17px;font-weight:600}
+.nav-right a{color:var(--ink-2);text-decoration:none}
+.nav-right a:hover{color:var(--ink)}
+.btn{font:inherit;font-size:17px;font-weight:700;padding:15px 24px;border-radius:999px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;text-decoration:none;display:inline-block;white-space:nowrap}
+.btn:hover{background:var(--blue);border-color:var(--blue)}
+.btn.ghost{background:#fff;color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--ink)}
+.btn.sm{font-size:15px;padding:10px 16px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+header{background:var(--pale);border-bottom:1px solid var(--line)}
+.hero{padding:72px 0 56px}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:700;color:var(--blue);background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 14px 7px 10px;margin-bottom:22px}
+.eyebrow::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--blue)}
+h1{font-family:'Inter Tight',sans-serif;font-weight:700;font-size:clamp(48px,6.4vw,92px);letter-spacing:-0.045em;line-height:0.98}
+h1 em{font-style:normal;color:var(--blue)}
+h2{font-family:'Inter Tight',sans-serif;font-weight:700;font-size:clamp(34px,3.6vw,52px);letter-spacing:-0.035em;line-height:1.02;margin-bottom:14px}
+h3{font-family:'Inter Tight',sans-serif;font-weight:700;font-size:24px;letter-spacing:-0.02em}
+.sub{font-size:22px;line-height:1.5;color:var(--ink-2);max-width:760px;margin:20px 0 30px}
+.search{position:relative;max-width:820px}
+.search input{width:100%;font:inherit;font-size:22px;font-weight:500;padding:22px 26px 22px 60px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink);outline:none;box-shadow:0 10px 30px rgba(11,30,69,0.06)}
+.search input:focus{border-color:var(--blue);box-shadow:0 0 0 5px rgba(31,95,209,0.14)}
+.search svg{position:absolute;left:24px;top:50%;transform:translateY(-50%);width:22px;height:22px;stroke:var(--ink-2)}
+.results{max-width:820px;margin-top:14px;display:none;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.results a{display:block;padding:18px 24px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink)}
+.results a:last-child{border-bottom:none}
+.results a:hover{background:var(--pale)}
+.results strong{display:block;font-size:19px}
+.results span{display:block;font-size:16px;color:var(--ink-2);margin-top:4px;line-height:1.45}
+.quick{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.chip{font:inherit;font-size:16px;font-weight:600;padding:10px 16px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;text-decoration:none}
+.chip:hover{border-color:var(--blue);color:var(--blue)}
+section{padding:72px 0}
+.cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.cat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px;text-decoration:none;color:var(--ink);display:block}
+.cat:hover{border-color:var(--blue)}
+.cat h3{margin-bottom:6px}
+.cat p{font-size:16px;color:var(--ink-2)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:32px;align-items:start}
+@media(max-width:1060px){.layout{grid-template-columns:1fr}}
+.group{margin-bottom:48px}
+.group h2{font-size:36px}
+details.art{background:#fff;border:1px solid var(--line);border-radius:14px;margin-bottom:10px}
+details.art summary{list-style:none;cursor:pointer;padding:20px 24px;font-size:20px;font-weight:700;display:flex;justify-content:space-between;gap:16px;align-items:center}
+details.art summary::-webkit-details-marker{display:none}
+details.art summary::after{content:'+';font-size:28px;font-weight:500;color:var(--blue);line-height:1}
+details.art[open] summary::after{content:'−'}
+details.art[open]{border-color:var(--blue)}
+.ans{padding:0 24px 22px;font-size:18px;line-height:1.6;color:var(--ink)}
+.ans p{margin-bottom:10px}
+.ans ol{margin:6px 0 10px 24px}
+.ans li{margin-bottom:6px}
+.vote{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px;font-size:16px;color:var(--ink-2);font-weight:600}
+.vote button{font:inherit;font-size:15px;font-weight:700;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
+.vote button:hover{border-color:var(--ink)}
+.side{position:sticky;top:96px}
+.ace{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;height:620px;box-shadow:0 20px 50px rgba(11,30,69,0.08)}
+@media(max-width:1060px){.side{position:static}.ace{height:560px}}
+.ace-head{background:var(--ink);color:#fff;padding:18px 20px;display:flex;align-items:center;gap:12px}
+.ace-dot{width:10px;height:10px;border-radius:50%;background:#3FD07A;flex:none}
+.ace-head strong{font-size:19px;display:block}
+.ace-head span{font-size:14px;color:#C9D6EE}
+.ace-msgs{flex:1;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:10px;background:var(--gray)}
+.m{max-width:88%;padding:12px 15px;border-radius:14px;font-size:16px;line-height:1.5;white-space:pre-wrap}
+.m.a{background:#fff;border:1px solid var(--line);align-self:flex-start}
+.m.u{background:var(--blue);color:#fff;align-self:flex-end}
+.m a{font-weight:700}
+.sugg{display:flex;flex-wrap:wrap;gap:6px;align-self:flex-start}
+.sugg button{font:inherit;font-size:14px;font-weight:600;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--blue);cursor:pointer;text-align:left}
+.ace-form{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line);background:#fff}
+.ace-form input{flex:1;font:inherit;font-size:17px;padding:12px 14px;border-radius:999px;border:1px solid var(--line);outline:none;min-width:0}
+.ace-form input:focus{border-color:var(--blue)}
+.ace-note{font-size:14px;color:var(--ink-2);padding:0 14px 12px;background:#fff}
+.pain{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+.pcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px}
+.pcard .bad{font-size:15px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:var(--red);margin-bottom:8px}
+.pcard h3{margin-bottom:10px}
+.pcard p{font-size:17px;line-height:1.55;color:var(--ink-2)}
+.contact{background:var(--ink);color:#fff;border-radius:22px;padding:48px}
+.contact h2{color:#fff}
+.contact .lead{font-size:20px;line-height:1.5;color:#D3DDEF;max-width:720px;margin-bottom:26px}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:900px}
+.form .full{grid-column:1/-1}
+.form label{display:block;font-size:14px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#C9D6EE;margin-bottom:6px}
+.form input,.form select,.form textarea{width:100%;font:inherit;font-size:18px;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.08);color:#fff;outline:none}
+.form select option{color:var(--ink)}
+.form textarea{min-height:150px;line-height:1.5}
+.form input:focus,.form select:focus,.form textarea:focus{border-color:#fff}
+.form .btn{background:#fff;color:var(--ink);border-color:#fff}
+.form .btn:hover{background:var(--pale)}
+@media(max-width:700px){.form{grid-template-columns:1fr}.contact{padding:28px 20px}nav{padding:0 16px}.nav-right a.hide-m{display:none}}
+.done{display:none;background:#fff;color:var(--ink);border-radius:16px;padding:26px;max-width:900px}
+.done strong{font-size:26px;display:block;margin-bottom:6px}
+.done p{font-size:18px;line-height:1.5}
+.ferr{color:#FFB3AF;font-size:17px;font-weight:600;min-height:24px}
+.hp{position:absolute;left:-5000px}
+footer{padding:40px 0 60px;font-size:16px;color:var(--ink-2)}
+footer a{color:var(--ink-2)}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/" aria-label="Squadron"><svg class="nav-logo-svg" viewBox="0 -430 2278 492" xmlns="http://www.w3.org/2000/svg" aria-label="Squadron">
+      <g transform="translate(0,0)" data-letter="S" data-idx="0"><g class="logo-letter">
+        <path d="M 6 -371.28125 L 75 -429.65625 L 199 -429.65625 L 268 -371.28125 L 268.5 -304.921875 L 167.5 -304.921875 L 167.5 -349.015625 L 106.5 -349.015625 L 106.5 -259.5625 L 268 -259.984375 L 270 -57.953125 L 201 0.421875 L 77 0.421875 L 8 -57.953125 L 7.5 -124.3125 L 108.5 -124.3125 L 108.5 -80.21875 L 169.5 -80.21875 L 169.5 -169.6875 L 148.5 -169.6875 L 148.5 -169.265625 L 8 -169.265625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(286,0)" data-letter="Q" data-idx="1"><g class="logo-letter">
+        <path d="M 200 0.84375 L 187.5 0.84375 L 187.5 63.421875 L 87 63.421875 L 87 0.84375 L 74.5 0.84375 L 5.5 -57.546875 L 5.5 -370.015625 L 74.5 -428.40625 L 198 -428.40625 L 268 -369.1875 L 268 -56.703125 Z M 106 -347.765625 L 106 -82.3125 L 167.5 -82.3125 L 167.5 -346.921875 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(572,0)" data-letter="U" data-idx="2"><g class="logo-letter">
+        <path d="M 6.5 -428.40625 L 108 -428.40625 L 108 -83.15625 L 169 -83.15625 L 169 -352.796875 L 169.5 -352.796875 L 169.5 -429.234375 L 269.5 -429.234375 L 269.5 -58.375 L 200.5 0 L 76.5 0 L 7.5 -58.375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(858,0)" data-letter="A" data-idx="3"><g class="logo-letter">
+        <path d="M 107.5 0 L 7 0 L 7 -199.078125 L 6.5 -199.078125 L 6.5 -372.546875 L 75.5 -430.921875 L 199.5 -430.921875 L 268.5 -372.546875 L 268.5 -325.078125 L 269.5 0 L 169.5 0 L 168.5 -172.203125 L 107.5 -172.203125 Z M 107 -257.046875 L 168 -257.046875 L 168 -347.765625 L 107 -347.765625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1144,0)" data-letter="D" data-idx="4"><g class="logo-letter">
+        <path d="M 269.5 -55.859375 L 200.5 0.84375 L 30 0.421875 L 30 0 L 7.5 0 L 6.5 -429.65625 L 199.5 -429.65625 L 268.5 -371.28125 Z M 108 -83.578125 L 169 -83.578125 L 168 -359.9375 L 107 -359.9375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1430,0)" data-letter="R" data-idx="5"><g class="logo-letter">
+        <path d="M 108 0.421875 L 7.5 0.421875 L 7 -430.5 L 200 -430.5 L 269 -372.125 L 269 -324.65625 L 270 -233.515625 L 268.5 -233.09375 L 269 -230.15625 L 250 -214.203125 L 250.5 -214.203125 L 269.5 -198.234375 L 269 -195.296875 L 270.5 -194.875 L 270 0.421875 L 170 0.421875 L 169 -171.78125 L 108 -171.78125 Z M 107.5 -256.625 L 168.5 -256.625 L 168.5 -347.34375 L 107.5 -347.34375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1716,0)" data-letter="O" data-idx="6"><g class="logo-letter">
+        <path d="M 202 0.84375 L 76.5 0.84375 L 7.5 -57.546875 L 6.5 -372.546875 L 75.5 -430.921875 L 199 -430.921875 L 269 -371.703125 L 270 -56.703125 Z M 107 -350.28125 L 108 -82.3125 L 169.5 -82.3125 L 168.5 -349.4375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(2002,0)" data-letter="N" data-idx="7"><g class="logo-letter">
+        <path d="M 109 0.421875 L 8.5 0.421875 L 8.5 -198.65625 L 8 -198.65625 L 7 -430.5 L 108.5 -430.5 L 169.5 -263.34375 L 169.5 -430.5 L 270 -430.5 L 270 -324.65625 L 271 0.421875 L 170 0.421875 L 108.5 -162.546875 Z" fill="white"/>
+      </g></g>
+    </svg></a>
+  <span class="nav-right"><a class="hide-m" href="/">Home</a><a class="hide-m" href="/account">Log in</a><a href="#contact">Contact</a><a class="btn sm" href="/start">Build your team</a></span>
+</nav>
+<header><div class="wrap hero">
+  <p class="eyebrow">Help Center</p>
+  <h1>How can we <em>help?</em></h1>
+  <p class="sub">Search the answers, ask Ace, our AI support agent, or reach a person at Squadron. Every request gets a reference number.</p>
+  <div class="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    <input id="q" type="search" placeholder="Search: widget not showing, refund, test by phone" autocomplete="off" aria-label="Search the Help Center">
+  </div>
+  <div class="results" id="results" role="listbox"></div>
+  <div class="quick" id="quick"></div>
+</div></header>
+
+<section><div class="wrap">
+  <div class="cats" id="cats"></div>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap layout">
+  <div id="articles"></div>
+  <aside class="side">
+    <div class="ace" aria-label="Ask Ace">
+      <div class="ace-head"><span class="ace-dot"></span><div><strong>Ace · Squadron Support</strong><span>AI agent · answers from this Help Center</span></div></div>
+      <div class="ace-msgs" id="msgs"></div>
+      <form class="ace-form" id="aceForm"><input id="aceIn" placeholder="Ask a question" autocomplete="off" aria-label="Ask Ace"><button class="btn sm" type="submit">Send</button></form>
+      <p class="ace-note">Ace is an AI. Ask for a person at any time.</p>
+    </div>
+  </aside>
+</div></section>
+
+<section style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)"><div class="wrap">
+  <p class="eyebrow">Why Squadron is different</p>
+  <h2>What people hate about AI customer service, and what Squadron does instead.</h2>
+  <p class="sub" style="margin-bottom:32px">These are the complaints that come up again and again in reviews of AI answering services. Squadron is built so none of them can happen to you or your customers.</p>
+  <div class="pain" id="pain"></div>
+</div></section>
+
+<section id="contact"><div class="wrap">
+  <div class="contact">
+    <p class="eyebrow" style="background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);color:#fff">Talk to a person</p>
+    <h2>Send us your question.</h2>
+    <p class="lead">A person at Squadron reads every request and replies by email. You get a reference number now and a copy of your request in your inbox.</p>
+    <form class="form" id="tForm" novalidate>
+      <div><label for="tName">Name</label><input id="tName" autocomplete="name"></div>
+      <div><label for="tEmail">Email for the reply</label><input id="tEmail" type="email" autocomplete="email" required></div>
+      <div class="full"><label for="tTopic">Topic</label><select id="tTopic"><option>Setup</option><option>Testing</option><option>Going live</option><option>Billing</option><option>Something is broken</option><option>Sales question</option><option>Other</option></select></div>
+      <div class="full"><label for="tMsg">What do you need?</label><textarea id="tMsg" required placeholder="Tell us what happened, what you expected, and the business or page it concerns."></textarea></div>
+      <input class="hp" id="tWeb" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="full"><p class="ferr" id="tErr"></p><button class="btn" type="submit" id="tBtn">Send to a person</button></div>
+    </form>
+    <div class="done" id="tDone"><strong id="tRef"></strong><p>We have your request, and a copy is on its way to your inbox. A person at Squadron will reply to <span id="tTo"></span>. Keep the reference in the subject if you write again.</p></div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">Squadron is a service of Island Global Co. <a href="/terms">Terms</a> · <a href="/privacy">Privacy</a> · <a href="mailto:info@squadron.tel">info@squadron.tel</a></div></footer>
+
+<script type="module">
+import { CATEGORIES, ARTICLES, search } from '/help-kb.js';
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const link = (s) => s.replace(/\b(squadron\.tel\/[a-z#-]*)/g, '<a href="https://www.$1">$1</a>').replace(/\binfo@squadron\.tel\b/g, '<a href="mailto:info@squadron.tel">info@squadron.tel</a>');
+function fmt(a) {
+  const lines = a.split('\n'); let out = '', list = [];
+  const flush = () => { if (list.length) { out += '<ol>' + list.map((l) => `<li>${link(esc(l))}</li>`).join('') + '</ol>'; list = []; } };
+  for (const l of lines) { const m = l.match(/^\d+\.\s+(.*)/); if (m) list.push(m[1]); else { flush(); if (l.trim()) out += `<p>${link(esc(l))}</p>`; } }
+  flush(); return out;
+}
+const DESC = { start: 'What Squadron needs and how setup works.', test: 'Chat, voice and phone tests, and your QA checklist.', deploy: 'The chat widget, phone lines and transfers.', agents: 'The 24 agents, escalation and what they say.', billing: 'Plans, payment, pauses and cancelling.', trouble: 'Fixes for the most common problems.', account: 'Deleting data, exports and reaching a person.' };
+$('cats').innerHTML = CATEGORIES.map((c) => `<a class="cat" href="#cat-${c.id}"><h3>${esc(c.title)}</h3><p>${esc(DESC[c.id] || '')} ${ARTICLES.filter((a) => a.cat === c.id).length} articles.</p></a>`).join('');
+$('articles').innerHTML = CATEGORIES.map((c) => `<div class="group" id="cat-${c.id}"><h2>${esc(c.title)}</h2>${ARTICLES.filter((a) => a.cat === c.id).map((a) => `
+  <details class="art" id="${a.id}"><summary>${esc(a.q)}</summary><div class="ans">${fmt(a.a)}
+  <div class="vote" data-id="${a.id}">Did this answer your question? <button data-v="1">Yes</button><button data-v="0">No</button></div></div></details>`).join('')}</div>`).join('');
+const QUICK = ['how-setup-works', 'qa-checklist', 'chat-widget', 'no-surprise-bills', 'widget-missing', 'contact-person'];
+$('quick').innerHTML = QUICK.map((id) => { const a = ARTICLES.find((x) => x.id === id); return `<a class="chip" href="#${id}">${esc(a.q)}</a>`; }).join('');
+
+function openArticle(id) { const d = document.getElementById(id); if (d && d.tagName === 'DETAILS') { d.open = true; setTimeout(() => d.scrollIntoView({ behavior: 'smooth', block: 'start' }), 30); } }
+window.addEventListener('hashchange', () => openArticle(location.hash.slice(1)));
+if (location.hash) openArticle(location.hash.slice(1));
+document.addEventListener('click', (e) => { const a = e.target.closest('a[href^="#"]'); if (a) { const id = a.getAttribute('href').slice(1); if (document.getElementById(id)?.tagName === 'DETAILS') { e.preventDefault(); history.replaceState(null, '', '#' + id); openArticle(id); $('results').style.display = 'none'; } } });
+
+$('q').addEventListener('input', () => {
+  const v = $('q').value.trim(); const r = $('results');
+  if (!v) { r.style.display = 'none'; return; }
+  const hits = search(v, 6);
+  r.innerHTML = hits.length ? hits.map((h) => `<a href="#${h.id}"><strong>${esc(h.q)}</strong><span>${esc(h.a.split('\n')[0].slice(0, 160))}</span></a>`).join('') : `<a href="#contact"><strong>No article matches that yet.</strong><span>Ask Ace on this page, or send it to a person with the form below.</span></a>`;
+  r.style.display = 'block';
+});
+
+document.getElementById('articles').addEventListener('click', async (e) => {
+  const b = e.target.closest('.vote button'); if (!b) return;
+  const box = b.parentElement; const yes = b.dataset.v === '1';
+  box.innerHTML = yes ? 'Thanks for telling us.' : 'Thanks. Ask Ace, or <a href="#contact">send it to a person</a>, and we will improve this answer.';
+  fetch('/api/support', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'helpful', id: box.dataset.id, yes }) }).catch(() => {});
+});
+
+// Pain points from reviews of AI answering services, and Squadron's answer.
+const PAIN = [
+  ['I could not reach a human.', 'A person is always one sentence away.', 'Every agent offers a message or a transfer to your on-call number when a customer asks for a person, and a call reaches a person after three agents at most.'],
+  ['The AI made something up.', 'Answers only from your sources.', 'Every answer comes from your Business Profile with its source shown. When the profile does not cover a question, the agent says so and logs it for you.'],
+  ['I got a surprise bill.', 'Prepaid, never billed after the fact.', 'You pay 30 days up front. When the prepaid amount is used, the team pauses and you get a top-up invoice. Nothing upgrades automatically.'],
+  ['I could not cancel.', 'There is nothing to cancel.', 'No contract and no auto-renewal. Stop paying and the team stops at the end of the period, and you can delete your account in one click.'],
+  ['Key features cost extra.', 'The full team on every plan.', 'Every plan, including the $39 Basic plan, has the full team and unlimited web chat, with no feature held back for a higher tier. The overage rate, 25¢ a minute, is published.'],
+  ['The vendor never answered me.', 'Support you can reach.', 'This Help Center, Ace for instant answers, and a person by email with a reference number on every request.'],
+  ['Setup took weeks.', 'Start from your website.', 'Paste your web address, review the profile and team Squadron builds, test by chat, voice and phone, then turn it on.'],
+  ['Callers did not know it was a bot.', 'Honest from the first word.', 'Every agent says it is an AI at the start, every call opens with a recording notice, and Squadron never places outbound AI calls.'],
+  ['It was phone only.', 'Chat included.', 'Unlimited web chat comes with every plan, with phone lines opening soon, and each channel shows its true status on the Deploy screen.'],
+];
+$('pain').innerHTML = PAIN.map(([bad, h, p]) => `<div class="pcard"><div class="bad">“${esc(bad)}”</div><h3>${esc(h)}</h3><p>${esc(p)}</p></div>`).join('');
+
+// Ace
+const msgs = $('msgs'); let sid = null; const transcript = [];
+function add(text, who, extra) {
+  const d = document.createElement('div'); d.className = 'm ' + who;
+  d.innerHTML = esc(text).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  if (extra && extra.link) d.innerHTML += `\n<a href="${esc(extra.link)}">${extra.link.includes('contact') ? 'Open the contact form' : 'Read the full article'}</a>`;
+  msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
+  transcript.push({ role: who === 'u' ? 'user' : 'agent', text });
+}
+function chips(list) {
+  if (!list || !list.length) return;
+  const w = document.createElement('div'); w.className = 'sugg';
+  list.forEach((s) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = s; b.onclick = () => ask(s); w.appendChild(b); });
+  msgs.appendChild(w); msgs.scrollTop = msgs.scrollHeight;
+}
+async function ask(text) {
+  add(text, 'u');
+  try {
+    const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: text, sessionId: sid }) });
+    const d = await r.json(); sid = d.sessionId;
+    add(d.reply, 'a', d);
+    if (d.followUp) setTimeout(() => add(d.followUp, 'a'), 500);
+    chips(d.suggestions);
+    if (d.handoff) { $('tMsg').value = $('tMsg').value || text; }
+  } catch { add('I could not reach the server. Please use the contact form below or email info@squadron.tel.', 'a'); }
+}
+(async () => {
+  const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: 'hi' }) }).then((x) => x.json()).catch(() => null);
+  if (r) { sid = r.sessionId; add(r.reply, 'a'); chips(r.suggestions); }
+})();
+$('aceForm').addEventListener('submit', (e) => { e.preventDefault(); const v = $('aceIn').value.trim(); if (!v) return; $('aceIn').value = ''; ask(v); });
+
+// Ticket
+$('tForm').addEventListener('submit', async (e) => {
+  e.preventDefault(); $('tErr').textContent = ''; const btn = $('tBtn'); btn.disabled = true; btn.textContent = 'Sending';
+  try {
+    const r = await fetch('/api/support', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'ticket', name: $('tName').value, email: $('tEmail').value, topic: $('tTopic').value, message: $('tMsg').value, website: $('tWeb').value, page: location.href, transcript: transcript.length > 1 ? transcript : null }) });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || 'Your request could not be sent.');
+    $('tForm').style.display = 'none'; $('tDone').style.display = 'block';
+    $('tRef').textContent = 'Reference ' + d.reference; $('tTo').textContent = $('tEmail').value.trim();
+  } catch (err) { $('tErr').textContent = err.message + ' You can also email info@squadron.tel.'; }
+  btn.disabled = false; btn.textContent = 'Send to a person';
+});
+</script>
+</body>
+</html>
