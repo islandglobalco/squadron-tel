@@ -148,7 +148,8 @@ body.home .sqchat-avatar{border-radius:10px!important;overflow:hidden;width:42px
 body.home .sqchat-avatar img{width:100%;height:100%;display:block}
 body.home .sqchat-name{font-family:var(--label);font-size:16px!important;font-weight:600!important;letter-spacing:0!important;text-transform:none!important;color:var(--ink)!important}
 body.home .sqchat-close{color:var(--ink-2)!important}
-body.home .sqchat-bubble{border-radius:16px!important;font-size:15px!important}
+body.home .sqchat-bubble{border-radius:16px!important;font-size:17px!important;line-height:1.5!important}
+body.home #sqChatWindow{transition:height .35s cubic-bezier(0.16,1,0.3,1),width .35s cubic-bezier(0.16,1,0.3,1),transform .3s,opacity .3s!important}
 body.home .sqchat-msg.agent .sqchat-bubble{background:var(--gray)!important;color:var(--ink)!important}
 body.home .sqchat-msg.user .sqchat-bubble{background:var(--ink)!important;color:#fff!important}
 body.home #sqChatInput{border-radius:999px!important;font-size:15px!important;background:var(--gray)!important;border:1px solid var(--line)!important;color:var(--ink)!important}

@@ -14,8 +14,9 @@
   var css = '\
 .sqw-btn{position:fixed;right:20px;bottom:20px;z-index:2147483000;width:64px;height:64px;border-radius:50%;border:none;cursor:pointer;background:' + accent + ';box-shadow:0 8px 28px rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center}\
 .sqw-btn svg{width:30px;height:30px;fill:#0B1E45}\
-.sqw-box{position:fixed;right:20px;bottom:96px;z-index:2147483000;width:390px;max-width:calc(100vw - 40px);height:580px;max-height:calc(100vh - 120px);background:#0B1E45;color:#fff;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,0.5);display:none;flex-direction:column;overflow:hidden;font-family:Inter,system-ui,sans-serif}\
+.sqw-box{position:fixed;right:20px;bottom:96px;z-index:2147483000;width:420px;max-width:calc(100vw - 40px);height:600px;max-height:calc(100vh - 120px);transition:height .35s ease,width .35s ease;background:#0B1E45;color:#fff;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,0.5);display:none;flex-direction:column;overflow:hidden;font-family:Inter,system-ui,sans-serif}\
 .sqw-box.open{display:flex}\
+.sqw-box.tall{height:880px;width:480px}\
 .sqw-head{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,0.12)}\
 .sqw-head img{width:40px;height:40px;border-radius:4px;object-fit:cover;background:#10295C}\
 .sqw-head .sqw-id{flex:1;min-width:0}\
@@ -50,7 +51,8 @@
   document.body.appendChild(btn); document.body.appendChild(box);
   var msgs = box.querySelector('#sqw-msgs'), input = box.querySelector('#sqw-in'), personBtn = box.querySelector('#sqw-person');
 
-  function add(text, cls) { var d = document.createElement('div'); d.className = 'sqw-m ' + (cls || ''); d.textContent = text; msgs.appendChild(d); msgs.scrollTop = 1e9; return d; }
+  function grow() { if (msgs.scrollHeight > msgs.clientHeight + 8) box.classList.add('tall'); }
+  function add(text, cls) { var d = document.createElement('div'); d.className = 'sqw-m ' + (cls || ''); d.textContent = text; msgs.appendChild(d); grow(); msgs.scrollTop = 1e9; return d; }
   function el(tag, attrs, text) { var e = document.createElement(tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (text) e.textContent = text; return e; }
 
   function personForm(prefill) {

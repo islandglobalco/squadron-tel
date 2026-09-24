@@ -757,7 +757,7 @@ details[open] .faq-q{color:var(--signal);}
 }
 #sqChatWindow{
   position:fixed;bottom:104px;right:28px;z-index:8001;
-  width:360px;height:500px;
+  width:420px;height:min(600px,calc(100vh - 140px));
   background:#0F2553;border:1px solid rgba(255,255,255,0.12);
   border-radius:3px;box-shadow:0 40px 80px rgba(0,0,0,0.7);
   display:flex;flex-direction:column;overflow:hidden;
@@ -765,6 +765,7 @@ details[open] .faq-q{color:var(--signal);}
   transition:all 0.3s cubic-bezier(0.16,1,0.3,1);
 }
 #sqChatWindow.open{transform:scale(1) translateY(0);opacity:1;pointer-events:all;}
+#sqChatWindow.tall{height:min(880px,calc(100vh - 128px));width:min(480px,calc(100vw - 40px));}
 .sqchat-header{
   background:rgba(255,198,46,0.1);border-bottom:1px solid rgba(255,255,255,0.08);
   padding:16px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0;
@@ -817,7 +818,7 @@ details[open] .faq-q{color:var(--signal);}
 }
 #sqChatSend:hover{transform:scale(1.1);}
 @media(max-width:480px){
-  #sqChatWindow{width:calc(100vw - 16px);right:8px;bottom:90px;}
+  #sqChatWindow,#sqChatWindow.tall{width:calc(100vw - 16px);right:8px;bottom:90px;height:calc(100vh - 110px);}
   #sqChatBtn{right:16px;bottom:16px;}
 }
 
@@ -1584,6 +1585,7 @@ document.addEventListener('click',e=>{
 (function(){
   let sqOpen=false, sqSession=null, sqTyping=false;
   const msgs=document.getElementById('sqChatMessages');
+  new MutationObserver(()=>{ if(msgs.scrollHeight>msgs.clientHeight+8) document.getElementById('sqChatWindow').classList.add('tall'); }).observe(msgs,{childList:true,subtree:true});
 
   function sqAddMsg(text,role){
     const wrap=document.createElement('div');
@@ -1595,6 +1597,7 @@ document.addEventListener('click',e=>{
     bubble.innerHTML=safe.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
     wrap.appendChild(bubble);
     msgs.appendChild(wrap);
+    if(msgs.scrollHeight>msgs.clientHeight+8) document.getElementById('sqChatWindow').classList.add('tall');
     msgs.scrollTop=msgs.scrollHeight;
     return wrap;
   }
