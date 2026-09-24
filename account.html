@@ -6,17 +6,17 @@
 <title>Your account — Squadron</title>
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700;800;900&family=Saira+Stencil+One&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="/onboard.css">
 <style>
-.card{border-radius:3px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);padding:26px 28px;margin-bottom:18px}
-.big{font-size:20px;line-height:1.55;color:#fff;font-weight:600}
+.card{border-radius:12px;background:#fff;border:2px solid rgba(11,30,69,0.1);padding:26px 28px;margin-bottom:18px}
+.big{font-size:20px;line-height:1.55;color:var(--white);font-weight:600}
 .detail{font-size:17px;line-height:1.55;color:var(--slate);font-weight:500;margin-top:6px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
 .biz h3{font-size:24px;font-weight:800;margin-bottom:6px;word-break:break-word}
 .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
 .error:not(:empty){display:block}
-.tag{display:inline-block;font-size:13px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;padding:6px 12px;border-radius:3px;border:1px solid rgba(255,255,255,0.25);color:var(--slate);margin-left:8px;vertical-align:middle}
+.tag{display:inline-block;font-size:13px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;padding:6px 12px;border-radius:12px;border:1px solid rgba(11,30,69,0.25);color:var(--slate);margin-left:8px;vertical-align:middle}
 .tag.on{color:var(--green);border-color:rgba(34,217,90,0.5)}
 @media (max-width:720px){.two{grid-template-columns:1fr}}
 </style>
@@ -95,8 +95,8 @@ async function load() {
       <div class="actions"><a class="btn small" href="/hq?t=${t}">Open Squadron HQ</a><a class="btn small ghost" href="/test?t=${t}">Test the team</a><a class="btn small ghost" href="/deploy?t=${t}">Channels and settings</a></div></div>`;
   }
   h += `<div class="card" style="border-color:rgba(255,90,90,0.55)"><p class="big" style="font-size:24px;font-weight:800">Delete my account</p>
-    <p class="detail" style="color:#E4E8F4">This permanently deletes your account, every team, conversation and call recording, and takes your agents offline right away. It cannot be undone, and payments are not refunded.</p>
-    <form class="two" onsubmit="event.preventDefault();deleteAccount(this)"><input class="input" id="delpass" type="password" placeholder="Your password" autocomplete="current-password" required><button class="btn" type="submit" style="background:#C8102E;color:#fff;border-color:#C8102E;box-shadow:0 4px 0 #7A0A1C;font-size:17px">Delete my account now</button></form></div>`;
+    <p class="detail" style="color:#1E2D4A">This permanently deletes your account, every team, conversation and call recording, and takes your agents offline right away. It cannot be undone, and payments are not refunded.</p>
+    <form class="two" onsubmit="event.preventDefault();deleteAccount(this)"><input class="input" id="delpass" type="password" placeholder="Your password" autocomplete="current-password" required><button class="btn" type="submit" style="background:#C8102E;color:var(--white);border-color:#C8102E;box-shadow:0 4px 0 #7A0A1C;font-size:17px">Delete my account now</button></form></div>`;
   $('body').innerHTML = h;
 }
 async function deleteAccount(f) {

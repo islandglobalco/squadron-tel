@@ -7,15 +7,15 @@
 <meta name="description" content="Enter your business and Squadron builds a customer-service team around it.">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700;800;900&family=Saira+Stencil+One&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="/onboard.css">
 <style>
 .planpick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.planopt{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:22px;border-radius:3px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:#fff;cursor:pointer;font-family:inherit}
+.planopt{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:22px;border-radius:12px;border:2px solid rgba(11,30,69,0.2);background:#fff;color:var(--white);cursor:pointer;font-family:inherit}
 .planopt:hover{border-color:var(--signal)}
-.planopt .pn{font-family:'Saira Condensed',sans-serif;font-weight:900;font-size:30px;text-transform:uppercase;line-height:1}
-.planopt .pp{font-family:'Saira Condensed',sans-serif;font-weight:900;font-size:46px;line-height:1;color:var(--signal)}
-.planopt .pm{font-size:17px;font-weight:600;color:rgba(255,255,255,0.85)}
+.planopt .pn{font-family:'Inter Tight',sans-serif;font-weight:700;font-size:30px;line-height:1}
+.planopt .pp{font-family:'Inter Tight',sans-serif;font-weight:700;font-size:46px;line-height:1;color:var(--signal)}
+.planopt .pm{font-size:17px;font-weight:600;color:#3D4C68}
 @media (max-width:760px){.planpick{grid-template-columns:1fr}}
 </style>
 <link rel="stylesheet" href="/theme.css">
@@ -223,18 +223,18 @@ async function payGate() {
   $('s2lead').textContent = 'Your site is read. Squadron is prepaid, so your profile and team are built as soon as your first 30 days are paid.';
   const me = await api('/api/auth').catch(() => ({ account: null }));
   if (!me.account) {
-    box.innerHTML = `<div class="card" style="padding:24px;border-radius:3px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.12)"><p style="font-size:20px;font-weight:700;color:#fff;margin-bottom:12px">Create your account to choose a plan.</p>
+    box.innerHTML = `<div class="card" style="padding:24px;border-radius:12px;background:#fff;border:2px solid rgba(11,30,69,0.12)"><p style="font-size:20px;font-weight:700;color:var(--white);margin-bottom:12px">Create your account to choose a plan.</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><input class="input" id="p_email" type="email" placeholder="Email" autocomplete="email"><input class="input" id="p_pass" type="password" placeholder="Password (8+ characters)" autocomplete="new-password"></div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><button class="btn" onclick="payAuth('signup')">Create account</button><button class="btn ghost" onclick="payAuth('login')">I have an account, log in</button></div>
-      <label style="display:flex;gap:12px;align-items:flex-start;margin-top:16px;font-size:17px;line-height:1.5;color:rgba(255,255,255,0.9);font-weight:500;cursor:pointer"><input type="checkbox" id="p_terms" style="width:22px;height:22px;margin-top:2px;flex:none;accent-color:#FFC62E">I agree to the <a href="/terms" target="_blank" style="color:var(--signal);font-weight:700">Terms of Service</a> and the <a href="/privacy" target="_blank" style="color:var(--signal);font-weight:700">Privacy Policy</a>, and I will follow the call-recording and consumer laws that apply to my business.</label></div>`;
+      <label style="display:flex;gap:12px;align-items:flex-start;margin-top:16px;font-size:17px;line-height:1.5;color:#3D4C68;font-weight:500;cursor:pointer"><input type="checkbox" id="p_terms" style="width:22px;height:22px;margin-top:2px;flex:none;accent-color:#FFC62E">I agree to the <a href="/terms" target="_blank" style="color:var(--signal);font-weight:700">Terms of Service</a> and the <a href="/privacy" target="_blank" style="color:var(--signal);font-weight:700">Privacy Policy</a>, and I will follow the call-recording and consumer laws that apply to my business.</label></div>`;
     return;
   }
   await api('/api/auth', { action: 'claim', token }).catch((e) => err('err2', e.message));
   const active = me.account.active;
   if (active) { box.innerHTML = ''; box.classList.add('hidden'); return reanalyze(); }
-  box.innerHTML = `<p style="font-size:22px;font-weight:800;color:#fff;margin-bottom:16px">Choose your plan. Every plan has unlimited web chat, and nothing renews automatically.</p>
+  box.innerHTML = `<p style="font-size:22px;font-weight:800;color:var(--white);margin-bottom:16px">Choose your plan. Every plan has unlimited web chat, and nothing renews automatically.</p>
     <div class="planpick">${PLAN_CHOICES.map(([k, n, p, m]) => `<button class="planopt" onclick="choosePlan('${k}')"><span class="pn">${n}</span><span class="pp">${p}</span><span class="pm">30 days · ${m}</span></button>`).join('')}</div>
-    <p style="font-size:18px;color:rgba(255,255,255,0.88);margin-top:14px">Pick a plan to pay by card, and your team is built the moment the payment goes through. To pay by bank transfer instead, use <a href="/billing" style="color:var(--signal);font-weight:700">Billing</a>, then come back and press the button below when the transfer lands.</p>
+    <p style="font-size:18px;color:#3D4C68;margin-top:14px">Pick a plan to pay by card, and your team is built the moment the payment goes through. To pay by bank transfer instead, use <a href="/billing" style="color:var(--signal);font-weight:700">Billing</a>, then come back and press the button below when the transfer lands.</p>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="btn ghost" onclick="paidRetry(this)">My bank transfer has landed, build my team</button></div>`;
 }
 async function payAuth(action) {

@@ -6,49 +6,49 @@
 <title>Squadron HQ</title>
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700;800;900&family=Saira+Stencil+One&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="/onboard.css">
 <style>
 main{max-width:1240px}
 .tabs2{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:28px}
-.tab2{font-size:15px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;padding:12px 18px;border-radius:3px;border:2px solid rgba(255,255,255,0.14);background:transparent;color:var(--slate);cursor:pointer}
+.tab2{font-size:15px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;padding:12px 18px;border-radius:12px;border:2px solid rgba(11,30,69,0.14);background:transparent;color:var(--slate);cursor:pointer}
 .tab2.on{border-color:var(--signal);color:var(--navy);background:var(--signal)}
-.tab2 .n{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:3px;background:rgba(0,0,0,0.25);font-size:14px}
+.tab2 .n{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:12px;background:rgba(0,0,0,0.25);font-size:14px}
 .tab2.on .n{background:rgba(11,30,69,0.2)}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:30px}
-.stat{border-radius:3px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);padding:18px 20px}
+.stat{border-radius:12px;background:#fff;border:2px solid rgba(11,30,69,0.1);padding:18px 20px}
 .stat .k{font-size:14px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)}
-.stat .v{font-family:'Saira Condensed',sans-serif;font-weight:900;font-size:44px;line-height:1;margin-top:6px}
+.stat .v{font-family:'Inter Tight',sans-serif;font-weight:700;font-size:44px;line-height:1;margin-top:6px}
 .stat .s{font-size:16px;color:var(--slate);font-weight:600;margin-top:6px}
-.meter{height:10px;border-radius:3px;background:rgba(255,255,255,0.1);margin-top:10px;overflow:hidden}
+.meter{height:10px;border-radius:12px;background:rgba(11,30,69,0.1);margin-top:10px;overflow:hidden}
 .meter i{display:block;height:100%;background:var(--signal)}
 .meter i.hot{background:var(--amber)}
 table{width:100%;border-collapse:collapse;font-size:15px}
-th{font-size:14px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:10px 12px;border-bottom:2px solid rgba(255,255,255,0.12)}
-td{font-size:17px;padding:12px;border-bottom:1px solid rgba(255,255,255,0.08);vertical-align:top;font-weight:500}
+th{font-size:14px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:10px 12px;border-bottom:2px solid rgba(11,30,69,0.12)}
+td{font-size:17px;padding:12px;border-bottom:1px solid rgba(11,30,69,0.08);vertical-align:top;font-weight:500}
 tr.row-c{cursor:pointer}
-tr.row-c:hover td{background:rgba(255,255,255,0.04)}
-.pill{display:inline-block;font-size:14px;font-weight:800;letter-spacing:0.04em;padding:4px 10px;border-radius:3px;background:rgba(255,255,255,0.08);color:#fff;white-space:nowrap}
-.pill.esc{background:rgba(255,95,87,0.15);color:#ffb3af}
+tr.row-c:hover td{background:#fff}
+.pill{display:inline-block;font-size:14px;font-weight:800;letter-spacing:0.04em;padding:4px 10px;border-radius:12px;background:rgba(11,30,69,0.08);color:var(--white);white-space:nowrap}
+.pill.esc{background:rgba(255,95,87,0.15);color:var(--red)}
 .pill.gap{background:rgba(254,188,46,0.15);color:var(--amber)}
 .pill.ok{background:rgba(34,217,90,0.14);color:var(--green)}
 .pill.test{background:rgba(255,198,46,0.12);color:var(--signal)}
-.panel{border-radius:3px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);padding:22px 24px;margin-bottom:18px}
+.panel{border-radius:12px;background:#fff;border:2px solid rgba(11,30,69,0.1);padding:22px 24px;margin-bottom:18px}
 .tr{display:flex;flex-direction:column;gap:12px;margin-top:14px}
-.t{max-width:82%;padding:12px 16px;border-radius:3px;font-size:16px;line-height:1.5;background:rgba(255,255,255,0.08)}
+.t{max-width:82%;padding:12px 16px;border-radius:12px;font-size:16px;line-height:1.5;background:rgba(11,30,69,0.08)}
 .t.me{align-self:flex-end;background:var(--signal);color:var(--navy);font-weight:600}
 .t small{display:block;font-size:13px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--signal);margin-bottom:4px}
 .src{cursor:default}
 .gapq{font-size:17px;font-weight:600;line-height:1.5}
-.gapa{width:100%;font:inherit;font-size:16px;font-weight:500;padding:12px 14px;border-radius:3px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#fff;outline:none;margin-top:10px;min-height:70px}
+.gapa{width:100%;font:inherit;font-size:16px;font-weight:500;padding:12px 14px;border-radius:12px;border:2px solid rgba(11,30,69,0.2);background:#fff;color:var(--white);outline:none;margin-top:10px;min-height:70px}
 .gapa:focus{border-color:var(--signal)}
 .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .empty{font-size:18px;color:var(--slate);font-weight:600;padding:30px 0}
 .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-.f{font-size:15px;font-weight:800;padding:8px 12px;border-radius:3px;border:2px solid rgba(255,255,255,0.18);background:transparent;color:#fff;cursor:pointer}
+.f{font-size:15px;font-weight:800;padding:8px 12px;border-radius:12px;border:2px solid rgba(11,30,69,0.18);background:transparent;color:var(--white);cursor:pointer}
 .f.on{border-color:var(--signal);color:var(--signal)}
 .field label{display:block;font-size:14px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin:12px 0 6px}
-.field input,.field select{width:100%;font:inherit;font-size:17px;font-weight:600;padding:14px 16px;border-radius:3px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#fff;outline:none}
+.field input,.field select{width:100%;font:inherit;font-size:17px;font-weight:600;padding:14px 16px;border-radius:12px;border:2px solid rgba(11,30,69,0.2);background:#fff;color:var(--white);outline:none}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media (max-width:720px){.row2{grid-template-columns:1fr}}
 </style>
@@ -143,7 +143,7 @@ async function loadConv(id) {
     const srcs = (c.sources || []);
     cell.innerHTML = `<div class="panel"><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><span class="pill">${esc(c.channel)}</span><span class="pill">${esc(c.agent_name || '')}</span>${c.recording_url ? `<audio controls preload="none" src="/api/recording?token=${encodeURIComponent(token)}&id=${encodeURIComponent(c.id)}" style="height:32px"></audio>` : '<span class="pill">No recording</span>'}<span class="pill">${srcs.length} source${srcs.length === 1 ? '' : 's'} cited</span></div>
       <div class="tr">${(c.transcript || []).map((t) => t.role === 'customer' ? `<div class="t me">${esc(t.text)}</div>` : `<div class="t"><small>${esc(t.agent_name || 'Agent')}${t.type ? ' · ' + esc(t.type) : ''}</small>${esc(t.text)}</div>`).join('')}</div>
-      ${srcs.length ? `<div style="margin-top:16px"><div class="stat" style="padding:14px 16px"><div class="k">Sources used</div>${srcs.map((s) => `<div style="font-size:14px;margin-top:8px;color:var(--slate)"><b style="color:#fff">${esc(s.text)}</b>${s.source && s.source.url ? ` · <a href="${esc(s.source.url)}" target="_blank" rel="noopener" style="color:var(--signal)">${esc(s.source.url)}</a>` : s.source && s.source.kind === 'owner' ? ' · corrected by you' : ''}</div>`).join('')}</div></div>` : ''}</div>`;
+      ${srcs.length ? `<div style="margin-top:16px"><div class="stat" style="padding:14px 16px"><div class="k">Sources used</div>${srcs.map((s) => `<div style="font-size:14px;margin-top:8px;color:var(--slate)"><b style="color:var(--white)">${esc(s.text)}</b>${s.source && s.source.url ? ` · <a href="${esc(s.source.url)}" target="_blank" rel="noopener" style="color:var(--signal)">${esc(s.source.url)}</a>` : s.source && s.source.kind === 'owner' ? ' · corrected by you' : ''}</div>`).join('')}</div></div>` : ''}</div>`;
   } catch (e) { const cell = $('conv_' + id); if (cell) cell.textContent = e.message; }
 }
 function queue() {
@@ -163,7 +163,7 @@ async function gap(id, action) {
 }
 function settingsView() {
   const s = d.settings || {}, ch = d.channels;
-  return `<div class="panel"><h2>Channels</h2>${['phone', 'chat', 'email', 'sms'].map((k) => `<div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:16px;font-weight:600"><span style="text-transform:capitalize">${k}</span><span class="pill ${ch[k].state === 'live' ? 'ok' : ch[k].state === 'ready' ? 'test' : ''}">${esc(ch[k].label)}</span></div>`).join('')}<div class="acts"><button class="btn small ghost" onclick="location.href='/deploy?t='+encodeURIComponent(token)">Change on the deploy screen</button></div></div>
+  return `<div class="panel"><h2>Channels</h2>${['phone', 'chat', 'email', 'sms'].map((k) => `<div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid rgba(11,30,69,0.08);font-size:16px;font-weight:600"><span style="text-transform:capitalize">${k}</span><span class="pill ${ch[k].state === 'live' ? 'ok' : ch[k].state === 'ready' ? 'test' : ''}">${esc(ch[k].label)}</span></div>`).join('')}<div class="acts"><button class="btn small ghost" onclick="location.href='/deploy?t='+encodeURIComponent(token)">Change on the deploy screen</button></div></div>
     <div class="panel"><h2>On-call and business hours</h2><div class="row2 field"><div><label>On-call name</label><input id="s_name" value="${esc(s.on_call_name || '')}"></div><div><label>On-call phone</label><input id="s_phone" value="${esc(s.on_call_phone || '')}"></div><div><label>Email for message alerts</label><input id="s_email" value="${esc(s.notify_email || '')}"></div><div><label>Business hours</label><input id="s_hours" value="${esc(s.hours || '')}"></div></div><div class="field"><label>Outside business hours</label><select id="s_after"><option value="answer" ${s.after_hours !== 'message' ? 'selected' : ''}>Answer questions and take messages</option><option value="message" ${s.after_hours === 'message' ? 'selected' : ''}>Take messages only</option></select></div><div class="acts"><button class="btn small" onclick="saveSettings()">Save</button><span id="saved" style="color:var(--green);font-weight:700;align-self:center"></span></div></div>
     <div class="panel"><h2>Plan</h2><p style="font-size:17px;color:var(--slate);font-weight:500;line-height:1.55">${d.plan.active ? `${esc(d.plan.name)} · ${d.plan.minutes.toLocaleString()} voice minutes and unlimited web chat, prepaid through ${new Date(d.plan.periodEnd).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}.` : 'No paid plan is active.'} Squadron is prepaid and never bills after the fact. When a period's prepaid amount is used, your team pauses and we email you a top-up invoice. Manage it on the <a href="/billing" style="color:var(--signal)">Billing page</a>. There is no automatic upgrade.</p></div>`;
 }

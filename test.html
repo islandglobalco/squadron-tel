@@ -6,46 +6,46 @@
 <title>Test your team — Squadron</title>
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700;800;900&family=Saira+Stencil+One&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="/onboard.css">
 <style>
 .modes{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
-.mode{font-size:16px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;padding:14px 22px;border-radius:3px;border:2px solid rgba(255,255,255,0.14);background:transparent;color:var(--slate);cursor:pointer}
+.mode{font-size:16px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;padding:14px 22px;border-radius:12px;border:2px solid rgba(11,30,69,0.14);background:transparent;color:var(--slate);cursor:pointer}
 .mode.on{border-color:var(--signal);color:var(--navy);background:var(--signal)}
 .mode.soon{opacity:0.55;cursor:default}
 .wrap{display:grid;grid-template-columns:300px 1fr;gap:24px;align-items:start}
 .roster{display:flex;flex-direction:column;gap:10px}
-.r{display:flex;gap:12px;align-items:center;padding:10px;border-radius:3px;background:rgba(255,255,255,0.05);border:2px solid transparent}
+.r{display:flex;gap:12px;align-items:center;padding:10px;border-radius:12px;background:#fff;border:2px solid transparent}
 .r.on{border-color:var(--signal)}
-.r img{width:48px;height:48px;border-radius:3px;object-fit:cover;background:#10295C}
-.r b{display:block;font-family:'Saira Condensed',sans-serif;font-weight:800;text-transform:uppercase;font-size:20px;line-height:1}
+.r img{width:48px;height:48px;border-radius:12px;object-fit:cover;background:#EAF2FC}
+.r b{display:block;font-family:'Inter Tight',sans-serif;font-weight:800;font-size:20px;line-height:1}
 .r small{font-size:15px;font-weight:700;color:var(--signal);text-transform:uppercase;letter-spacing:0.04em}
-.chat{border-radius:3px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);display:flex;flex-direction:column;min-height:560px}
+.chat{border-radius:12px;background:#fff;border:2px solid rgba(11,30,69,0.1);display:flex;flex-direction:column;min-height:560px}
 .msgs{flex:1;padding:24px;display:flex;flex-direction:column;gap:18px;overflow-y:auto;max-height:64vh}
 .m{display:flex;gap:12px;max-width:85%}
 .m.me{align-self:flex-end;flex-direction:row-reverse}
-.m img{width:44px;height:44px;border-radius:3px;object-fit:cover;flex:none;background:#10295C}
-.b{padding:14px 18px;border-radius:3px;font-size:18px;line-height:1.5;font-weight:500;background:rgba(255,255,255,0.08)}
+.m img{width:44px;height:44px;border-radius:12px;object-fit:cover;flex:none;background:#EAF2FC}
+.b{padding:14px 18px;border-radius:12px;font-size:18px;line-height:1.5;font-weight:500;background:rgba(11,30,69,0.08)}
 .m.me .b{background:var(--signal);color:var(--navy);font-weight:600}
 .m .who{font-size:14px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--signal);margin-bottom:6px}
 .m.refusal .b{border:2px solid rgba(254,188,46,0.5)}
 .m.transfer .b{border:2px solid rgba(255,95,87,0.5)}
 .cits{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.cit{font-size:14px;font-weight:800;padding:5px 10px;border-radius:3px;background:rgba(34,217,90,0.14);color:var(--green);border:1px solid rgba(34,217,90,0.35);cursor:pointer}
+.cit{font-size:14px;font-weight:800;padding:5px 10px;border-radius:12px;background:rgba(34,217,90,0.14);color:var(--green);border:1px solid rgba(34,217,90,0.35);cursor:pointer}
 .cit.gap{background:rgba(254,188,46,0.12);color:var(--amber);border-color:rgba(254,188,46,0.4);cursor:default}
 .citbox{margin-top:8px;font-size:16px;line-height:1.5;color:var(--slate);border-left:3px solid var(--green);padding:8px 12px;display:none}
-.citbox a{color:#fff;word-break:break-all}
-.compose{display:flex;gap:10px;padding:16px;border-top:1px solid rgba(255,255,255,0.1)}
-.compose input{flex:1;font:inherit;font-size:18px;font-weight:600;padding:16px 20px;border-radius:3px;border:2px solid rgba(255,255,255,0.22);background:rgba(255,255,255,0.06);color:#fff;outline:none}
+.citbox a{color:var(--white);word-break:break-all}
+.compose{display:flex;gap:10px;padding:16px;border-top:1px solid rgba(11,30,69,0.1)}
+.compose input{flex:1;font:inherit;font-size:18px;font-weight:600;padding:16px 20px;border-radius:12px;border:2px solid rgba(11,30,69,0.22);background:#fff;color:var(--white);outline:none}
 .compose input:focus{border-color:var(--signal)}
 .starters{display:flex;flex-wrap:wrap;gap:8px;padding:0 24px 20px}
-.starter{font-size:16px;font-weight:700;padding:9px 14px;border-radius:3px;border:2px solid rgba(255,255,255,0.2);background:transparent;color:#fff;cursor:pointer}
+.starter{font-size:16px;font-weight:700;padding:9px 14px;border-radius:12px;border:2px solid rgba(11,30,69,0.2);background:transparent;color:var(--white);cursor:pointer}
 .typing{font-size:17px;color:var(--slate);font-weight:600;padding:0 24px 12px}
-.vhead{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.1);flex-wrap:wrap}
+.vhead{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:20px 24px;border-bottom:1px solid rgba(11,30,69,0.1);flex-wrap:wrap}
 .vstatus{font-size:17px;font-weight:600;color:var(--slate);line-height:1.5;flex:1;min-width:240px}
 .vstatus.live{color:var(--green)}
 .vacts{display:flex;gap:8px;flex-wrap:wrap}
-.vnote{padding:16px 24px;font-size:16px;color:var(--slate);line-height:1.5;font-weight:500;border-top:1px solid rgba(255,255,255,0.1)}
+.vnote{padding:16px 24px;font-size:16px;color:var(--slate);line-height:1.5;font-weight:500;border-top:1px solid rgba(11,30,69,0.1)}
 .m.tool .b{background:rgba(255,198,46,0.1);border:1px solid rgba(255,198,46,0.35);font-size:17px}
 .chat.hidden{display:none}
 @media (max-width:860px){.wrap{grid-template-columns:1fr}.roster{flex-direction:row;flex-wrap:wrap}}
@@ -194,7 +194,7 @@ function setMode(m) {
 // ---- Demo number ----
 function showNumber(r) {
   if (!r.available) { $('pStatus').textContent = r.reason || 'No demo numbers are available right now.'; $('pGet').style.display = 'none'; return; }
-  if (r.number) { const until = r.expiresAt ? new Date(r.expiresAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''; $('pStatus').innerHTML = `Call <b style="color:#fff;font-size:26px">${esc(r.number)}</b> from any phone. It is yours until ${esc(until)}.`; $('pGet').textContent = 'Extend fifteen minutes'; }
+  if (r.number) { const until = r.expiresAt ? new Date(r.expiresAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''; $('pStatus').innerHTML = `Call <b style="color:var(--white);font-size:26px">${esc(r.number)}</b> from any phone. It is yours until ${esc(until)}.`; $('pGet').textContent = 'Extend fifteen minutes'; }
   else { $('pStatus').textContent = 'Get a real phone number for fifteen minutes and call your team from any phone.'; $('pGet').textContent = 'Get a demo number'; }
 }
 async function checkNumber() { try { showNumber(await api('/api/demo-number?token=' + encodeURIComponent(token))); } catch (e) { $('pStatus').textContent = e.message; } }

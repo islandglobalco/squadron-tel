@@ -6,23 +6,23 @@
 <title>Deploy your team — Squadron</title>
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700;800;900&family=Saira+Stencil+One&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="/onboard.css">
 <style>
-.card{border-radius:3px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.1);padding:26px 28px;margin-bottom:18px}
+.card{border-radius:12px;background:#fff;border:2px solid rgba(11,30,69,0.1);padding:26px 28px;margin-bottom:18px}
 .card h2{margin-bottom:8px}
 .chan{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:start}
-.state{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;padding:8px 14px;border-radius:3px;white-space:nowrap}
+.state{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;padding:8px 14px;border-radius:12px;white-space:nowrap}
 .state::before{content:'';width:10px;height:10px;border-radius:50%;background:currentColor}
 .state.live{background:rgba(34,217,90,0.14);color:var(--green);border:1px solid rgba(34,217,90,0.4)}
 .state.ready{background:rgba(255,198,46,0.14);color:var(--signal);border:1px solid rgba(255,198,46,0.4)}
-.state.unavailable{background:rgba(255,255,255,0.06);color:var(--slate);border:1px solid rgba(255,255,255,0.18)}
+.state.unavailable{background:#fff;color:var(--slate);border:1px solid rgba(11,30,69,0.18)}
 .state.pending{background:rgba(254,188,46,0.12);color:var(--amber);border:1px solid rgba(254,188,46,0.4)}
 .detail{font-size:17px;line-height:1.55;color:var(--slate);font-weight:500;margin-top:6px}
-.snippet{margin-top:14px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:16px;padding:14px 16px;border-radius:3px;background:#040A1C;border:1px solid rgba(255,255,255,0.12);color:#fff;word-break:break-all;user-select:all}
+.snippet{margin-top:14px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:16px;padding:14px 16px;border-radius:12px;background:#0B1E45;border:1px solid #0B1E45;color:#EAF2FC;word-break:break-all;user-select:all}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .field label{display:block;font-size:14px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin:12px 0 6px}
-.field input,.field select{width:100%;font:inherit;font-size:17px;font-weight:600;padding:14px 16px;border-radius:3px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#fff;outline:none}
+.field input,.field select{width:100%;font:inherit;font-size:17px;font-weight:600;padding:14px 16px;border-radius:12px;border:2px solid rgba(11,30,69,0.2);background:#fff;color:var(--white);outline:none}
 .field input:focus{border-color:var(--signal)}
 .ok{color:var(--green);font-weight:700;font-size:17px;margin-top:10px}
 .acct{font-size:16px;color:var(--slate);font-weight:600}
@@ -126,13 +126,13 @@ async function api(path, body, method) {
 function renderAccount() {
   if (account) {
     const planText = account.active ? `${esc(account.planInfo.name)}, paid through ${new Date(account.paidThrough).toLocaleDateString()}` : 'No paid plan yet, so your team cannot go live';
-    $('acctBody').innerHTML = `<div class="acct">Signed in as <b style="color:#fff">${esc(account.email)}</b> · ${planText} · <a href="/billing" style="color:var(--signal)">Billing</a> · <a href="#" onclick="logout();return false" style="color:var(--signal)">Log out</a></div>`;
+    $('acctBody').innerHTML = `<div class="acct">Signed in as <b style="color:var(--white)">${esc(account.email)}</b> · ${planText} · <a href="/billing" style="color:var(--signal)">Billing</a> · <a href="#" onclick="logout();return false" style="color:var(--signal)">Log out</a></div>`;
     return;
   }
   $('acctBody').innerHTML = `<p class="detail">Create your account to deploy. Squadron is prepaid: plans start at $39 for 30 days.</p>
     <div class="row2 field"><div><label>Email</label><input id="a_email" type="email" autocomplete="email"></div><div><label>Password (8+ characters)</label><input id="a_pass" type="password" autocomplete="new-password"></div></div>
     <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn small" onclick="auth('signup')">Create account</button><button class="btn small ghost" onclick="auth('login')">I already have one, log in</button></div>
-    <label style="display:flex;gap:12px;align-items:flex-start;margin-top:16px;font-size:17px;line-height:1.5;color:rgba(255,255,255,0.9);font-weight:500;cursor:pointer"><input type="checkbox" id="a_terms" style="width:22px;height:22px;margin-top:2px;flex:none;accent-color:#FFC62E">I agree to the <a href="/terms" target="_blank" style="color:var(--signal);font-weight:700">Terms of Service</a> and the <a href="/privacy" target="_blank" style="color:var(--signal);font-weight:700">Privacy Policy</a>, and I will follow the call-recording and consumer laws that apply to my business.</label>`;
+    <label style="display:flex;gap:12px;align-items:flex-start;margin-top:16px;font-size:17px;line-height:1.5;color:#3D4C68;font-weight:500;cursor:pointer"><input type="checkbox" id="a_terms" style="width:22px;height:22px;margin-top:2px;flex:none;accent-color:#FFC62E">I agree to the <a href="/terms" target="_blank" style="color:var(--signal);font-weight:700">Terms of Service</a> and the <a href="/privacy" target="_blank" style="color:var(--signal);font-weight:700">Privacy Policy</a>, and I will follow the call-recording and consumer laws that apply to my business.</label>`;
 }
 async function auth(action) {
   err('');
