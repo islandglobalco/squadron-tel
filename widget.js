@@ -1,5 +1,7 @@
 // Squadron chat widget. Include on any page:
 // <script src="https://squadron.tel/widget.js" data-business="biz_..." async></script>
+// The business's human layer (Deploy screen) decides whether customers see a
+// "Talk to a person" option, a choice at the start, or the AI team only.
 (function () {
   var script = document.currentScript || (function () { var s = document.getElementsByTagName('script'); return s[s.length - 1]; })();
   var business = script && script.getAttribute('data-business');
@@ -7,53 +9,125 @@
   // squadron.tel redirects to www, and a redirected preflight fails, so the API is always called on www.
   var origin = ((script.src || '').replace(/\/widget\.js.*$/, '') || 'https://www.squadron.tel').replace('https://squadron.tel', 'https://www.squadron.tel');
   var accent = script.getAttribute('data-color') || '#FFC62E';
-  var conversationId = null, open = false, busy = false, agent = null;
+  var conversationId = null, open = false, busy = false, agent = null, mode = 'ai_first', person = null, started = false, lastAsk = '';
 
   var css = '\
 .sqw-btn{position:fixed;right:20px;bottom:20px;z-index:2147483000;width:64px;height:64px;border-radius:50%;border:none;cursor:pointer;background:' + accent + ';box-shadow:0 8px 28px rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center}\
 .sqw-btn svg{width:30px;height:30px;fill:#0B1E45}\
-.sqw-box{position:fixed;right:20px;bottom:96px;z-index:2147483000;width:380px;max-width:calc(100vw - 40px);height:560px;max-height:calc(100vh - 120px);background:#0B1E45;color:#fff;border-radius:3px;box-shadow:0 20px 60px rgba(0,0,0,0.5);display:none;flex-direction:column;overflow:hidden;font-family:Inter,system-ui,sans-serif}\
+.sqw-box{position:fixed;right:20px;bottom:96px;z-index:2147483000;width:390px;max-width:calc(100vw - 40px);height:580px;max-height:calc(100vh - 120px);background:#0B1E45;color:#fff;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,0.5);display:none;flex-direction:column;overflow:hidden;font-family:Inter,system-ui,sans-serif}\
 .sqw-box.open{display:flex}\
-.sqw-head{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,0.1)}\
-.sqw-head img{width:40px;height:40px;border-radius:3px;object-fit:cover;background:#10295C}\
-.sqw-head b{display:block;font-size:18px;font-weight:800}\
+.sqw-head{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,0.12)}\
+.sqw-head img{width:40px;height:40px;border-radius:4px;object-fit:cover;background:#10295C}\
+.sqw-head .sqw-id{flex:1;min-width:0}\
+.sqw-head b{display:block;font-size:18px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}\
 .sqw-head small{font-size:14px;color:#D2D8EA;font-weight:600}\
+.sqw-person{font:inherit;font-size:14px;font-weight:800;padding:9px 12px;border-radius:999px;border:1px solid rgba(255,255,255,0.45);background:transparent;color:#fff;cursor:pointer;white-space:nowrap}\
+.sqw-person:hover{background:#fff;color:#0B1E45}\
 .sqw-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}\
-.sqw-m{max-width:88%;padding:11px 14px;border-radius:3px;font-size:17px;line-height:1.45;background:rgba(255,255,255,0.09);white-space:pre-wrap;word-break:break-word}\
+.sqw-m{max-width:88%;padding:11px 14px;border-radius:6px;font-size:17px;line-height:1.45;background:rgba(255,255,255,0.1);white-space:pre-wrap;word-break:break-word}\
 .sqw-m.me{align-self:flex-end;background:' + accent + ';color:#0B1E45;font-weight:600}\
-.sqw-m.note{background:rgba(254,188,46,0.15);border:1px solid rgba(254,188,46,0.5);font-size:15px}\
-.sqw-form{display:flex;gap:8px;padding:12px;border-top:1px solid rgba(255,255,255,0.1)}\
-.sqw-form input{flex:1;font:inherit;font-size:17px;padding:12px 14px;border-radius:3px;border:2px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.06);color:#fff;outline:none}\
-.sqw-form button{font:inherit;font-weight:800;font-size:16px;padding:0 18px;border-radius:3px;border:none;background:' + accent + ';color:#0B1E45;cursor:pointer}\
+.sqw-m.note{background:rgba(254,188,46,0.16);border:1px solid rgba(254,188,46,0.55);font-size:16px}\
+.sqw-choice{display:flex;flex-direction:column;gap:8px}\
+.sqw-choice button{font:inherit;font-size:17px;font-weight:800;padding:14px 16px;border-radius:6px;border:1px solid rgba(255,255,255,0.35);background:rgba(255,255,255,0.06);color:#fff;cursor:pointer;text-align:left}\
+.sqw-choice button.pri{background:' + accent + ';color:#0B1E45;border-color:' + accent + '}\
+.sqw-choice small{display:block;font-size:14px;font-weight:600;opacity:0.85;margin-top:2px}\
+.sqw-hf{display:flex;flex-direction:column;gap:8px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:14px}\
+.sqw-hf b{font-size:17px}\
+.sqw-hf input,.sqw-hf textarea{font:inherit;font-size:16px;padding:11px 12px;border-radius:4px;border:1px solid rgba(255,255,255,0.3);background:rgba(0,0,0,0.15);color:#fff;outline:none}\
+.sqw-hf textarea{min-height:70px;resize:vertical}\
+.sqw-hf button{font:inherit;font-weight:800;font-size:16px;padding:12px;border-radius:4px;border:none;background:' + accent + ';color:#0B1E45;cursor:pointer}\
+.sqw-hf .sqw-err{color:#FFB3AF;font-size:14px;font-weight:600;min-height:0}\
+.sqw-form{display:flex;gap:8px;padding:12px;border-top:1px solid rgba(255,255,255,0.12)}\
+.sqw-form input{flex:1;font:inherit;font-size:17px;padding:12px 14px;border-radius:4px;border:2px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.06);color:#fff;outline:none;min-width:0}\
+.sqw-form button{font:inherit;font-weight:800;font-size:16px;padding:0 18px;border-radius:4px;border:none;background:' + accent + ';color:#0B1E45;cursor:pointer}\
 .sqw-foot{font-size:13px;color:#C3CAE0;text-align:center;padding:0 12px 10px}';
   var style = document.createElement('style'); style.textContent = css; document.head.appendChild(style);
 
   var btn = document.createElement('button'); btn.className = 'sqw-btn'; btn.setAttribute('aria-label', 'Chat with us');
   btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9l-5 4v-4H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>';
-  var box = document.createElement('div'); box.className = 'sqw-box';
-  box.innerHTML = '<div class="sqw-head"><img alt="" id="sqw-avatar"><div><b id="sqw-name">Customer service</b><small>AI agent · answers from what this business publishes</small></div></div><div class="sqw-msgs" id="sqw-msgs"></div><form class="sqw-form" id="sqw-form"><input id="sqw-in" placeholder="Ask a question" autocomplete="off"><button type="submit">Send</button></form><div class="sqw-foot">Powered by Squadron. You are chatting with an AI agent.</div>';
+  var box = document.createElement('div'); box.className = 'sqw-box'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', 'Customer service chat');
+  box.innerHTML = '<div class="sqw-head"><img alt="" id="sqw-avatar"><div class="sqw-id"><b id="sqw-name">Customer service</b><small id="sqw-sub">AI agent · answers from what this business publishes</small></div><button type="button" class="sqw-person" id="sqw-person" hidden>Talk to a person</button></div><div class="sqw-msgs" id="sqw-msgs" aria-live="polite"></div><form class="sqw-form" id="sqw-form"><input id="sqw-in" placeholder="Ask a question" autocomplete="off" aria-label="Your message"><button type="submit">Send</button></form><div class="sqw-foot" id="sqw-foot">Powered by Squadron. You are chatting with an AI agent.</div>';
   document.body.appendChild(btn); document.body.appendChild(box);
-  var msgs = box.querySelector('#sqw-msgs'), input = box.querySelector('#sqw-in');
+  var msgs = box.querySelector('#sqw-msgs'), input = box.querySelector('#sqw-in'), personBtn = box.querySelector('#sqw-person');
 
   function add(text, cls) { var d = document.createElement('div'); d.className = 'sqw-m ' + (cls || ''); d.textContent = text; msgs.appendChild(d); msgs.scrollTop = 1e9; return d; }
+  function el(tag, attrs, text) { var e = document.createElement(tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (text) e.textContent = text; return e; }
+
+  function personForm(prefill) {
+    var old = msgs.querySelector('.sqw-hf'); if (old) old.remove();
+    var f = el('form', { 'class': 'sqw-hf' });
+    f.appendChild(el('b', {}, 'Talk to ' + (person || 'a person')));
+    var n = el('input', { placeholder: 'Your name', autocomplete: 'name', 'aria-label': 'Your name' });
+    var c = el('input', { placeholder: 'Email or phone number', autocomplete: 'email', 'aria-label': 'Email or phone number', required: 'required' });
+    var m = el('textarea', { placeholder: 'What do you need?', 'aria-label': 'What do you need?' }); m.value = prefill || '';
+    var e = el('div', { 'class': 'sqw-err' });
+    var b = el('button', { type: 'submit' }, 'Send to a person');
+    f.appendChild(n); f.appendChild(c); f.appendChild(m); f.appendChild(e); f.appendChild(b);
+    f.addEventListener('submit', function (ev) {
+      ev.preventDefault(); e.textContent = ''; b.disabled = true; b.textContent = 'Sending';
+      fetch(origin + '/api/handoff', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ businessId: business, conversationId: conversationId, name: n.value, contact: c.value, message: m.value }) })
+        .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+        .then(function (x) {
+          if (!x.ok) { e.textContent = x.j.error || 'That did not send. Please try again.'; b.disabled = false; b.textContent = 'Send to a person'; return; }
+          conversationId = x.j.conversationId || conversationId; f.remove(); add(x.j.reply, 'note');
+          if (mode !== 'person_first') add('You can keep chatting with the AI team here while you wait.');
+        })
+        .catch(function () { e.textContent = 'Could not reach the business. Please try again.'; b.disabled = false; b.textContent = 'Send to a person'; });
+    });
+    msgs.appendChild(f); msgs.scrollTop = 1e9; c.focus();
+  }
+
   function send(text, silent) {
     if (!text || busy) return;
-    busy = true; if (!silent) add(text, 'me'); input.value = '';
+    busy = true; if (!silent) { add(text, 'me'); lastAsk = text; } input.value = '';
     var typing = add('…');
     fetch(origin + '/api/converse', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ businessId: business, conversationId: conversationId, message: text, channel: 'chat' }) })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (x) {
         typing.remove();
-        if (!x.ok) { add(x.j.error || 'Something went wrong. Please try again.', 'note'); return; }
+        if (!x.ok) {
+          add(x.j.error || 'Something went wrong. Please try again.', 'note');
+          if (mode !== 'ai_only') personForm(lastAsk);
+          return;
+        }
         conversationId = x.j.conversationId;
         if (x.j.agent) { agent = x.j.agent; box.querySelector('#sqw-name').textContent = agent.persona + ' · ' + agent.title; if (agent.portrait) box.querySelector('#sqw-avatar').src = (/cdn\.midjourney\.com\/([0-9a-f-]{36})\//.test(agent.portrait) ? origin + '/portraits/' + RegExp.$1 + '.webp' : agent.portrait); }
         add(x.j.reply);
-        if (x.j.followUp) { var fu = x.j.followUp; var t2 = add('…'); setTimeout(function () { t2.remove(); add(fu); }, 900); }
-        if (x.j.replyType === 'transfer') add('A person will follow up with you.', 'note');
+        var rt = x.j.replyType;
+        var done = function () { if ((rt === 'transfer' && mode !== 'ai_only') || rt === 'take_message') personForm(x.j.messageForOwner || lastAsk); };
+        if (x.j.followUp) { var fu = x.j.followUp; var t2 = add('…'); setTimeout(function () { t2.remove(); add(fu); done(); }, 900); } else done();
       })
       .catch(function () { typing.remove(); add('Could not reach the team. Please try again.', 'note'); })
       .then(function () { busy = false; });
   }
-  btn.addEventListener('click', function () { open = !open; box.classList.toggle('open', open); if (open) { input.focus(); if (!msgs.children.length) send('Hello', true); } });
-  box.querySelector('#sqw-form').addEventListener('submit', function (e) { e.preventDefault(); send(input.value.trim()); });
+
+  function startAI() { started = true; var ch = msgs.querySelector('.sqw-choice'); if (ch) ch.remove(); send('Hello', true); input.focus(); }
+  function start() {
+    if (started) return;
+    if (mode === 'choice' || mode === 'person_first') {
+      var box2 = el('div', { 'class': 'sqw-choice' });
+      add(mode === 'person_first' ? 'You can reach ' + (person || 'a person at the business') + ' here. Leave your details and they will contact you, or ask our AI team a quick question.' : 'Choose how you want help. You can switch at any time.');
+      var p = el('button', { type: 'button', 'class': mode === 'person_first' ? 'pri' : '' }); p.textContent = 'Talk to a person'; p.appendChild(el('small', {}, person ? person + ' will contact you.' : 'Someone from the business will contact you.'));
+      var a = el('button', { type: 'button', 'class': mode === 'choice' ? 'pri' : '' }); a.textContent = 'Chat with the AI team'; a.appendChild(el('small', {}, 'Answers right away from what this business publishes.'));
+      p.addEventListener('click', function () { started = true; box2.remove(); personForm(''); });
+      a.addEventListener('click', startAI);
+      if (mode === 'person_first') { box2.appendChild(p); box2.appendChild(a); } else { box2.appendChild(a); box2.appendChild(p); }
+      msgs.appendChild(box2);
+    } else startAI();
+  }
+
+  fetch(origin + '/api/handoff?businessId=' + encodeURIComponent(business))
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (j) {
+      if (!j) return;
+      mode = j.mode || 'ai_first'; person = j.person || null;
+      if (mode !== 'ai_only') personBtn.hidden = false;
+      if (mode === 'person_first') box.querySelector('#sqw-sub').textContent = 'AI receptionist · a person will contact you';
+      if (mode === 'ai_only') box.querySelector('#sqw-foot').textContent = 'Powered by Squadron. You are chatting with an AI agent, and it can take a message for the business.';
+    })
+    .catch(function () {});
+
+  personBtn.addEventListener('click', function () { started = true; var ch = msgs.querySelector('.sqw-choice'); if (ch) ch.remove(); personForm(lastAsk); });
+  btn.addEventListener('click', function () { open = !open; box.classList.toggle('open', open); if (open && !msgs.children.length) start(); });
+  box.querySelector('#sqw-form').addEventListener('submit', function (e) { e.preventDefault(); var v = input.value.trim(); if (!v) return; if (!started) { started = true; var ch = msgs.querySelector('.sqw-choice'); if (ch) ch.remove(); } send(v); });
 })();

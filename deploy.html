@@ -27,6 +27,11 @@
 .ok{color:var(--green);font-weight:700;font-size:17px;margin-top:10px}
 .acct{font-size:16px;color:var(--slate);font-weight:600}
 @media (max-width:720px){.chan,.row2{grid-template-columns:1fr}}
+.hm{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;border-radius:12px;border:1px solid var(--line,#DCE4EF);background:#fff;margin-bottom:10px;cursor:pointer;text-transform:none;letter-spacing:0;color:inherit}
+.hm.on{border-color:#1F5FD1;box-shadow:0 0 0 3px rgba(31,95,209,0.14)}
+.hm input{margin-top:5px;width:20px;height:20px;flex:none;accent-color:#1F5FD1}
+.hm b{display:block;font-size:19px;font-weight:700;color:#0B1E45}
+.hm small{display:block;font-size:16px;line-height:1.5;color:#44536F;font-weight:500;margin-top:4px;text-transform:none;letter-spacing:0}
 </style>
 <link rel="stylesheet" href="/theme.css">
 </head>
@@ -82,12 +87,15 @@
   <div id="channels"></div>
 
   <div class="card">
-    <h2>On-call and hours</h2>
+    <h2>The human layer</h2>
+    <p class="detail">Choose how your AI team and your people share the work. Every channel follows this choice.</p>
+    <div class="field" id="humanModes"></div>
+    <h2 style="margin-top:28px">On-call and hours</h2>
     <p class="detail">When a customer asks for a person, is upset, or hits something the profile does not cover, the team transfers or takes a message for the on-call contact.</p>
     <div class="row2 field">
       <div><label>On-call name</label><input id="s_name" placeholder="Who takes escalations"></div>
       <div><label>On-call phone</label><input id="s_phone" placeholder="+1 555 555 5555"></div>
-      <div><label>Email for message alerts (alerts coming soon; messages show in HQ today)</label><input id="s_email" placeholder="you@yourbusiness.com"></div>
+      <div><label>Email for person requests and messages</label><input id="s_email" placeholder="you@yourbusiness.com"></div>
       <div><label>Business hours (as customers should hear them)</label><input id="s_hours" placeholder="Monday to Friday, 9am to 5pm Central"></div>
     </div>
     <div class="field"><label>Outside business hours</label><select id="s_after"><option value="answer">Answer questions and take messages</option><option value="message">Take messages only</option></select></div>
@@ -145,6 +153,7 @@ function render() {
   $('channels').innerHTML = chanCard('phone', 'Phone', s.phone) + chanCard('chat', 'Chat', s.chat) + chanCard('email', 'Email', s.email) + chanCard('sms', 'SMS', s.sms);
   const st = data.settings || {};
   $('s_name').value = st.on_call_name || ''; $('s_phone').value = st.on_call_phone || ''; $('s_email').value = st.notify_email || ''; $('s_hours').value = st.hours || ''; $('s_after').value = st.after_hours || 'answer';
+  renderHuman(data.humanModes || {}, st.human_mode || 'ai_first');
 }
 async function toggle(key, enabled) {
   err('');
@@ -153,7 +162,7 @@ async function toggle(key, enabled) {
 async function saveSettings() {
   $('saved').textContent = 'Saving…';
   try {
-    data = await api('/api/settings', { token, settings: { on_call_name: $('s_name').value, on_call_phone: $('s_phone').value, notify_email: $('s_email').value, hours: $('s_hours').value, after_hours: $('s_after').value } });
+    data = await api('/api/settings', { token, settings: { on_call_name: $('s_name').value, on_call_phone: $('s_phone').value, notify_email: $('s_email').value, hours: $('s_hours').value, after_hours: $('s_after').value, human_mode: (document.querySelector('input[name=human]:checked') || {}).value || 'ai_first' } });
     $('saved').textContent = 'Saved.'; setTimeout(() => ($('saved').textContent = ''), 2500);
   } catch (e) { $('saved').textContent = 'Could not save: ' + e.message; }
 }
@@ -168,6 +177,10 @@ async function load() {
   if (!token) { location.href = '/start'; return; }
   try { await load(); } catch (e) { err(e.message); }
 })();
+function renderHuman(modes, cur) {
+  const el = document.getElementById('humanModes'); if (!el) return;
+  el.innerHTML = Object.entries(modes).map(([k, m]) => `<label class="hm ${k === cur ? 'on' : ''}"><input type="radio" name="human" value="${k}" ${k === cur ? 'checked' : ''} onchange="document.querySelectorAll('.hm').forEach((x) => x.classList.toggle('on', x.contains(this)))"><span><b>${m.label}</b><small>${m.detail}</small></span></label>`).join('');
+}
 </script>
 </body>
 </html>

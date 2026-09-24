@@ -92,6 +92,9 @@
     },
     "api/support.js": {
       "maxDuration": 30
+    },
+    "api/handoff.js": {
+      "maxDuration": 30
     }
   },
   "routes": [
@@ -286,6 +289,10 @@
     {
       "src": "/api/support",
       "dest": "/api/support.js"
+    },
+    {
+      "src": "/api/handoff",
+      "dest": "/api/handoff.js"
     },
     {
       "src": "/(.*)",

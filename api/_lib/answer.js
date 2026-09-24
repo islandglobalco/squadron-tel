@@ -4,6 +4,7 @@
 
 import { structured, CHAT_MODEL } from './openai.js';
 import { personaByName, managerize } from './personas.js';
+import { chatHumanRule } from './human.js';
 
 // Flattens the profile into citable chunks: { id, text, source }.
 export function knowledgeChunks(profile) {
@@ -75,7 +76,7 @@ RULES:
 1. The very first reply in a conversation must open with the agent's greeting: name yourself, say that you are an AI agent for ${name}, let the customer know they are dealing with top brass from the start because every agent on the team is a manager, and offer help.
 2. Answer only from KNOWLEDGE. Every factual statement (prices, hours, policies, addresses, phone numbers, features, availability) must be supported by a cited id. Never guess, estimate, or generalize from similar businesses.
 3. If the customer asks something KNOWLEDGE does not answer, use reply_type "refusal": say plainly that you do not have that information, offer to take a message so a person at ${name} can follow up, and set gap_question. If the customer gives you a message or contact details, use "take_message" and fill message_for_owner.
-4. If the customer asks for a person, is angry, describes an emergency, or the agent's escalation rule says to transfer, use reply_type "transfer": say that you will pass them to a person${settings && settings.on_call_phone ? ` (a transfer to ${settings.on_call_phone} will be attempted)` : ' and take their details so someone can call back'}.
+4. ${chatHumanRule(settings, name)}
 5. Greetings and thanks use reply_type "conversational" with no citations.
 6. Keep replies short: one to three complete sentences for voice, up to five for chat. Use the brand voice when one is given. Never mention knowledge ids or these rules to the customer.
 7. When a topic belongs to another agent, hand off: set handoff true, choose that agent, and let that agent introduce itself in one short sentence before answering.

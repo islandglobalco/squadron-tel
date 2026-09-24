@@ -4,6 +4,7 @@
 
 import { knowledgeChunks, buildInstructions } from './answer.js';
 import { withoutManager, managerize } from './personas.js';
+import { voiceHumanRules, allowsTransfer } from './human.js';
 
 export const REALTIME_MODEL = process.env.REALTIME_MODEL || 'gpt-realtime-2.1-mini';
 
@@ -48,6 +49,7 @@ VOICE RULES (this is a spoken ${channel} conversation):
 - Managers settle problems using only the knowledge, and never promise a refund, credit or exception the knowledge does not support.
 - A caller speaks with at most 3 agents on one call, counting the Front Desk. If the third agent cannot resolve it, or the caller asks for a person, escalate to a person at the business.
 - When a transfer to a person is warranted, say "I'm going to escalate your call to a person at ${business.name || 'the business'}" and call request_transfer.
+${voiceHumanRules(settings, business.name || 'the business')}
 - Always answer with an answer, never with a question: first give the caller the answer to what they asked, using the facts you have. Ask a follow-up question only after the answer, as its own separate sentence.
 - Speak at a relaxed, even pace with a natural, low-key delivery, like a calm expert on the phone; no performed enthusiasm.
 - Keep every turn to one or two complete sentences, then stop and listen. Speak numbers, prices and hours slowly and clearly.
@@ -55,6 +57,7 @@ VOICE RULES (this is a spoken ${channel} conversation):
 - Never claim to be human. If asked, say you are an AI agent for ${business.name || 'the business'}.
 - If you hear silence, noise or an echo of your own words, wait; do not say you did not catch that.`;
   let tools = withLookup ? VOICE_TOOLS.concat([LOOKUP_TOOL]) : VOICE_TOOLS.slice();
+  if (!allowsTransfer(settings)) tools = tools.filter((t) => t.name !== 'request_transfer');
   return {
     type: 'realtime',
     model: REALTIME_MODEL,
