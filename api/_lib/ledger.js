@@ -18,6 +18,9 @@ import { PLANS, planKey } from './auth.js';
 export const COST_SHARE = Math.min(1, Math.max(0.1, Number(process.env.COST_SHARE || 0.95)));
 
 // Worst-case provider cost, in cents, used for holds before work starts.
+// Battalion overage markup over measured provider cost, in cents a minute.
+export const OVERAGE_MARKUP_CENTS = 1;
+
 export const HOLD = {
   voicePerMinute: Number(process.env.HOLD_VOICE_CENTS_PER_MIN || 15), // realtime mini + Twilio, with margin
   chatTurn: 3,
@@ -96,18 +99,22 @@ export async function ledgerStatus(accountId) {
   const key = planKey(period.item);
   const plan = PLANS[key] || PLANS.none;
   const packs = await sql().query("SELECT item, amount_cents FROM invoices WHERE account_id = $1 AND kind = 'pack' AND status = 'paid' AND period_start = $2", [accountId, period.period_start]);
-  let prepaid = period.amount_cents, extraMin = 0;
-  for (const p of packs) { prepaid += p.amount_cents; extraMin += (PRICES[p.item] && PRICES[p.item].minutes) || 0; }
+  let prepaid = period.amount_cents, extraMin = 0, credit = 0;
+  for (const p of packs) { prepaid += p.amount_cents; extraMin += (PRICES[p.item] && PRICES[p.item].minutes) || 0; if (PRICES[p.item] && PRICES[p.item].credit) credit += p.amount_cents; }
   const s = await sql().query('SELECT COALESCE(SUM(cents),0)::float AS cents, COALESCE(SUM(seconds) FILTER (WHERE counts_minutes),0)::int AS seconds FROM spend WHERE account_id = $1 AND created_at >= $2', [accountId, period.period_start]);
-  const budget = Math.floor(prepaid * COST_SHARE);
-  const spent = s[0].cents;
+  // Overage credit is spent in full at cost plus the markup; plan money keeps
+  // the usual COST_SHARE margin.
+  const budget = Math.floor((prepaid - credit) * COST_SHARE) + credit;
   const minutesIncluded = plan.minutes + extraMin;
   const minutesUsed = Math.ceil(s[0].seconds / 60);
+  const overageMinutes = plan.metered ? Math.max(0, minutesUsed - minutesIncluded) : 0;
+  const spent = s[0].cents + overageMinutes * OVERAGE_MARKUP_CENTS;
   return {
     active: true, plan, planKey: key, periodStart: period.period_start, periodEnd: period.period_end,
     prepaidCents: prepaid, budgetCents: budget, spentCents: Math.round(spent * 100) / 100,
     remainingCents: Math.max(0, budget - spent),
     minutesIncluded, minutesUsed, minutesRemaining: Math.max(0, minutesIncluded - minutesUsed),
+    metered: !!plan.metered, overageMinutes, creditCents: credit,
   };
 }
 
@@ -151,7 +158,10 @@ export async function settleHold(ref, { cents, seconds }) {
 
 // Largest safe length for a new voice session, in seconds.
 export function maxVoiceSeconds(st, { capSeconds, countsMinutes }) {
-  let s = Math.floor((st.remainingCents / HOLD.voicePerMinute) * 60);
-  if (countsMinutes) s = Math.min(s, st.minutesRemaining * 60);
+  const perMin = HOLD.voicePerMinute + (st.metered ? OVERAGE_MARKUP_CENTS : 0);
+  let s = Math.floor((st.remainingCents / perMin) * 60);
+  // Metered plans keep answering past the included minutes while overage
+  // credit lasts; other plans stop at their minutes.
+  if (countsMinutes && !st.metered) s = Math.min(s, st.minutesRemaining * 60);
   return Math.max(0, Math.min(capSeconds, s));
 }

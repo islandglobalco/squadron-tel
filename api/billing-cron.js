@@ -42,15 +42,15 @@ export async function runBilling() {
       if (r.sent) out.notices++;
     }
     const lowBudget = st.remainingCents < st.budgetCents * 0.2;
-    const lowMinutes = st.minutesRemaining < st.minutesIncluded * 0.2;
+    const lowMinutes = !st.metered && st.minutesRemaining < st.minutesIncluded * 0.2;
     if (lowBudget || lowMinutes) {
-      const { invoice, created } = await createInvoice(a.id, 'minutes100');
+      const { invoice, created } = await createInvoice(a.id, st.metered ? 'credit100' : 'minutes100');
       if (created) out.topups++;
       const w = await wireInstructions(invoice);
-      const r = await noticeOnce(a.id, `low:${new Date(st.periodStart).toISOString()}`, { subject: 'Your Squadron balance is running low', text: `Your team has used most of this period's prepaid ${lowMinutes ? 'voice minutes' : 'balance'}. Squadron never bills you after the fact, so your team pauses when the prepaid amount is used. To keep it answering, wire this 100-minute top-up.\n\n${wireText(invoice, w)}` }).catch(() => ({}));
+      const r = await noticeOnce(a.id, `low:${new Date(st.periodStart).toISOString()}`, { subject: 'Your Squadron balance is running low', text: `Your team has used most of this period's prepaid ${lowMinutes ? 'voice minutes' : 'balance'}. Squadron never bills you after the fact, so your team pauses when the prepaid amount is used. To keep it answering, wire this ${st.metered ? '$100 overage credit' : '100-minute top-up'}.\n\n${wireText(invoice, w)}` }).catch(() => ({}));
       if (r.sent) out.notices++;
     }
-    if (st.remainingCents < 3 || st.minutesRemaining <= 0) {
+    if (st.remainingCents < 3 || (!st.metered && st.minutesRemaining <= 0)) {
       const r = await noticeOnce(a.id, `paused:${new Date(st.periodStart).toISOString()}:${st.prepaidCents}`, { subject: 'Your Squadron team is paused', text: `Your team has used everything prepaid for this period${st.minutesRemaining <= 0 ? ' (all included voice minutes)' : ''}, so it has paused. A top-up invoice is waiting in Billing: ${BILLING}` }).catch(() => ({}));
       if (r.sent) out.notices++;
     }

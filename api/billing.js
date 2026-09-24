@@ -25,6 +25,7 @@ export default async function handler(req, res) {
       const p = PRICES[body.item];
       if (!p) return bad(res, 400, 'Unknown item');
       if (p.kind === 'pack' && !st.active) return bad(res, 400, 'Extra minutes are added to a running paid plan. Choose and pay for a plan first.');
+      if (p.credit && !st.metered) return bad(res, 400, 'Overage credit is part of the Battalion plan. Other plans add minutes in blocks of 100.');
       const { invoice, created } = await createInvoice(acc.id, body.item);
       if (created) {
         const w = await wireInstructions(invoice);
@@ -34,6 +35,7 @@ export default async function handler(req, res) {
       const p = PRICES[body.item];
       if (!p) return bad(res, 400, 'Unknown item');
       if (p.kind === 'pack' && !st.active) return bad(res, 400, 'Extra minutes are added to a running paid plan. Choose and pay for a plan first.');
+      if (p.credit && !st.metered) return bad(res, 400, 'Overage credit is part of the Battalion plan. Other plans add minutes in blocks of 100.');
       const out = await startCheckout(acc, body.item, { returnTo: String(body.returnTo || '/billing') });
       return res.status(200).json({ url: out.url });
     } else if (body.action === 'confirm') {
@@ -58,7 +60,7 @@ export default async function handler(req, res) {
       status: {
         active: st.active, plan: st.planKey, planInfo: st.plan, periodStart: st.periodStart, periodEnd: st.periodEnd,
         minutesIncluded: st.minutesIncluded, minutesUsed: st.minutesUsed, minutesRemaining: st.minutesRemaining,
-        prepaidCents: st.prepaidCents, balancePercent: st.budgetCents ? Math.max(0, Math.round((st.remainingCents / st.budgetCents) * 100)) : 0,
+        prepaidCents: st.prepaidCents, metered: st.metered, overageMinutes: st.overageMinutes, creditCents: st.creditCents, balancePercent: st.budgetCents ? Math.max(0, Math.round((st.remainingCents / st.budgetCents) * 100)) : 0,
       },
       plans: PLANS, prices: PRICES, invoices: out, notice, cards: stripeEnabled(),
     });

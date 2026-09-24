@@ -13,7 +13,7 @@
 .card h2{margin-bottom:10px}
 .big{font-size:20px;line-height:1.55;color:var(--white);font-weight:600}
 .detail{font-size:17px;line-height:1.55;color:var(--slate);font-weight:500;margin-top:6px}
-.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:18px}
+.plans{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:18px}
 .plan{border-radius:12px;background:#fff;border:2px solid rgba(11,30,69,0.12);padding:26px;display:flex;flex-direction:column;gap:10px}
 .plan.current{border-color:var(--signal);background:var(--signal-dim)}
 .plan h3{font-family:'Inter Tight',sans-serif;font-weight:700;font-size:34px;letter-spacing:-0.02em}
@@ -32,6 +32,7 @@
 .ok{color:var(--green);font-weight:700;font-size:18px;margin-top:12px}
 .error:not(:empty){display:block}
 .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+@media (max-width:1100px){.plans{grid-template-columns:1fr 1fr}}
 @media (max-width:900px){.plans{grid-template-columns:1fr}.packs{grid-template-columns:1fr}.wire{grid-template-columns:1fr}.wire dd{margin-bottom:8px}}
 </style>
 <link rel="stylesheet" href="/theme.css">
@@ -76,7 +77,7 @@
   <h2 style="margin:34px 0 16px">Plans</h2>
   <div class="plans" id="plans"></div>
   <h2 style="margin:34px 0 16px">Extra voice minutes</h2>
-  <p class="detail" style="margin-bottom:16px">Extra minutes cost $0.25 each, prepaid in blocks of 100. A block adds to your current paid period and does not renew.</p>
+  <p class="detail" style="margin-bottom:16px">On Basic, Pro and Command Center, extra minutes cost $0.25 each, prepaid in blocks of 100, and a block adds to your current paid period without renewing. On Battalion, minutes beyond 10,000 draw on prepaid overage credit at Squadron's cost plus 1¢ a minute.</p>
   <div class="packs" id="packs"></div>
 </main>
 <script>
@@ -88,8 +89,9 @@ const FEATURES = {
   basic: ['250 AI voice minutes', 'Unlimited web chat', 'The full team, 24/7'],
   pro: ['650 AI voice minutes', 'Unlimited web chat', 'The full team, 24/7'],
   center: ['2,000 AI voice minutes', 'Unlimited web chat', 'The full team, 24/7'],
+  battalion: ['10,000 AI voice minutes', 'Beyond 10,000: our cost plus 1¢ a minute', 'Unlimited web chat', 'The full team, 24/7'],
 };
-const PLAN_NAMES = { basic: 'Basic', pro: 'Pro', center: 'Command Center' };
+const PLAN_NAMES = { basic: 'Basic', pro: 'Pro', center: 'Command Center', battalion: 'Battalion' };
 let data = null;
 
 async function call(body) {
@@ -141,7 +143,7 @@ function render() {
   }
   $('invoices').innerHTML = h;
 
-  $('plans').innerHTML = ['basic', 'pro', 'center'].map((k) => {
+  $('plans').innerHTML = ['basic', 'pro', 'center', 'battalion'].map((k) => {
     const p = data.prices[k];
     const cur = st.active && st.plan === k;
     const open = pending.some((i) => i.item === k);
@@ -150,10 +152,10 @@ function render() {
       ${data.cards ? `<button class="btn small" onclick="card('${k}', this)">${cur ? 'Pay the next 30 days by card' : 'Pay ' + money(p.cents) + ' by card'}</button>` : ''}
       <button class="btn small ${data.cards ? 'ghost' : cur ? 'ghost' : ''}" ${open ? 'disabled' : ''} onclick="invoice('${k}', this)">${open ? 'Wire invoice waiting' : 'Pay by bank transfer'}</button></div>`;
   }).join('');
-  $('packs').innerHTML = ['minutes100'].map((k) => {
+  $('packs').innerHTML = [st.metered ? 'credit100' : 'minutes100'].map((k) => {
     const p = data.prices[k];
     const open = pending.some((i) => i.item === k);
-    return `<div class="plan"><h3>100 extra minutes</h3><div class="price">${money(p.cents)}</div>${st.active ? `${data.cards ? `<button class="btn small" onclick="card('${k}', this)">Buy by card</button>` : ''}<button class="btn small ghost" ${open ? 'disabled' : ''} onclick="invoice('${k}', this)">${open ? 'Wire invoice waiting' : 'Buy by bank transfer'}</button>` : '<button class="btn small ghost" disabled>Needs a paid plan</button>'}</div>`;
+    return `<div class="plan"><h3>${k === 'credit100' ? '$100 overage credit' : '100 extra minutes'}</h3>${k === 'credit100' ? `<p class="detail">Minutes beyond your 10,000 draw on this credit at Squadron's cost plus 1¢ a minute.${st.overageMinutes ? ` ${st.overageMinutes.toLocaleString()} overage minutes used this period.` : ''}</p>` : ''}<div class="price">${money(p.cents)}</div>${st.active ? `${data.cards ? `<button class="btn small" onclick="card('${k}', this)">Buy by card</button>` : ''}<button class="btn small ghost" ${open ? 'disabled' : ''} onclick="invoice('${k}', this)">${open ? 'Wire invoice waiting' : 'Buy by bank transfer'}</button>` : '<button class="btn small ghost" disabled>Needs a paid plan</button>'}</div>`;
   }).join('');
 }
 

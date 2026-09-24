@@ -7,6 +7,6 @@ export async function usageFor(businessId) {
   const accountId = await accountForBusiness(businessId);
   const st = await ledgerStatus(accountId);
   const paused = !st.active || st.remainingCents < HOLD.chatTurn;
-  const voicePaused = paused || st.minutesRemaining <= 0 || st.remainingCents < HOLD.voicePerMinute;
+  const voicePaused = paused || (!st.metered && st.minutesRemaining <= 0) || st.remainingCents < HOLD.voicePerMinute;
   return { ...st, accountId, paused, voicePaused };
 }
