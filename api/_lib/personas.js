@@ -33,10 +33,6 @@ export const PERSONAS = [
 // Seniority order used when a call is escalated to a higher agent.
 export const RANKS = ['Airman First Class', 'Senior Airman', 'Staff Sergeant', 'Tech Sergeant', 'Master Sergeant', 'Lieutenant', 'Captain', 'Major', 'Lt. Colonel', 'Colonel', 'General'];
 
-// The manager on duty. Not in the pickable library: every team gets Overwatch
-// automatically as its most senior agent, the last stop before a person.
-export const MANAGER = { idx: 24, name: 'Overwatch', rank: 'General', voice: 'cedar', tone: 'Calm, senior and decisive; takes ownership and settles what others could not.', portrait: HELMET + '24.svg', manager: true };
-
 // Every agent is a manager of its own area, so its title always ends in "Manager".
 export function managerTitle(title) {
   const t = String(title || '').trim() || 'Front Desk';
@@ -47,24 +43,12 @@ export function managerize(agents) {
   return (Array.isArray(agents) ? agents : []).map((a) => (a && a.title ? { ...a, title: managerTitle(a.title) } : a));
 }
 
-export function withManager(agents, businessName) {
-  const list = Array.isArray(agents) ? agents : [];
-  if (list.some((a) => a && a.role_key === 'manager')) return list;
-  const name = businessName || 'the business';
-  return list.concat([{
-    id: 'agt_mgr_overwatch', role_key: 'manager', title: 'General Manager',
-    persona: MANAGER.name, persona_idx: MANAGER.idx, voice: MANAGER.voice, tone: MANAGER.tone, portrait: MANAGER.portrait,
-    job_description: `Overwatch is the most senior agent on the team. It takes over when another agent cannot resolve a problem or a customer asks for a manager, reviews what has happened so far, and settles it using only what ${name} has published.`,
-    scope: ['Escalations from other agents', 'Requests for a manager or supervisor', 'Complaints and unresolved problems'],
-    out_of_scope: [`Refunds, credits, exceptions or promises that ${name} has not published`],
-    escalation_rule: `When it cannot resolve the problem from what ${name} has published, or the customer still wants a person, it escalates the call to a person at ${name} or takes a message.`,
-    greeting: `I'm Overwatch, the AI general manager for ${name}.`,
-    why: 'Every Squadron team has a general manager above its other managers for escalations.',
-    enabled: true,
-  }]);
+// Squadron has 24 agents and no separate general manager. Teams saved while
+// Overwatch existed may still carry a role_key 'manager' entry; drop it.
+export function withoutManager(agents) {
+  return (Array.isArray(agents) ? agents : []).filter((a) => !(a && (a.role_key === 'manager' || a.persona === 'Overwatch')));
 }
 
 export function personaByName(name) {
-  if (String(name || '').toLowerCase() === MANAGER.name.toLowerCase()) return MANAGER;
   return PERSONAS.find((p) => [p.name, p.alias].some((n) => n && n.toLowerCase() === String(name || '').toLowerCase())) || null;
 }

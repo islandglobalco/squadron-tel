@@ -2,7 +2,7 @@
 // Business Profile, and assigns each agent a voice from the persona library.
 
 import { structured, CHAT_MODEL } from './openai.js';
-import { PERSONAS, personaByName, withManager, managerTitle } from './personas.js';
+import { PERSONAS, personaByName, withoutManager, managerTitle } from './personas.js';
 import { profileToKnowledge } from './profile.js';
 
 const TEAM_SCHEMA = {
@@ -79,7 +79,6 @@ export async function generateTeam(profile) {
       enabled: true,
     };
   });
-  const bizName = (profile && profile.company && profile.company.name && profile.company.name.value) || '';
-  const agents = withManager(picked, bizName);
+  const agents = withoutManager(picked);
   return { agents, routing_notes: data.routing_notes, model, usage };
 }

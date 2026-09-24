@@ -27,7 +27,6 @@ const AGENTS = [
   { name: 'Ace', voice: 'marin', tone: 'Calm, natural and self-assured; the first voice customers hear.', text: "I'm Ace, an AI agent. I answer first, handle what I can, and bring in the right person when it's needed." },
   { name: 'Throttle', voice: 'ballad', tone: 'Easygoing and matter-of-fact.', text: "I'm Throttle. Orders and deliveries. I'll tell you where it is and when it should arrive." },
   { name: 'Doc', voice: 'alloy', tone: 'Even-keeled, knowledgeable and plainspoken.', text: "I'm Doc. The detailed product questions. If I know, I'll tell you plainly, and if I don't, I'll say so." },
-  { name: 'Overwatch', voice: 'cedar', tone: 'Calm, senior and decisive; takes ownership and settles what others could not.', text: "I'm Overwatch, the manager on duty. When a problem has gone up the line, it comes to me, and I see it through." },
 ];
 
 // Each preview is generated once, stored in Vercel Blob, and served from

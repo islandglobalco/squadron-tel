@@ -119,7 +119,10 @@ export async function loadProfile(businessId) {
 
 export async function loadTeam(businessId) {
   const rows = await sql().query('SELECT agents, model, updated_at FROM teams WHERE business_id = $1', [businessId]);
-  return rows[0] || null;
+  const t = rows[0] || null;
+  // Overwatch was retired; teams saved with it keep only their 24-library agents.
+  if (t && t.agents && Array.isArray(t.agents.agents)) t.agents = { ...t.agents, agents: t.agents.agents.filter((a) => !(a && (a.role_key === 'manager' || a.persona === 'Overwatch'))) };
+  return t;
 }
 
 export function readJson(req) {

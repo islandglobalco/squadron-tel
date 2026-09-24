@@ -175,19 +175,3 @@ body.home .cta-email{min-width:300px!important}
 #sqSoundToggle[aria-pressed="false"]{color:#44536F}
 @media(max-width:600px){#sqSoundToggle span{display:none}#sqSoundToggle{padding:12px}}
 
-/* Overwatch, the manager on duty (feature card under the crew grid) */
-body.home .manager-wrap{max-width:1400px;margin:-72px auto 0;padding:0 48px 120px}
-body.home .manager-card{display:grid!important;grid-template-columns:minmax(0,360px) minmax(0,1fr);align-items:stretch;border:2px solid var(--blue)!important}
-body.home .manager-card .agent-art{height:100%;aspect-ratio:3/4}
-body.home .manager-card .portrait-overlay{border-top:none!important;border-left:1px solid var(--line)!important;display:flex;flex-direction:column;justify-content:center;padding:48px 56px!important;background:var(--pale)!important}
-body.home .manager-card .portrait-rank{font-size:15px}
-body.home .manager-card .portrait-name{font-size:clamp(44px,5vw,72px)!important;letter-spacing:-0.04em!important;margin:4px 0!important}
-body.home .manager-card .portrait-role{font-size:20px!important}
-body.home .manager-copy{margin-top:20px;font-family:var(--label);font-size:20px;line-height:1.55;color:var(--ink-2);max-width:620px}
-body.home .manager-card .voice-waveform{top:74px}
-@media(max-width:900px){
-  body.home .manager-wrap{margin-top:-48px;padding:0 20px 80px}
-  body.home .manager-card{grid-template-columns:1fr}
-  body.home .manager-card .portrait-overlay{border-left:none!important;border-top:1px solid var(--line)!important;padding:24px!important}
-  body.home .manager-copy{font-size:18px}
-}

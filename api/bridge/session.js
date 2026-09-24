@@ -19,8 +19,7 @@ export default async function handler(req, res) {
     const profile = applyCorrections(prow.profile, prow.corrections);
     const agents = team.agents.agents.filter((a) => a.enabled !== false);
     const business = { name: profile.company?.name?.value || biz.input_value };
-    const as = req.query?.as === 'manager' ? 'manager' : 'front';
-    const session = voiceSession({ business, agents, profile, channel: 'phone', settings: biz.settings || null, recordingNotice: as !== 'manager', withLookup: true, as });
+    const session = voiceSession({ business, agents, profile, channel: 'phone', settings: biz.settings || null, recordingNotice: true, withLookup: true });
     // A short-lived OpenAI key for this one call, so the bridge never holds the real key.
     const model = String(req.query?.model || process.env.REALTIME_MODEL || 'gpt-realtime-2.1-mini');
     const cs = await fetch('https://api.openai.com/v1/realtime/client_secrets', {
