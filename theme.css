@@ -168,3 +168,9 @@ body.home #voiceTranscript{background:var(--gray)!important}
 body.home .cta-form{max-width:640px!important}
 body.home .cta-email{min-width:300px!important}
 @media(min-width:900px){body.home footer{padding-right:130px!important}}
+
+/* Sound toggle (on by default) */
+#sqSoundToggle{position:fixed;left:20px;bottom:20px;z-index:7999;display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;border:1px solid var(--line,#DCE4EF);background:rgba(255,255,255,0.92);backdrop-filter:blur(10px);color:#0B1E45;font:600 15px/1 'Inter',system-ui,sans-serif;cursor:pointer;box-shadow:0 8px 24px rgba(11,30,69,0.10)}
+#sqSoundToggle:hover{background:#fff;color:#1F5FD1}
+#sqSoundToggle[aria-pressed="false"]{color:#44536F}
+@media(max-width:600px){#sqSoundToggle span{display:none}#sqSoundToggle{padding:12px}}

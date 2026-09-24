@@ -1083,6 +1083,20 @@ details[open] .faq-q{color:var(--signal);}
     </div>
 
   </div><!-- /portrait-grid -->
+  <div class="manager-wrap">
+    <div class="portrait-card manager-card" data-agent="24" data-name="Overwatch">
+      <div class="helmet" data-helmet="24"><img src="/helmets/24.svg" alt="Overwatch insignia"></div>
+      <img class="agent-art" src="https://cdn.midjourney.com/75d90b88-b401-43ed-8f28-f30df61fbdbc/0_1_640_N.webp" alt="Overwatch, AI manager on duty" loading="lazy">
+      <div class="portrait-overlay">
+        <div class="portrait-rank">General · On every team</div>
+        <div class="portrait-name">Overwatch</div>
+        <div class="portrait-role">Manager on Duty</div>
+        <p class="manager-copy">Every Squadron team includes Overwatch. A call reaches at most three agents: the Front Desk escalates to the right specialist, and a caller who asks for a manager is escalated to Overwatch. If Overwatch can't settle it, the call escalates to a person at your business.</p>
+      </div>
+      <button class="voice-btn" onclick="previewVoice(24,this)" aria-label="Preview Overwatch voice"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="voice-waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+  </div>
 </section>
 
 <section class="how-section" id="how">
@@ -1338,26 +1352,25 @@ function playChime(){
   }catch(e){}
 }
 
-// Confetti sound (logo hover): a soft pop, then a bright rising sparkle
+// Confetti sound (logo hover): the jackpot win from 7-7-7.world and @less,
+// the "win" hit followed by the coin cascade, at a gentler level.
+const JACKPOT={raw:{},buf:{}};
+['win','money'].forEach(n=>{fetch('/sfx/'+n+'.mp3').then(r=>r.ok?r.arrayBuffer():null).then(a=>{if(a)JACKPOT.raw[n]=a}).catch(()=>{})});
+async function jackpotBuf(ctx,n){
+  if(JACKPOT.buf[n]) return JACKPOT.buf[n];
+  let a=JACKPOT.raw[n]; if(!a){a=await fetch('/sfx/'+n+'.mp3').then(r=>r.arrayBuffer());}
+  JACKPOT.buf[n]=await ctx.decodeAudioData(a.slice(0)); return JACKPOT.buf[n];
+}
 function playConfettiSound(){
   try{
     const ctx=getAudio(); if(ctx.state==='suspended') ctx.resume();
-    const now=ctx.currentTime;
-    const buf=ctx.createBuffer(1,Math.floor(ctx.sampleRate*0.12),ctx.sampleRate);
-    const d=buf.getChannelData(0);
-    for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,3);
-    const src=ctx.createBufferSource(); src.buffer=buf;
-    const hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=1200;
-    const pg=ctx.createGain(); pg.gain.value=0.18;
-    src.connect(hp); hp.connect(pg); pg.connect(ctx.destination);
-    src.start(now); src.stop(now+0.12);
-    [1047,1319,1568,2093,2637].forEach((f,i)=>{
-      const t=now+0.04+i*0.045;
-      const osc=ctx.createOscillator(); osc.type='triangle'; osc.frequency.value=f;
-      const g=ctx.createGain();
-      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.07,t+0.01); g.gain.exponentialRampToValueAtTime(0.001,t+0.45);
-      osc.connect(g); g.connect(ctx.destination);
-      osc.start(t); osc.stop(t+0.5);
+    [['win',0,0.55],['money',0.35,0.45]].forEach(([n,at,vol])=>{
+      jackpotBuf(ctx,n).then(b=>{
+        const src=ctx.createBufferSource(); src.buffer=b;
+        const g=ctx.createGain(); g.gain.value=vol;
+        src.connect(g); g.connect(ctx.destination);
+        src.start(ctx.currentTime+at);
+      }).catch(()=>{});
     });
   }catch(e){}
 }
@@ -1495,7 +1508,7 @@ function previewVoice(agentIdx, btn){
 const navLogo=document.getElementById('navLogo');
 let swordCooldown=false;
 navLogo.addEventListener('mouseenter',()=>{
-  if(!swordCooldown){playSword();swordCooldown=true;setTimeout(()=>swordCooldown=false,1200);}
+  /* the logo now plays only the jackpot sound (see confetti) */
 });
 
 // ═══════════════════════════════════════════════
@@ -1514,7 +1527,7 @@ document.querySelectorAll('[data-sound]').forEach(el=>{
 document.querySelectorAll('.portrait-card').forEach(card=>{
   let cardCooldown=false;
   card.addEventListener('mouseenter',()=>{
-    /* crew-card hover sound now comes from sq-sfx.js (radio beep) */
+    /* crew-card hover sound now comes from sfx.js (radio beep) */
   });
 });
 
@@ -1790,7 +1803,7 @@ document.addEventListener('click',e=>{
     const logo=document.getElementById('navLogo');
     let lastBurst=0;
     if(logo) logo.addEventListener('mouseenter',function(){
-      const t=Date.now(); if(t-lastBurst<1500) return; lastBurst=t;
+      const t=Date.now(); if(t-lastBurst<3000) return; lastBurst=t;
       window.triggerConfetti();
       if(typeof playConfettiSound==='function') playConfettiSound();
     });
@@ -2062,5 +2075,6 @@ document.querySelectorAll('video.hover-play').forEach(function (v) {
   card.addEventListener('mouseleave', function () { v.pause(); });
 });
 </script>
+<script src="/sfx.js" defer></script>
 </body>
 </html>

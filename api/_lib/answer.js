@@ -3,6 +3,7 @@
 // profile does not answer gets an honest refusal, a message, or a transfer.
 
 import { structured, CHAT_MODEL } from './openai.js';
+import { personaByName } from './personas.js';
 
 // Flattens the profile into citable chunks: { id, text, source }.
 export function knowledgeChunks(profile) {
@@ -54,7 +55,8 @@ const REPLY_SCHEMA = {
 };
 
 function agentBrief(a) {
-  return `- id ${a.id}: ${a.title} (${a.persona}, ${a.tone}). ${a.job_description} Handles: ${a.scope.join('; ')}. Does not handle: ${(a.out_of_scope || []).join('; ') || 'nothing listed'}. Escalation: ${a.escalation_rule}`;
+  const rank = (personaByName(a.persona) || {}).rank;
+  return `- id ${a.id}: ${a.title} (${a.persona}${rank ? ', rank ' + rank : ''}, ${a.tone}). ${a.job_description} Handles: ${a.scope.join('; ')}. Does not handle: ${(a.out_of_scope || []).join('; ') || 'nothing listed'}. Escalation: ${a.escalation_rule}`;
 }
 
 export function buildInstructions({ business, agents, chunks, voice, channel, settings }) {

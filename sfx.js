@@ -40,8 +40,8 @@
     ping: function () {
       var c = ac(); if (!c) return; var t = c.currentTime;
       [0, 0.16].forEach(function (off, i) {
-        var o = c.createOscillator(); o.type = 'sine'; o.frequency.setValueAtTime(1480, t + off);
-        o.frequency.exponentialRampToValueAtTime(1320, t + off + 0.3);
+        var o = c.createOscillator(); o.type = 'sine'; o.frequency.setValueAtTime(740, t + off);
+        o.frequency.exponentialRampToValueAtTime(660, t + off + 0.3);
         var g = c.createGain(); env(c, g, t + off, i ? 0.018 : 0.045, 0.005, 0.35);
         o.connect(g); g.connect(c.destination); o.start(t + off); o.stop(t + off + 0.4);
       });
@@ -73,7 +73,7 @@
     // Radio "roger" beep: two quick tones (crew cards)
     radio: function () {
       var c = ac(); if (!c) return; var t = c.currentTime;
-      [[1250, 0], [1650, 0.075]].forEach(function (p) {
+      [[620, 0], [830, 0.075]].forEach(function (p) {
         var o = c.createOscillator(); o.type = 'sine'; o.frequency.value = p[0];
         var g = c.createGain(); env(c, g, t + p[1], 0.05, 0.004, 0.07);
         o.connect(g); g.connect(c.destination); o.start(t + p[1]); o.stop(t + p[1] + 0.09);
