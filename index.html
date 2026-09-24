@@ -444,6 +444,26 @@ nav{
 
 /* PRICE COMPARISON */
 .compare{margin:72px auto 0;max-width:1100px}
+.cmp .compare-title{font-size:clamp(34px,4vw,52px)!important}
+.cmp .compare-sub{font-size:20px!important;max-width:780px}
+.cmp-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:28px;text-align:left}
+@media(max-width:1000px){.cmp-grid{grid-template-columns:1fr}}
+.cmp-card{background:#fff;border:1px solid #DCE4EF;border-radius:20px;padding:24px;color:#0B1E45}
+.cmp-head{margin-bottom:14px}
+.cmp-size{display:inline-block;font-size:14px;font-weight:700;color:#1F5FD1;background:#EAF2FC;border-radius:999px;padding:5px 12px}
+.cmp-head h4{font-family:'Inter Tight',Inter,sans-serif;font-size:24px;font-weight:700;letter-spacing:-0.02em;margin-top:10px;color:#0B1E45}
+.cmp-row{display:grid;grid-template-columns:1fr auto;grid-template-areas:"who price" "bar ppm";gap:6px 14px;align-items:center;padding:14px 0;border-top:1px solid #EEF2F7}
+.cmp-who{grid-area:who}.cmp-who b{display:block;font-size:18px;font-weight:700;color:#0B1E45}.cmp-who b a{color:#0B1E45;text-decoration:none}.cmp-who span{font-size:15px;color:#3D4C68}
+.cmp-price{grid-area:price;font-family:'Inter Tight',Inter,sans-serif;font-size:28px;font-weight:700;color:#0B1E45;text-align:right;white-space:nowrap}.cmp-price span{font-size:15px;font-weight:500;color:#3D4C68}
+.cmp-bar{grid-area:bar;height:12px;border-radius:999px;background:#EEF2F7;overflow:hidden}.cmp-bar i{display:block;height:100%;border-radius:999px;background:#9AA8BE}
+.cmp-ppm{grid-area:ppm;text-align:right;white-space:nowrap}.cmp-ppm b{font-size:18px;font-weight:700;color:#0B1E45}.cmp-ppm span{font-size:14px;color:#3D4C68;margin-left:4px}
+.cmp-row.us .cmp-bar i{background:#1F5FD1}.cmp-row.us .cmp-who b,.cmp-row.us .cmp-price{color:#1F5FD1}
+.cmp-row.us{background:linear-gradient(90deg,#F3F7FD,#fff);margin:0 -12px;padding-left:12px;padding-right:12px;border-radius:12px;border-top-color:transparent}
+.cmp-more{margin-top:22px;text-align:left}
+.cmp-more summary{cursor:pointer;font-size:18px;font-weight:700;color:#1F5FD1;text-align:center;list-style:none}
+.cmp-more summary::-webkit-details-marker{display:none}
+.cmp-more[open] summary{margin-bottom:14px}
+
 .compare-title{font-family:'Saira Condensed',sans-serif;font-size:44px;font-weight:900;text-transform:uppercase;letter-spacing:0.02em;text-align:center;margin-bottom:12px}
 .compare-sub,.compare-note{font-size:18px;line-height:1.55;color:rgba(255,255,255,0.85);text-align:center;max-width:760px;margin:0 auto 24px}
 .compare-note{margin-top:20px;font-size:16px}
@@ -1135,9 +1155,11 @@ details[open] .faq-q{color:var(--signal);}
     </div>
     <p class="section-sub" style="margin:40px auto 0;text-align:center;max-width:760px;font-size:20px;color:rgba(255,255,255,0.88);">No contract, no setup fee and no automatic upgrade. When a period's prepaid amount is used, your team pauses and we email you a top-up invoice, so you never get a surprise bill.</p>
 
-    <div class="compare" id="compare">
-      <h3 class="compare-title">How the price per minute compares</h3>
-      <p class="compare-sub">Monthly prices from each company's own pricing page, checked on September 23, 2026. Price per minute is the plan price divided by the minutes it includes.</p>
+    <div class="compare cmp" id="compare">
+      <h3 class="compare-title">What you pay for the same amount of calls</h3>
+      <p class="compare-sub">Shorter bars cost less. At every plan size, Squadron has the lowest price per minute of these services, and web chat is unlimited on every plan.</p>
+      <div class="cmp-grid"><div class="cmp-card"><div class="cmp-head"><span class="cmp-size">Small</span><h4>About 250 minutes a month</h4></div><div class="cmp-row us"><div class="cmp-who"><b>Squadron</b><span>Basic · 250 min</span></div><div class="cmp-bar"><i style="width:27%"></i></div><div class="cmp-ppm"><b>16¢</b><span>a minute</span></div><div class="cmp-price">$39<span>/mo</span></div></div><div class="cmp-row"><div class="cmp-who"><b><a href="https://heyrosie.com/pricing" rel="nofollow noopener" target="_blank">Rosie</a></b><span>Professional · 250 min</span></div><div class="cmp-bar"><i style="width:33%"></i></div><div class="cmp-ppm"><b>20¢</b><span>a minute</span></div><div class="cmp-price">$49<span>/mo</span></div></div><div class="cmp-row"><div class="cmp-who"><b><a href="https://www.myaifrontdesk.com/pricing" rel="nofollow noopener" target="_blank">My AI Front Desk</a></b><span>200 min</span></div><div class="cmp-bar"><i style="width:83%"></i></div><div class="cmp-ppm"><b>50¢</b><span>a minute</span></div><div class="cmp-price">$99<span>/mo</span></div></div></div><div class="cmp-card"><div class="cmp-head"><span class="cmp-size">Medium</span><h4>About 500 to 1,000 minutes a month</h4></div><div class="cmp-row us"><div class="cmp-who"><b>Squadron</b><span>Pro · 650 min</span></div><div class="cmp-bar"><i style="width:20%"></i></div><div class="cmp-ppm"><b>12¢</b><span>a minute</span></div><div class="cmp-price">$79<span>/mo</span></div></div><div class="cmp-row"><div class="cmp-who"><b><a href="https://heyrosie.com/pricing" rel="nofollow noopener" target="_blank">Rosie</a></b><span>Scale · 1,000 min</span></div><div class="cmp-bar"><i style="width:25%"></i></div><div class="cmp-ppm"><b>15¢</b><span>a minute</span></div><div class="cmp-price">$149<span>/mo</span></div></div><div class="cmp-row"><div class="cmp-who"><b><a href="https://dialzara.com/pricing" rel="nofollow noopener" target="_blank">Dialzara</a></b><span>1,000 min</span></div><div class="cmp-bar"><i style="width:58%"></i></div><div class="cmp-ppm"><b>35¢</b><span>a minute</span></div><div class="cmp-price">$349<span>/mo</span></div></div><div class="cmp-row"><div class="cmp-who"><b><a href="https://frontdesk.care/pricing" rel="nofollow noopener" target="_blank">Front Desk</a></b><span>500 min</span></div><div class="cmp-bar"><i style="width:100%"></i></div><div class="cmp-ppm"><b>60¢</b><span>a minute</span></div><div class="cmp-price">$299<span>/mo</span></div></div></div><div class="cmp-card"><div class="cmp-head"><span class="cmp-size">Large</span><h4>About 2,000 minutes a month</h4></div><div class="cmp-row us"><div class="cmp-who"><b>Squadron</b><span>Command Center · 2,000 min</span></div><div class="cmp-bar"><i style="width:17%"></i></div><div class="cmp-ppm"><b>10¢</b><span>a minute</span></div><div class="cmp-price">$199<span>/mo</span></div></div><div class="cmp-row"><div class="cmp-who"><b><a href="https://heyrosie.com/pricing" rel="nofollow noopener" target="_blank">Rosie</a></b><span>Growth · 2,000 min</span></div><div class="cmp-bar"><i style="width:25%"></i></div><div class="cmp-ppm"><b>15¢</b><span>a minute</span></div><div class="cmp-price">$299<span>/mo</span></div></div></div></div>
+      <details class="cmp-more"><summary>See the full price table</summary>
       <div class="compare-scroll"><table class="ppm-table">
         <thead><tr><th>Service</th><th>Plan</th><th>Minutes included</th><th>Price per minute</th><th>Web chat</th></tr></thead>
         <tbody>
@@ -1152,7 +1174,8 @@ details[open] .faq-q{color:var(--signal);}
           <tr><td><a href="https://frontdesk.care/pricing" rel="nofollow noopener" target="_blank">Front Desk</a></td><td>$299</td><td>500</td><td>60¢</td><td>500 chats</td></tr>
         </tbody>
       </table></div>
-      <p class="compare-note">Sorted from the lowest price per minute. At the same 2,000 minutes, Squadron Command Center costs $199 and Rosie Growth costs $299. Competitor prices change, so follow each link to check the current price.</p>
+      </details>
+      <p class="compare-note">Prices come from each company's own pricing page, checked on September 23, 2026. Price per minute is the plan price divided by the minutes it includes. Competitor prices change, so follow each link to check the current price.</p>
     </div>
   </div>
 </section>
