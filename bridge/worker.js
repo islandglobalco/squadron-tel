@@ -106,18 +106,30 @@ export class CallSession {
     const sendTw = (o) => { try { tw.send(JSON.stringify(o)); } catch {} };
     const sendOai = (o) => { if (oai && oaiReady) try { oai.send(JSON.stringify(o)); } catch {} };
 
-    const openOpenAI = async () => {
-      ctx = await vercel(env, `/api/bridge/session?businessId=${encodeURIComponent(businessId)}&model=${encodeURIComponent(model)}`);
-      // Squadron issues a short-lived key per call; a worker-held OPENAI_API_KEY is only a fallback.
-      const key = ctx.clientSecret || env.OPENAI_API_KEY;
+    // Opens an OpenAI Realtime session for the call. as = 'front' starts the
+    // team at the Front Desk; as = 'manager' hands the live call to Overwatch,
+    // the general manager, on a fresh session in its own voice.
+    const openOpenAI = async (as = 'front', handoff = null) => {
+      const next = await vercel(env, `/api/bridge/session?businessId=${encodeURIComponent(businessId)}&model=${encodeURIComponent(model)}${as === 'manager' ? '&as=manager' : ''}`);
+      // Squadron issues a short-lived key per session; a worker-held OPENAI_API_KEY is only a fallback.
+      const key = next.clientSecret || env.OPENAI_API_KEY;
       const resp = await fetch(`https://api.openai.com/v1/realtime?model=${encodeURIComponent(model)}`, { headers: { Upgrade: 'websocket', Authorization: `Bearer ${key}` } });
-      oai = resp.webSocket;
-      if (!oai) throw new Error(`OpenAI did not accept the WebSocket (${resp.status})`);
-      oai.accept();
-      oaiReady = true;
+      const sock = resp.webSocket;
+      if (!sock) throw new Error(`OpenAI did not accept the WebSocket (${resp.status})`);
+      sock.accept();
+      const old = oai;
+      oai = sock; oaiReady = true;
+      if (old) { try { old.close(); } catch {} }
+      if (ctx) { next.from = ctx.from; next.to = ctx.to; }
+      ctx = next;
       sendOai({ type: 'session.update', session: { type: 'realtime', instructions: ctx.session.instructions, tools: ctx.session.tools, tool_choice: 'auto', audio: { input: { format: { type: 'audio/pcmu' }, transcription: { model: 'gpt-4o-mini-transcribe' }, turn_detection: { type: 'semantic_vad', eagerness: 'auto', interrupt_response: true } }, output: { format: { type: 'audio/pcmu' }, voice: ctx.session.audio.output.voice } } } });
+      if (handoff) {
+        const history = transcript.slice(-16).map((t) => `${t.role === 'customer' ? 'Caller' : (t.agent_name || 'Agent')}: ${t.text}`).join('\n');
+        sendOai({ type: 'conversation.item.create', item: { type: 'message', role: 'system', content: [{ type: 'input_text', text: `Escalation to you, Overwatch. Reason: ${handoff}\nThe call so far:\n${history || '(no transcript yet)'}` }] } });
+      }
       sendOai({ type: 'response.create' });
-      oai.addEventListener('message', (m) => {
+      sock.addEventListener('message', (m) => {
+        if (sock !== oai) return; // a replaced session stays silent
         let ev; try { ev = JSON.parse(typeof m.data === 'string' ? m.data : new TextDecoder().decode(m.data)); } catch { return; }
         switch (ev.type) {
           case 'response.output_audio.delta':
@@ -145,8 +157,9 @@ export class CallSession {
             break;
         }
       });
-      oai.addEventListener('close', () => { oaiReady = false; });
+      sock.addEventListener('close', () => { if (sock === oai) oaiReady = false; });
     };
+    let escalated = false;
 
     const handleTool = async (ev) => {
       let args = {}; try { args = JSON.parse(ev.arguments || '{}'); } catch {}
@@ -158,6 +171,15 @@ export class CallSession {
         output = { ok: true, note: 'The message is recorded. Tell the caller a person will follow up.' };
       } else if (ev.name === 'log_gap') {
         if (args.question) gaps.push(args.question);
+      } else if (ev.name === 'escalate_to_manager') {
+        if (escalated) { output = { ok: false, note: 'Overwatch already has this call.' }; }
+        else {
+          escalated = true;
+          // Swap the live call to Overwatch; the old session is closed, so no tool output goes back to it.
+          lastAssistantItem = null; responseStartTs = null;
+          try { await openOpenAI('manager', args.reason || 'The caller asked for a manager.'); return; }
+          catch (e) { console.log('escalation failed', e.message); escalated = false; output = { ok: false, note: 'Overwatch could not be reached. Say so, then offer to escalate to a person or take a message.' }; }
+        }
       } else if (ev.name === 'request_transfer') {
         transferRequested = true;
         const target = ctx.settings && ctx.settings.on_call_phone;

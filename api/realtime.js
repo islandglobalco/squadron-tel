@@ -53,7 +53,8 @@ export default async function handler(req, res) {
     const session = voiceSession({ business, agents, profile, channel: 'voice', settings: null, recordingNotice: false });
     const fd = new FormData();
     fd.set('sdp', sdp);
-    fd.set('session', JSON.stringify(session));
+    const { speaker, ...openaiSession } = session; // speaker is Squadron-only metadata
+    fd.set('session', JSON.stringify(openaiSession));
     const r = await fetch('https://api.openai.com/v1/realtime/calls', { method: 'POST', headers: { Authorization: `Bearer ${apiKey()}` }, body: fd });
     const text = await r.text();
     if (!r.ok) { console.error('[realtime]', r.status, text.slice(0, 400)); return bad(res, 502, `Voice session failed (${r.status}).`); }

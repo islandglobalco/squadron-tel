@@ -3,7 +3,7 @@
 // profile does not answer gets an honest refusal, a message, or a transfer.
 
 import { structured, CHAT_MODEL } from './openai.js';
-import { personaByName } from './personas.js';
+import { personaByName, managerize } from './personas.js';
 
 // Flattens the profile into citable chunks: { id, text, source }.
 export function knowledgeChunks(profile) {
@@ -60,6 +60,7 @@ function agentBrief(a) {
 }
 
 export function buildInstructions({ business, agents, chunks, voice, channel, settings }) {
+  agents = managerize(agents);
   const name = business.name || 'the business';
   return `You are the customer-service team for ${name}, speaking to a customer over ${channel}. You are a team of AI agents; you never claim to be human.
 
@@ -71,7 +72,7 @@ ${chunks.map((c) => `[${c.id}] ${c.text}`).join('\n')}
 ${voice ? `\nBRAND VOICE: ${voice}` : ''}
 
 RULES:
-1. The very first reply in a conversation must open with the agent's greeting: name yourself, say that you are an AI agent for ${name}, and offer help.
+1. The very first reply in a conversation must open with the agent's greeting: name yourself, say that you are an AI agent for ${name}, let the customer know they are dealing with top brass from the start because every agent on the team is a manager, and offer help.
 2. Answer only from KNOWLEDGE. Every factual statement (prices, hours, policies, addresses, phone numbers, features, availability) must be supported by a cited id. Never guess, estimate, or generalize from similar businesses.
 3. If the customer asks something KNOWLEDGE does not answer, use reply_type "refusal": say plainly that you do not have that information, offer to take a message so a person at ${name} can follow up, and set gap_question. If the customer gives you a message or contact details, use "take_message" and fill message_for_owner.
 4. If the customer asks for a person, is angry, describes an emergency, or the agent's escalation rule says to transfer, use reply_type "transfer": say that you will pass them to a person${settings && settings.on_call_phone ? ` (a transfer to ${settings.on_call_phone} will be attempted)` : ' and take their details so someone can call back'}.
@@ -130,7 +131,10 @@ export async function answer({ business, agents, profile, history, message, chan
     if (!/\bAI\b/.test(greet)) greet = `Hi, I'm ${agent.persona || 'an assistant'}, an AI agent for ${business.name || 'this business'}.`;
     const first = reply.split(/(?<=[.!])\s+/)[0] || '';
     const alreadyDisclosed = /\b(an AI|AI agent|AI assistant)\b/i.test(first) && (!agent.persona || first.includes(agent.persona));
-    if (!alreadyDisclosed) reply = reply ? `${greet} ${reply}` : raw.trim();
+    const brass = "You're dealing with top brass from the start: every agent on this team is a manager.";
+    if (!/top brass/i.test(greet + ' ' + reply)) greet = `${greet} ${brass}`;
+    if (!alreadyDisclosed) reply = reply ? `${greet} ${reply}` : `${raw.trim()} ${brass}`;
+    else if (!/top brass/i.test(reply)) reply = reply.replace(/^([^.!]*[.!])\s*/, `$1 ${brass} `);
   }
   const cited = citations.map((id) => { const c = chunks.find((x) => x.id === id); return { id, text: c.text, source: c.source }; });
   return { agent, reply, replyType, citations: cited, gapQuestion: data.gap_question, messageForOwner: data.message_for_owner, handoff: !!data.handoff, followUp, model, usage };

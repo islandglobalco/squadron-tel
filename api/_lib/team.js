@@ -2,7 +2,7 @@
 // Business Profile, and assigns each agent a voice from the persona library.
 
 import { structured, CHAT_MODEL } from './openai.js';
-import { PERSONAS, personaByName, withManager } from './personas.js';
+import { PERSONAS, personaByName, withManager, managerTitle } from './personas.js';
 import { profileToKnowledge } from './profile.js';
 
 const TEAM_SCHEMA = {
@@ -16,7 +16,7 @@ const TEAM_SCHEMA = {
         additionalProperties: false,
         properties: {
           role_key: { type: 'string', description: 'Short snake_case key, for example front_desk, scheduling, billing, returns, technical, sales, emergency.' },
-          title: { type: 'string', description: 'Job title as shown to the business owner, for example Front Desk.' },
+          title: { type: 'string', description: 'Manager title as shown to the business owner, for example Front Desk Manager or Billing Manager.' },
           persona: { type: 'string', description: 'One persona name from the library, unique within the team.' },
           job_description: { type: 'string', description: 'Two or three complete sentences describing what this agent does for this specific business.' },
           scope: { type: 'array', items: { type: 'string' }, description: 'Topics this agent handles, drawn from the profile.' },
@@ -36,7 +36,7 @@ const TEAM_SCHEMA = {
 const INSTRUCTIONS = `You design a customer-service team for one specific business, using only its Business Profile.
 
 Rules:
-1. Build between two and six agents. The first agent is always the Front Desk: it greets, answers general questions, and routes to the others. Do not add a manager or supervisor agent; Squadron adds Overwatch, the manager on duty, to every team automatically.
+1. Build between two and six agents. The first agent is always the Front Desk: it greets, answers general questions, and routes to the others. Every agent is the manager of its own area, so every title ends in "Manager" (for example Front Desk Manager, Billing Manager, Returns Manager). Do not add a general manager or supervisor agent; Squadron adds Overwatch, the general manager, to every team automatically.
 2. Add a specialist only when the profile shows a need for it. Examples: a scheduling agent when the business takes appointments or reservations; a billing agent when there are prices, plans, invoices or payments; a returns agent when there are return, refund or shipping policies; a technical agent when the business sells software, an app, or equipment that needs troubleshooting; a sales agent when there are products or services to compare and buy; an emergency dispatch agent when the business handles urgent situations (repairs, medical, security, outages). Do not add an agent for a need the profile does not show.
 3. Each agent's scope must be drawn from the profile. Do not invent products, policies or capabilities.
 4. Escalation rules must be concrete: what triggers a transfer to a person, what the agent does when it does not have the answer (it says so and takes a message), and what it never does (for example it never quotes a price that is not in the profile).
@@ -64,7 +64,7 @@ export async function generateTeam(profile) {
     return {
       id: `agt_${i + 1}_${a.role_key.replace(/[^a-z0-9_]/gi, '').toLowerCase() || 'agent'}`,
       role_key: a.role_key,
-      title: a.title,
+      title: managerTitle(a.title),
       persona: p.name,
       persona_idx: p.idx,
       voice: p.voice,
