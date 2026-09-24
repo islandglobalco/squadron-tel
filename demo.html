@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Squadron team</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--pale:#EAF2FC;--gray:#F5F7FA;--ink:#0B1E45;--ink-2:#44536F;--blue:#1F5FD1;--line:#DCE4EF}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--gray);color:var(--ink);-webkit-font-smoothing:antialiased}
+nav{position:sticky;top:0;z-index:50;background:rgba(245,247,250,0.92);backdrop-filter:blur(18px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:72px}
+.nav-logo{background:var(--ink);padding:9px 14px;border-radius:8px;line-height:0;display:inline-flex}
+.nav-logo svg{height:20px;width:auto}
+.btn{font:inherit;font-size:17px;font-weight:700;padding:16px 28px;border-radius:999px;border:none;background:var(--ink);color:#fff;cursor:pointer;text-decoration:none;display:inline-block}
+.btn:hover{background:var(--blue)}
+.btn.sm{font-size:15px;padding:11px 18px}
+header{background:var(--pale);border-bottom:1px solid var(--line)}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+.hero{padding:80px 0 64px}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:700;color:var(--blue);background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 14px 7px 10px;margin-bottom:22px}
+.eyebrow::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--blue)}
+h1{font-family:'Inter Tight',sans-serif;font-weight:700;font-size:clamp(48px,6.4vw,96px);letter-spacing:-0.045em;line-height:0.98;max-width:1000px}
+h1 em{font-style:normal;color:var(--blue)}
+.sub{font-size:22px;line-height:1.5;color:var(--ink-2);max-width:780px;margin:24px 0 34px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:18px;padding:56px 0}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.art{aspect-ratio:4/3;background:var(--pale) center 22%/cover no-repeat;border-bottom:1px solid var(--line)}
+.body{padding:22px 24px 24px;display:flex;flex-direction:column;gap:10px;flex:1}
+.rank{font-size:14px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--blue)}
+.name{font-family:'Inter Tight',sans-serif;font-weight:700;font-size:40px;letter-spacing:-0.035em;line-height:1}
+.title{font-size:19px;font-weight:700}
+.job{font-size:17px;line-height:1.55;color:var(--ink-2)}
+.greet{font-size:17px;line-height:1.5;background:var(--gray);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:14px;font-weight:600;padding:5px 10px;border-radius:999px;background:var(--pale)}
+.card .btn{align-self:flex-start;margin-top:auto}
+.rules{background:#fff;border:1px solid var(--line);border-radius:14px;padding:32px;margin-bottom:56px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px}
+.rules h3{font-family:'Inter Tight',sans-serif;font-size:22px;font-weight:700;letter-spacing:-0.02em;margin-bottom:6px}
+.rules p{font-size:17px;line-height:1.5;color:var(--ink-2)}
+.cta{background:var(--ink);color:#fff;border-radius:18px;padding:56px 40px;margin-bottom:80px;text-align:center}
+.cta h2{font-family:'Inter Tight',sans-serif;font-weight:700;font-size:clamp(36px,4.4vw,60px);letter-spacing:-0.04em;line-height:1;margin-bottom:16px}
+.cta p{font-size:20px;line-height:1.5;color:#D3DDEF;max-width:640px;margin:0 auto 28px}
+.cta .btn{background:#fff;color:var(--ink)}
+.cta .btn:hover{background:var(--pale)}
+.msg{font-size:24px;font-weight:600;padding:120px 0}
+footer{font-size:15px;color:var(--ink-2);padding:0 0 48px}
+footer a{color:var(--ink-2)}
+@media(max-width:600px){nav{padding:0 16px}.wrap{padding:0 16px}.grid{grid-template-columns:1fr}.cta{padding:40px 22px}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/" aria-label="Squadron"><svg class="nav-logo-svg" viewBox="0 -430 2278 492" xmlns="http://www.w3.org/2000/svg" aria-label="Squadron">
+      <g transform="translate(0,0)" data-letter="S" data-idx="0"><g class="logo-letter">
+        <path d="M 6 -371.28125 L 75 -429.65625 L 199 -429.65625 L 268 -371.28125 L 268.5 -304.921875 L 167.5 -304.921875 L 167.5 -349.015625 L 106.5 -349.015625 L 106.5 -259.5625 L 268 -259.984375 L 270 -57.953125 L 201 0.421875 L 77 0.421875 L 8 -57.953125 L 7.5 -124.3125 L 108.5 -124.3125 L 108.5 -80.21875 L 169.5 -80.21875 L 169.5 -169.6875 L 148.5 -169.6875 L 148.5 -169.265625 L 8 -169.265625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(286,0)" data-letter="Q" data-idx="1"><g class="logo-letter">
+        <path d="M 200 0.84375 L 187.5 0.84375 L 187.5 63.421875 L 87 63.421875 L 87 0.84375 L 74.5 0.84375 L 5.5 -57.546875 L 5.5 -370.015625 L 74.5 -428.40625 L 198 -428.40625 L 268 -369.1875 L 268 -56.703125 Z M 106 -347.765625 L 106 -82.3125 L 167.5 -82.3125 L 167.5 -346.921875 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(572,0)" data-letter="U" data-idx="2"><g class="logo-letter">
+        <path d="M 6.5 -428.40625 L 108 -428.40625 L 108 -83.15625 L 169 -83.15625 L 169 -352.796875 L 169.5 -352.796875 L 169.5 -429.234375 L 269.5 -429.234375 L 269.5 -58.375 L 200.5 0 L 76.5 0 L 7.5 -58.375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(858,0)" data-letter="A" data-idx="3"><g class="logo-letter">
+        <path d="M 107.5 0 L 7 0 L 7 -199.078125 L 6.5 -199.078125 L 6.5 -372.546875 L 75.5 -430.921875 L 199.5 -430.921875 L 268.5 -372.546875 L 268.5 -325.078125 L 269.5 0 L 169.5 0 L 168.5 -172.203125 L 107.5 -172.203125 Z M 107 -257.046875 L 168 -257.046875 L 168 -347.765625 L 107 -347.765625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1144,0)" data-letter="D" data-idx="4"><g class="logo-letter">
+        <path d="M 269.5 -55.859375 L 200.5 0.84375 L 30 0.421875 L 30 0 L 7.5 0 L 6.5 -429.65625 L 199.5 -429.65625 L 268.5 -371.28125 Z M 108 -83.578125 L 169 -83.578125 L 168 -359.9375 L 107 -359.9375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1430,0)" data-letter="R" data-idx="5"><g class="logo-letter">
+        <path d="M 108 0.421875 L 7.5 0.421875 L 7 -430.5 L 200 -430.5 L 269 -372.125 L 269 -324.65625 L 270 -233.515625 L 268.5 -233.09375 L 269 -230.15625 L 250 -214.203125 L 250.5 -214.203125 L 269.5 -198.234375 L 269 -195.296875 L 270.5 -194.875 L 270 0.421875 L 170 0.421875 L 169 -171.78125 L 108 -171.78125 Z M 107.5 -256.625 L 168.5 -256.625 L 168.5 -347.34375 L 107.5 -347.34375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1716,0)" data-letter="O" data-idx="6"><g class="logo-letter">
+        <path d="M 202 0.84375 L 76.5 0.84375 L 7.5 -57.546875 L 6.5 -372.546875 L 75.5 -430.921875 L 199 -430.921875 L 269 -371.703125 L 270 -56.703125 Z M 107 -350.28125 L 108 -82.3125 L 169.5 -82.3125 L 168.5 -349.4375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(2002,0)" data-letter="N" data-idx="7"><g class="logo-letter">
+        <path d="M 109 0.421875 L 8.5 0.421875 L 8.5 -198.65625 L 8 -198.65625 L 7 -430.5 L 108.5 -430.5 L 169.5 -263.34375 L 169.5 -430.5 L 270 -430.5 L 270 -324.65625 L 271 0.421875 L 170 0.421875 L 108.5 -162.546875 Z" fill="white"/>
+      </g></g>
+    </svg></a>
+  <a class="btn sm" id="navCta" href="/start">Deploy this team</a>
+</nav>
+<div id="root"><div class="wrap"><p class="msg">Loading your team.</p></div></div>
+<script>
+const PORTRAITS = {"0": "https://cdn.midjourney.com/92efcfd1-dfbc-4d7c-95dc-68145389ded7/0_0_640_N.webp", "1": "https://cdn.midjourney.com/6a071583-7f3c-48c1-82f0-dc84dca7a7dc/0_3_640_N.webp", "2": "https://cdn.midjourney.com/c1b551c1-b9be-4ea3-913a-493964680cc8/0_0_640_N.webp", "3": "https://cdn.midjourney.com/80c93915-0cf1-46a1-89d9-975d5058c5c4/0_0_640_N.webp", "4": "https://cdn.midjourney.com/5252d6cb-6f13-4106-8ee9-2a41334f94ac/0_0_640_N.webp", "5": "https://cdn.midjourney.com/76d2efd4-186a-4bc4-b4c0-99d7b0bbe260/0_1_640_N.webp", "6": "https://cdn.midjourney.com/e7b83e77-8b3c-4de8-851a-04f7cc4d8e00/0_2_640_N.webp", "7": "https://cdn.midjourney.com/6a071583-7f3c-48c1-82f0-dc84dca7a7dc/0_0_640_N.webp", "8": "https://cdn.midjourney.com/81f8b677-8adb-4605-84d5-68e3038b6eb2/0_0_640_N.webp", "9": "https://cdn.midjourney.com/c1b551c1-b9be-4ea3-913a-493964680cc8/0_2_640_N.webp", "10": "https://cdn.midjourney.com/5252d6cb-6f13-4106-8ee9-2a41334f94ac/0_2_640_N.webp", "11": "https://cdn.midjourney.com/92efcfd1-dfbc-4d7c-95dc-68145389ded7/0_3_640_N.webp", "12": "https://cdn.midjourney.com/80c93915-0cf1-46a1-89d9-975d5058c5c4/0_2_640_N.webp", "13": "https://cdn.midjourney.com/4e317a04-c78a-4324-849c-5b949ef55bb4/0_0_640_N.webp", "14": "https://cdn.midjourney.com/6a071583-7f3c-48c1-82f0-dc84dca7a7dc/0_1_640_N.webp", "15": "https://cdn.midjourney.com/e7b83e77-8b3c-4de8-851a-04f7cc4d8e00/0_0_640_N.webp", "16": "https://cdn.midjourney.com/92efcfd1-dfbc-4d7c-95dc-68145389ded7/0_1_640_N.webp", "17": "https://cdn.midjourney.com/81f8b677-8adb-4605-84d5-68e3038b6eb2/0_2_640_N.webp", "18": "https://cdn.midjourney.com/5252d6cb-6f13-4106-8ee9-2a41334f94ac/0_3_640_N.webp", "19": "https://cdn.midjourney.com/1bc06cc0-009c-446b-affb-e0ade63a844b/0_0_640_N.webp", "20": "https://cdn.midjourney.com/6a071583-7f3c-48c1-82f0-dc84dca7a7dc/0_2_640_N.webp", "21": "https://cdn.midjourney.com/4e317a04-c78a-4324-849c-5b949ef55bb4/0_3_640_N.webp", "22": "https://cdn.midjourney.com/1bc06cc0-009c-446b-affb-e0ade63a844b/0_1_640_N.webp", "23": "https://cdn.midjourney.com/81f8b677-8adb-4605-84d5-68e3038b6eb2/0_3_640_N.webp"};
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+const slug = (location.pathname.split('/demo/')[1] || new URLSearchParams(location.search).get('s') || '').replace(/\/$/, '');
+let playing = null;
+function play(idx, btn) {
+  if (playing) { playing.a.pause(); playing.b.textContent = 'Hear the voice'; if (playing.b === btn) { playing = null; return; } }
+  const a = new Audio('/api/tts?agent=' + idx + '&v=v4');
+  btn.textContent = 'Stop';
+  a.onended = () => { btn.textContent = 'Hear the voice'; playing = null; };
+  a.play().catch(() => { btn.textContent = 'Hear the voice'; });
+  playing = { a, b: btn };
+}
+(async () => {
+  const root = document.getElementById('root');
+  try {
+    const r = await fetch('/api/admin?action=demo&slug=' + encodeURIComponent(slug));
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || 'This demo does not exist.');
+    const deploy = '/start?url=' + encodeURIComponent(d.website);
+    document.getElementById('navCta').href = deploy;
+    document.title = `${d.name}: your Squadron team`;
+    root.innerHTML = `
+    <header><div class="wrap hero">
+      <p class="eyebrow">Built for ${esc(d.name)}</p>
+      <h1>${esc(d.name)}, meet your <em>customer-service team.</em></h1>
+      <p class="sub">Squadron read ${esc(d.website.replace(/^https?:\/\//, '').replace(/\/$/, ''))} and built this team of ${d.agents.length} AI agents. Each one manages one area and answers only from what ${esc(d.name)} publishes.</p>
+      <a class="btn" href="${deploy}">Deploy this team for my business</a>
+    </div></header>
+    <div class="wrap">
+      <div class="grid">${d.agents.map((a) => `
+        <div class="card">
+          <div class="art" style="background-image:url('${PORTRAITS[a.idx] || ''}')"></div>
+          <div class="body">
+            ${a.rank ? `<div class="rank">${esc(a.rank)}</div>` : ''}
+            <div class="name">${esc(a.persona)}</div>
+            <div class="title">${esc(a.title)}</div>
+            <p class="job">${esc(a.job)}</p>
+            ${a.greeting ? `<div class="greet">“${esc(a.greeting)}”</div>` : ''}
+            ${a.scope && a.scope.length ? `<div class="tags">${a.scope.map((s) => `<span class="tag">${esc(s)}</span>`).join('')}</div>` : ''}
+            ${Number.isInteger(a.idx) ? `<button class="btn sm" onclick="play(${a.idx}, this)">Hear the voice</button>` : ''}
+          </div>
+        </div>`).join('')}
+      </div>
+      <div class="rules">
+        <div><h3>Every agent is a manager</h3><p>Callers deal with a manager from the first word, and a problem goes to a higher-ranking manager when it needs one.</p></div>
+        <div><h3>Honest by design</h3><p>Each agent says it is AI at the start, and every call opens with a recording notice.</p></div>
+        <div><h3>A person when it matters</h3><p>When a question is outside what ${esc(d.name)} publishes, the agent takes a message or passes the customer to your staff.</p></div>
+      </div>
+      <div class="cta">
+        <h2>Put this team to work.</h2>
+        <p>Plans start at $39 a month for 250 voice minutes with unlimited web chat, paid in advance, with no contract.</p>
+        <a class="btn" href="${deploy}">Deploy this team for my business</a>
+      </div>
+      <footer>Squadron is a service of Island Global Co. <a href="/terms">Terms</a> · <a href="/privacy">Privacy</a> · <a href="mailto:info@squadron.tel">info@squadron.tel</a></footer>
+    </div>`;
+  } catch (e) {
+    root.innerHTML = `<div class="wrap"><p class="msg">${esc(e.message)} <a href="/">Go to Squadron</a>.</p></div>`;
+  }
+})();
+</script>
+</body>
+</html>

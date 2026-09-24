@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOSS · Squadron</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--pale:#EAF2FC;--gray:#F5F7FA;--ink:#0B1E45;--ink-2:#44536F;--blue:#1F5FD1;--blue-2:#174BAA;--line:#DCE4EF;--green:#127A3A;--red:#B42318;--amber:#8A5A00}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--gray);color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh}
+a{color:var(--blue)}
+nav{position:sticky;top:0;z-index:50;background:rgba(245,247,250,0.92);backdrop-filter:blur(18px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:72px}
+.nav-logo{background:var(--ink);padding:9px 14px;border-radius:8px;line-height:0;display:inline-flex}
+.nav-logo svg{height:20px;width:auto}
+.nav-right{display:flex;gap:22px;font-size:17px;font-weight:600}
+.nav-right a{color:var(--ink-2);text-decoration:none}
+.nav-right a:hover{color:var(--ink)}
+main{max-width:1320px;margin:0 auto;padding:48px 24px 120px}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:700;color:var(--blue);background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 14px 7px 10px;margin-bottom:18px}
+.eyebrow::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--blue)}
+h1{font-family:'Inter Tight',sans-serif;font-weight:700;font-size:clamp(48px,6vw,84px);letter-spacing:-0.045em;line-height:0.98;margin-bottom:16px}
+h2{font-family:'Inter Tight',sans-serif;font-weight:700;font-size:32px;letter-spacing:-0.03em;margin-bottom:14px}
+.lead{font-size:21px;line-height:1.5;color:var(--ink-2);max-width:820px;margin-bottom:32px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:28px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.stat .k{font-size:14px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-2)}
+.stat .v{font-family:'Inter Tight',sans-serif;font-weight:700;font-size:44px;line-height:1;margin-top:6px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px;margin-bottom:18px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+input,textarea,select{font:inherit;font-size:17px;font-weight:500;padding:13px 16px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--ink);outline:none;min-width:0}
+input:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(31,95,209,0.12)}
+input.grow{flex:1;min-width:220px}
+textarea{width:100%;min-height:320px;line-height:1.55}
+.btn{font:inherit;font-size:16px;font-weight:700;padding:13px 20px;border-radius:999px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-block}
+.btn:hover{background:var(--blue);border-color:var(--blue)}
+.btn.ghost{background:#fff;color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--ink)}
+.btn.sm{font-size:15px;padding:9px 14px}
+.btn.warn{background:var(--red);border-color:var(--red)}
+.btn:disabled{opacity:0.45;cursor:default}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.f{font:inherit;font-size:15px;font-weight:700;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink-2);cursor:pointer}
+.f.on{border-color:var(--ink);background:var(--ink);color:#fff}
+table{width:100%;border-collapse:collapse}
+th{font-size:14px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-2);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}
+td{font-size:17px;padding:14px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+td .sub{font-size:15px;color:var(--ink-2);margin-top:3px;word-break:break-all}
+td input{width:100%;font-size:16px;padding:9px 12px}
+.pill{display:inline-block;font-size:14px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--pale);color:var(--ink);white-space:nowrap}
+.pill.ready{background:#E3F4E9;color:var(--green)}
+.pill.sent{background:#E6EEFB;color:var(--blue-2)}
+.pill.failed,.pill.unsubscribed{background:#FDECEA;color:var(--red)}
+.pill.replied{background:#FFF4DB;color:var(--amber)}
+.acts{display:flex;gap:6px;flex-wrap:wrap}
+.log{font-family:ui-monospace,Menlo,monospace;font-size:15px;line-height:1.55;background:var(--ink);color:#E8EEF8;border-radius:12px;padding:18px 20px;max-height:340px;overflow:auto;white-space:pre-wrap}
+.error{display:none;background:#FDECEA;color:var(--red);border:1px solid #F5C2BC;border-radius:10px;padding:14px 16px;font-size:17px;font-weight:600;margin-bottom:18px}
+.note{font-size:16px;color:var(--ink-2);line-height:1.5}
+.emails{font-size:14px;color:var(--ink-2);margin-top:4px}
+.emails button{font:inherit;font-size:14px;border:none;background:none;color:var(--blue);cursor:pointer;padding:0 6px 0 0;text-decoration:underline}
+dialog{border:none;border-radius:16px;padding:0;max-width:880px;width:94vw;box-shadow:0 30px 80px rgba(11,30,69,0.3)}
+dialog::backdrop{background:rgba(11,30,69,0.4)}
+.dlg{padding:26px}
+.dlg label{display:block;font-size:14px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-2);margin:14px 0 6px}
+.dlg input{width:100%}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/" aria-label="Squadron"><svg class="nav-logo-svg" viewBox="0 -430 2278 492" xmlns="http://www.w3.org/2000/svg" aria-label="Squadron">
+      <g transform="translate(0,0)" data-letter="S" data-idx="0"><g class="logo-letter">
+        <path d="M 6 -371.28125 L 75 -429.65625 L 199 -429.65625 L 268 -371.28125 L 268.5 -304.921875 L 167.5 -304.921875 L 167.5 -349.015625 L 106.5 -349.015625 L 106.5 -259.5625 L 268 -259.984375 L 270 -57.953125 L 201 0.421875 L 77 0.421875 L 8 -57.953125 L 7.5 -124.3125 L 108.5 -124.3125 L 108.5 -80.21875 L 169.5 -80.21875 L 169.5 -169.6875 L 148.5 -169.6875 L 148.5 -169.265625 L 8 -169.265625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(286,0)" data-letter="Q" data-idx="1"><g class="logo-letter">
+        <path d="M 200 0.84375 L 187.5 0.84375 L 187.5 63.421875 L 87 63.421875 L 87 0.84375 L 74.5 0.84375 L 5.5 -57.546875 L 5.5 -370.015625 L 74.5 -428.40625 L 198 -428.40625 L 268 -369.1875 L 268 -56.703125 Z M 106 -347.765625 L 106 -82.3125 L 167.5 -82.3125 L 167.5 -346.921875 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(572,0)" data-letter="U" data-idx="2"><g class="logo-letter">
+        <path d="M 6.5 -428.40625 L 108 -428.40625 L 108 -83.15625 L 169 -83.15625 L 169 -352.796875 L 169.5 -352.796875 L 169.5 -429.234375 L 269.5 -429.234375 L 269.5 -58.375 L 200.5 0 L 76.5 0 L 7.5 -58.375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(858,0)" data-letter="A" data-idx="3"><g class="logo-letter">
+        <path d="M 107.5 0 L 7 0 L 7 -199.078125 L 6.5 -199.078125 L 6.5 -372.546875 L 75.5 -430.921875 L 199.5 -430.921875 L 268.5 -372.546875 L 268.5 -325.078125 L 269.5 0 L 169.5 0 L 168.5 -172.203125 L 107.5 -172.203125 Z M 107 -257.046875 L 168 -257.046875 L 168 -347.765625 L 107 -347.765625 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1144,0)" data-letter="D" data-idx="4"><g class="logo-letter">
+        <path d="M 269.5 -55.859375 L 200.5 0.84375 L 30 0.421875 L 30 0 L 7.5 0 L 6.5 -429.65625 L 199.5 -429.65625 L 268.5 -371.28125 Z M 108 -83.578125 L 169 -83.578125 L 168 -359.9375 L 107 -359.9375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1430,0)" data-letter="R" data-idx="5"><g class="logo-letter">
+        <path d="M 108 0.421875 L 7.5 0.421875 L 7 -430.5 L 200 -430.5 L 269 -372.125 L 269 -324.65625 L 270 -233.515625 L 268.5 -233.09375 L 269 -230.15625 L 250 -214.203125 L 250.5 -214.203125 L 269.5 -198.234375 L 269 -195.296875 L 270.5 -194.875 L 270 0.421875 L 170 0.421875 L 169 -171.78125 L 108 -171.78125 Z M 107.5 -256.625 L 168.5 -256.625 L 168.5 -347.34375 L 107.5 -347.34375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(1716,0)" data-letter="O" data-idx="6"><g class="logo-letter">
+        <path d="M 202 0.84375 L 76.5 0.84375 L 7.5 -57.546875 L 6.5 -372.546875 L 75.5 -430.921875 L 199 -430.921875 L 269 -371.703125 L 270 -56.703125 Z M 107 -350.28125 L 108 -82.3125 L 169.5 -82.3125 L 168.5 -349.4375 Z" fill="white"/>
+      </g></g>
+      <g transform="translate(2002,0)" data-letter="N" data-idx="7"><g class="logo-letter">
+        <path d="M 109 0.421875 L 8.5 0.421875 L 8.5 -198.65625 L 8 -198.65625 L 7 -430.5 L 108.5 -430.5 L 169.5 -263.34375 L 169.5 -430.5 L 270 -430.5 L 270 -324.65625 L 271 0.421875 L 170 0.421875 L 108.5 -162.546875 Z" fill="white"/>
+      </g></g>
+    </svg></a>
+  <span class="nav-right"><a href="/account">Account</a><a href="/">Site</a></span>
+</nav>
+<main>
+  <p class="eyebrow">BOSS</p>
+  <h1>Prospects.</h1>
+  <p class="lead">Find businesses, build each one a private demo team from its website, and email the demo link. Every email carries the postal address and a one-click unsubscribe, and addresses that opt out are never emailed again.</p>
+  <div class="error" id="err"></div>
+  <div id="gate"></div>
+  <div id="app" style="display:none">
+    <div class="stats" id="stats"></div>
+    <div class="grid2">
+      <div class="panel">
+        <h2>Find businesses</h2>
+        <div class="row"><input class="grow" id="q" placeholder="Dentists in Austin, TX"><select id="qn"><option>5</option><option selected>10</option><option>15</option><option>20</option></select><button class="btn" id="findBtn" onclick="find()">Find</button></div>
+        <p class="note" style="margin-top:10px">Web search returns independent businesses with their own websites. Chains are skipped.</p>
+      </div>
+      <div class="panel">
+        <h2>Add one</h2>
+        <div class="row"><input class="grow" id="aw" placeholder="https://business.com"><input class="grow" id="ae" placeholder="Email (optional)"><button class="btn" onclick="addOne()">Add</button></div>
+        <p class="note" style="margin-top:10px">Squadron reads the site for published contact emails when it builds the demo.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="row" style="justify-content:space-between;margin-bottom:12px">
+        <h2 style="margin:0">Pipeline</h2>
+        <div class="row"><button class="btn ghost sm" id="buildAll" onclick="buildAll()">Build demos for all new</button><button class="btn sm" id="sendAll" onclick="sendAll()">Send all ready</button></div>
+      </div>
+      <div class="filters" id="filters"></div>
+      <div style="overflow-x:auto"><table><thead><tr><th>Business</th><th style="width:300px">Email</th><th>Status</th><th>Actions</th></tr></thead><tbody id="rows"></tbody></table></div>
+    </div>
+    <div class="panel">
+      <h2>Build log</h2>
+      <div class="log" id="log">Nothing has run yet.</div>
+    </div>
+  </div>
+</main>
+<dialog id="dlg"><div class="dlg">
+  <h2 id="dTitle">Email</h2>
+  <p class="note" id="dMeta"></p>
+  <label>Subject</label><input id="dSubj">
+  <label>Body</label><textarea id="dBody"></textarea>
+  <p class="note" style="margin-top:8px">The footer with the postal address and unsubscribe link is added when it sends.</p>
+  <div class="row" style="margin-top:16px;justify-content:space-between">
+    <div class="row"><button class="btn ghost sm" onclick="saveDraft()">Save</button><button class="btn ghost sm" onclick="redraft()">Reset to template</button><button class="btn ghost sm" onclick="sendOne(true)">Send test to me</button></div>
+    <div class="row"><button class="btn ghost sm" onclick="dlg.close()">Close</button><button class="btn sm" id="dSend" onclick="sendOne(false)">Send</button></div>
+  </div>
+</div></dialog>
+<script>
+const $ = (id) => document.getElementById(id);
+const dlg = $('dlg');
+let D = null, filter = 'all', openId = null, armed = null;
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+function err(m) { $('err').textContent = m || ''; $('err').style.display = m ? 'block' : 'none'; }
+function log(m) { const l = $('log'); if (l.dataset.fresh !== '1') { l.textContent = ''; l.dataset.fresh = '1'; } l.textContent += m + '\n'; l.scrollTop = l.scrollHeight; }
+async function api(body, q) {
+  const r = await fetch('/api/admin' + (q || ''), { method: body ? 'POST' : 'GET', headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined, credentials: 'same-origin' });
+  const j = await r.json().catch(() => ({ error: 'Bad response (HTTP ' + r.status + ')' }));
+  if (!r.ok) { const e = new Error(j.error || ('HTTP ' + r.status)); e.status = r.status; throw e; }
+  return j;
+}
+async function load() {
+  try { D = await api(null, '?action=list'); }
+  catch (e) {
+    if (e.status === 401 || e.status === 403) { $('gate').innerHTML = `<div class="panel"><p class="lead" style="margin:0 0 16px">${esc(e.message)}</p><a class="btn" href="/account">Log in</a></div>`; return; }
+    return err(e.message);
+  }
+  $('app').style.display = 'block'; err('');
+  render();
+}
+const ORDER = ['all', 'new', 'crawled', 'profiled', 'ready', 'sent', 'replied', 'failed', 'unsubscribed'];
+function render() {
+  const c = D.counts || {}, n = D.prospects.length;
+  $('stats').innerHTML = [['Prospects', n], ['Ready to send', c.ready || 0], ['Emailed', (c.sent || 0) + (c.replied || 0)], ['Sent in 24h', `${D.sentToday} / ${D.dailyCap}`]].map(([k, v]) => `<div class="stat"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
+  $('filters').innerHTML = ORDER.filter((k) => k === 'all' || c[k]).map((k) => `<button class="f ${filter === k ? 'on' : ''}" onclick="filter='${k}';render()">${k === 'all' ? 'All' : k[0].toUpperCase() + k.slice(1)} ${k === 'all' ? n : c[k]}</button>`).join('');
+  const list = D.prospects.filter((p) => filter === 'all' || p.status === filter);
+  $('rows').innerHTML = list.length ? list.map(row).join('') : `<tr><td colspan="4" class="note">No prospects here yet.</td></tr>`;
+  $('sendAll').textContent = armed === 'all' ? `Click again to send ${readyList().length}` : 'Send all ready';
+}
+function row(p) {
+  const found = (p.emails_found || []).filter((e) => e !== p.email);
+  const built = !!p.slug;
+  return `<tr>
+    <td><strong>${esc(p.name || p.domain)}</strong><div class="sub"><a href="${esc(p.website)}" target="_blank" rel="noopener">${esc(p.domain)}</a>${p.city ? ' · ' + esc(p.city) : ''}${p.category ? ' · ' + esc(p.category) : ''}</div>${p.error ? `<div class="sub" style="color:var(--red)">${esc(p.error)}</div>` : ''}</td>
+    <td><input value="${esc(p.email || '')}" placeholder="No email found" onchange="setEmail('${p.id}', this.value)">${found.length ? `<div class="emails">Also found: ${found.map((e) => `<button onclick="setEmail('${p.id}','${esc(e)}')">${esc(e)}</button>`).join('')}</div>` : ''}</td>
+    <td><span class="pill ${esc(p.status)}">${esc(p.status)}</span>${p.sends ? `<div class="sub">Emailed ${p.sends}×</div>` : ''}</td>
+    <td><div class="acts">
+      <button class="btn sm ${built ? 'ghost' : ''}" onclick="build('${p.id}')">${built ? 'Rebuild' : 'Build demo'}</button>
+      ${built ? `<a class="btn ghost sm" href="/demo/${esc(p.slug)}" target="_blank" rel="noopener">Demo</a><button class="btn ghost sm" onclick="openEmail('${p.id}')">Email</button>` : ''}
+      ${p.status === 'sent' ? `<button class="btn ghost sm" onclick="mark('${p.id}','replied')">Replied</button>` : ''}
+      <button class="btn ghost sm" onclick="del('${p.id}')">${armed === 'del:' + p.id ? 'Confirm' : 'Remove'}</button>
+    </div></td></tr>`;
+}
+function readyList() { return D.prospects.filter((p) => p.status === 'ready' && p.email && !p.sends); }
+async function find() {
+  const q = $('q').value.trim(); if (!q) return;
+  const b = $('findBtn'); b.disabled = true; b.textContent = 'Searching';
+  log(`Searching: ${q}`);
+  try { const r = await api({ action: 'find', query: q, count: +$('qn').value }); log(`Found ${r.found}, added ${r.added}, already listed ${r.duplicates}.`); await load(); }
+  catch (e) { err(e.message); log('Search failed: ' + e.message); }
+  b.disabled = false; b.textContent = 'Find';
+}
+async function addOne() {
+  try { const r = await api({ action: 'add', website: $('aw').value, email: $('ae').value }); log(r.duplicate ? `${r.prospect.domain} is already listed.` : `Added ${r.prospect.domain}.`); $('aw').value = ''; $('ae').value = ''; await load(); }
+  catch (e) { err(e.message); }
+}
+async function setEmail(id, v) { try { await api({ action: 'update', id, email: v }); await load(); } catch (e) { err(e.message); } }
+async function mark(id, status) { try { await api({ action: 'update', id, status }); await load(); } catch (e) { err(e.message); } }
+async function del(id) {
+  if (armed !== 'del:' + id) { armed = 'del:' + id; render(); return; }
+  armed = null; try { await api({ action: 'delete', id }); await load(); } catch (e) { err(e.message); }
+}
+async function build(id) {
+  const p = D.prospects.find((x) => x.id === id); const name = p ? (p.name || p.domain) : id;
+  const t0 = Date.now();
+  try {
+    log(`— ${name}: reading ${p.website}`);
+    const c = await api({ action: 'crawl', id });
+    if (!c.ok) { log(`  failed: ${c.error}`); await load(); return false; }
+    log(`  read ${c.pages} pages, ${Math.round(c.chars / 1000)}k characters; emails: ${c.emails.join(', ') || 'none'}`);
+    log('  building the Business Profile');
+    const pr = await api({ action: 'profile', id });
+    const P = pr.profile || {}; const cnt = (k) => (P[k] || []).length;
+    log(`  profile in ${(pr.ms / 1000).toFixed(1)}s (${pr.model}): ${P.company && P.company.name && P.company.name.value || 'no name'} · ${cnt('services') + cnt('products')} services/products · ${cnt('pricing')} prices · ${cnt('faqs')} FAQs · ${cnt('policies')} policies · ${cnt('hours')} hours rows`);
+    log('  building the team');
+    const tm = await api({ action: 'team', id });
+    log(`  team in ${(tm.ms / 1000).toFixed(1)}s: ${tm.agents.map((a) => `${a.persona} (${a.title})`).join(', ')}`);
+    log(`  demo: ${tm.demo}  · total ${((Date.now() - t0) / 1000).toFixed(0)}s`);
+    await load(); return true;
+  } catch (e) { log(`  failed: ${e.message}`); err(e.message); await load(); return false; }
+}
+async function buildAll() {
+  const b = $('buildAll'); b.disabled = true;
+  const list = D.prospects.filter((p) => p.status === 'new');
+  for (let i = 0; i < list.length; i++) { b.textContent = `Building ${i + 1} of ${list.length}`; await build(list[i].id); }
+  b.disabled = false; b.textContent = 'Build demos for all new';
+}
+function openEmail(id) {
+  const p = D.prospects.find((x) => x.id === id); openId = id;
+  $('dTitle').textContent = p.name || p.domain;
+  $('dMeta').textContent = `To ${p.email || '(no email yet)'} · From ${D.from} · Replies to ${D.replyTo}`;
+  $('dSubj').value = p.subject || ''; $('dBody').value = p.body || '';
+  $('dSend').textContent = p.sends ? 'Send follow-up' : 'Send';
+  dlg.showModal();
+}
+async function saveDraft() { try { await api({ action: 'update', id: openId, subject: $('dSubj').value, body: $('dBody').value }); await load(); log('Draft saved.'); } catch (e) { err(e.message); } }
+async function redraft() { try { const r = await api({ action: 'redraft', id: openId }); $('dSubj').value = r.prospect.subject; $('dBody').value = r.prospect.body; await load(); } catch (e) { err(e.message); } }
+async function sendOne(test) {
+  const p = D.prospects.find((x) => x.id === openId);
+  try {
+    await api({ action: 'update', id: openId, subject: $('dSubj').value, body: $('dBody').value });
+    const r = await api({ action: 'send', id: openId, test, again: !!p.sends });
+    log(`${test ? 'Test sent' : 'Sent'} to ${r.to} (${r.resendId}).`);
+    if (!test) dlg.close();
+    await load();
+  } catch (e) { alertIn(e.message); }
+}
+function alertIn(m) { $('dMeta').textContent = m; $('dMeta').style.color = 'var(--red)'; setTimeout(() => { $('dMeta').style.color = ''; }, 6000); }
+async function sendAll() {
+  const list = readyList();
+  if (!list.length) { log('Nothing is ready to send: build a demo and make sure the prospect has an email.'); return; }
+  if (armed !== 'all') { armed = 'all'; render(); return; }
+  armed = null; render();
+  for (const p of list) {
+    try { const r = await api({ action: 'send', id: p.id }); log(`Sent to ${r.to}.`); }
+    catch (e) { log(`${p.domain}: ${e.message}`); if (e.status === 429) break; }
+  }
+  await load();
+}
+load();
+</script>
+</body>
+</html>

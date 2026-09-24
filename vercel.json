@@ -86,6 +86,9 @@
     },
     "api/sweep.js": {
       "maxDuration": 60
+    },
+    "api/admin.js": {
+      "maxDuration": 300
     }
   },
   "routes": [
@@ -252,6 +255,22 @@
     {
       "src": "/privacy",
       "dest": "/privacy.html"
+    },
+    {
+      "src": "/admin",
+      "dest": "/admin.html"
+    },
+    {
+      "src": "/boss",
+      "dest": "/admin.html"
+    },
+    {
+      "src": "/api/admin",
+      "dest": "/api/admin.js"
+    },
+    {
+      "src": "/demo/(?<slug>[a-z0-9-]+)/?",
+      "dest": "/demo.html"
     },
     {
       "src": "/(.*)",
