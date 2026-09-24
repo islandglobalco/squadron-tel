@@ -179,3 +179,5 @@ body.home .cta-email{min-width:300px!important}
 #sqSoundToggle[aria-pressed="false"]{color:#44536F}
 @media(max-width:600px){#sqSoundToggle span{display:none}#sqSoundToggle{padding:12px}}
 
+
+@media (prefers-reduced-motion:reduce){body.home .hero-art video{display:none}}
