@@ -1238,6 +1238,7 @@ details[open] .faq-q{color:var(--signal);}
 // ═══════════════════════════════════════════════
 let audioCtx = null;
 function getAudio(){
+  if(window.sqMuted) throw new Error('muted');
   if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
   if(audioCtx.state==='suspended') audioCtx.resume();
   return audioCtx;
@@ -1333,6 +1334,30 @@ function playChime(){
       g.gain.exponentialRampToValueAtTime(0.001,now+i*0.03+0.5);
       osc.connect(g); g.connect(ctx.destination);
       osc.start(now+i*0.03); osc.stop(now+i*0.03+0.6);
+    });
+  }catch(e){}
+}
+
+// Confetti sound (logo hover): a soft pop, then a bright rising sparkle
+function playConfettiSound(){
+  try{
+    const ctx=getAudio(); if(ctx.state==='suspended') ctx.resume();
+    const now=ctx.currentTime;
+    const buf=ctx.createBuffer(1,Math.floor(ctx.sampleRate*0.12),ctx.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,3);
+    const src=ctx.createBufferSource(); src.buffer=buf;
+    const hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=1200;
+    const pg=ctx.createGain(); pg.gain.value=0.18;
+    src.connect(hp); hp.connect(pg); pg.connect(ctx.destination);
+    src.start(now); src.stop(now+0.12);
+    [1047,1319,1568,2093,2637].forEach((f,i)=>{
+      const t=now+0.04+i*0.045;
+      const osc=ctx.createOscillator(); osc.type='triangle'; osc.frequency.value=f;
+      const g=ctx.createGain();
+      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.07,t+0.01); g.gain.exponentialRampToValueAtTime(0.001,t+0.45);
+      osc.connect(g); g.connect(ctx.destination);
+      osc.start(t); osc.stop(t+0.5);
     });
   }catch(e){}
 }
@@ -1489,7 +1514,7 @@ document.querySelectorAll('[data-sound]').forEach(el=>{
 document.querySelectorAll('.portrait-card').forEach(card=>{
   let cardCooldown=false;
   card.addEventListener('mouseenter',()=>{
-    if(!cardCooldown){playChime();cardCooldown=true;setTimeout(()=>cardCooldown=false,600);}
+    /* crew-card hover sound now comes from sq-sfx.js (radio beep) */
   });
 });
 
@@ -1688,7 +1713,7 @@ document.addEventListener('click',e=>{
 <script>
 // ── CONFETTI ──────────────────────────────────────────────────────────────────
 (function(){
-  const COLORS=['#FFD460','#FFD700','#FFF0A0','#FFC62E','#ffffff','#E5AC12','#ffe066'];
+  const COLORS=['#1F5FD1','#3B7BE8','#6F9BE6','#A9C4F2','#0B1E45','#C3CBD6','#9AA6B4','#DDE3EA','#B8C2CF'];
   let particles=[], raf=null, canvas, ctx, running=false;
 
   function initCanvas(){
@@ -1763,7 +1788,12 @@ document.addEventListener('click',e=>{
 
   document.addEventListener('DOMContentLoaded',()=>{
     const logo=document.getElementById('navLogo');
-    /* confetti retired */
+    let lastBurst=0;
+    if(logo) logo.addEventListener('mouseenter',function(){
+      const t=Date.now(); if(t-lastBurst<1500) return; lastBurst=t;
+      window.triggerConfetti();
+      if(typeof playConfettiSound==='function') playConfettiSound();
+    });
   });
 })();
 
