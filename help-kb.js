@@ -97,7 +97,7 @@ export const ARTICLES = [
   // ---- Billing ----
   { id: 'pricing', cat: 'billing', q: 'How much does Squadron cost?',
     keys: 'price pricing cost how much plans basic pro command center battalion tiers enterprise large high volume',
-    a: `Plans are prepaid for 30 days: Basic is $39 with 250 AI voice minutes, Pro is $79 with 650 minutes, Command Center is $199 with 2,000 minutes, and Battalion is $899 with 10,000 minutes. Every plan includes the full team and unlimited web chat. On Basic, Pro and Command Center, extra voice minutes cost 25¢ each, prepaid in blocks of 100. On Battalion, minutes beyond 10,000 draw on prepaid overage credit at Squadron's cost plus 1¢ a minute.` },
+    a: `Plans are prepaid for 30 days: Basic is $39 with 250 AI voice minutes, Pro is $79 with 650 minutes, Command Center is $199 with 2,000 minutes, and Battalion is $999 with 10,000 minutes. Every plan includes the full team and unlimited web chat. On Basic, Pro and Command Center, extra voice minutes cost 25¢ each, prepaid in blocks of 100. On Battalion, minutes beyond 10,000 draw on prepaid overage credit at Squadron's cost plus 1¢ a minute.` },
   { id: 'no-surprise-bills', cat: 'billing', q: 'Can I get a surprise bill?',
     keys: 'surprise bill overage charges hidden fees extra charges bill after auto upgrade',
     a: `No. Squadron is prepaid and never bills you after the fact. When a period's prepaid amount is used, your team pauses and Squadron emails you a top-up invoice. There is no automatic upgrade, no per-agent fee and no hidden overage rate.` },

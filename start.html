@@ -217,7 +217,7 @@ async function analyze(skipCrawl) {
 }
 // Squadron is prepaid, so the profile and team are built after the plan is
 // paid. Reading the site costs nothing and happens first.
-const PLAN_CHOICES = [['basic', 'Basic', '$39', '250 voice minutes'], ['pro', 'Pro', '$79', '650 voice minutes'], ['center', 'Command Center', '$199', '2,000 voice minutes'], ['battalion', 'Battalion', '$899', '10,000 voice minutes']];
+const PLAN_CHOICES = [['basic', 'Basic', '$39', '250 voice minutes'], ['pro', 'Pro', '$79', '650 voice minutes'], ['center', 'Command Center', '$199', '2,000 voice minutes'], ['battalion', 'Battalion', '$999', '10,000 voice minutes']];
 async function payGate() {
   const box = $('payBox'); box.classList.remove('hidden');
   $('s2lead').textContent = 'Your site is read. Squadron is prepaid, so your profile and team are built as soon as your first 30 days are paid.';

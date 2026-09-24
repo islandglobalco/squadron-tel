@@ -110,7 +110,7 @@ export const PLANS = {
   center: { name: 'Command Center', price: 199, minutes: 2000 },
   // Battalion: flat fee for 10,000 minutes; minutes beyond that draw on
   // prepaid overage credit at Squadron's measured cost plus 1 cent a minute.
-  battalion: { name: 'Battalion', price: 899, minutes: 10000, metered: true },
+  battalion: { name: 'Battalion', price: 999, minutes: 10000, metered: true },
 };
 // Earlier plan ids map to the current plans.
 const ALIASES = { scout: 'basic', commander: 'pro', hq: 'center', trial: 'none' };
