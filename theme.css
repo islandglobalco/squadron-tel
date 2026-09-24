@@ -79,17 +79,17 @@ body.home .portrait-card:hover{transform:translateY(-4px);box-shadow:0 22px 50px
 body.home .agent-art{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;background:#fff;mix-blend-mode:multiply;filter:none!important;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
 body.home .portrait-card:hover .agent-art{transform:scale(1.03)}
 body.home .portrait-card .helmet{position:absolute;top:14px;left:14px;right:auto;width:44px;height:44px;aspect-ratio:auto;z-index:2}
-body.home .portrait-card .helmet img{width:100%;height:100%;display:block;border-radius:10px;box-shadow:0 4px 14px rgba(11,30,69,0.18)}
-body.home .portrait-overlay{position:static!important;background:#fff!important;padding:16px 18px 20px!important;border-left:none!important;border-top:1px solid var(--line)}
-body.home .portrait-card:hover .portrait-overlay{padding-bottom:20px!important}
+body.home .portrait-card .helmet img,body.home .portrait-card .helmet svg{width:100%;height:100%;display:block;border-radius:10px;box-shadow:0 4px 12px rgba(11,30,69,0.12)}
+body.home .portrait-overlay{position:static!important;background:#fff!important;padding:16px 80px 20px 18px!important;border-left:none!important;border-top:1px solid var(--line)}
+body.home .portrait-card:hover .portrait-overlay{padding-bottom:20px!important;padding-right:80px!important}
 body.home .portrait-rank{font-family:var(--label);font-size:13px;font-weight:600;letter-spacing:0.02em;text-transform:none;color:var(--blue);margin-bottom:2px}
 body.home .portrait-name{font-size:28px!important;font-weight:600!important;letter-spacing:-0.02em!important;margin-bottom:2px!important}
 body.home .portrait-role{font-family:var(--label);font-size:15px!important;font-weight:500!important;letter-spacing:0!important;text-transform:none!important;color:var(--ink-2)!important;opacity:1!important}
-body.home .voice-btn{top:auto!important;bottom:auto!important;left:auto!important;right:14px!important;transform:none!important;margin-top:14px;top:0!important;position:absolute;opacity:1!important;border-radius:50%!important;background:#fff!important;border:1px solid var(--line)!important;width:48px!important;height:48px!important;box-shadow:0 6px 18px rgba(11,30,69,0.12)!important;backdrop-filter:none!important;clip-path:none!important}
+body.home .voice-btn{top:auto!important;bottom:22px!important;left:auto!important;right:18px!important;transform:none!important;margin-top:0;position:absolute;opacity:1!important;border-radius:50%!important;background:#fff!important;border:1px solid var(--line)!important;width:48px!important;height:48px!important;box-shadow:0 6px 18px rgba(11,30,69,0.12)!important;backdrop-filter:none!important;clip-path:none!important}
 body.home .voice-btn:hover{transform:scale(1.06)!important}
 body.home .voice-btn svg{fill:var(--ink)!important}
 body.home .voice-btn.playing::before{border-color:var(--ink)!important}
-body.home .voice-waveform{bottom:auto!important;top:74px}
+body.home .voice-waveform{top:auto!important;bottom:34px!important;left:auto!important;right:78px!important}
 body.home .wave-bar{background:var(--blue)!important}
 
 /* How it works */
