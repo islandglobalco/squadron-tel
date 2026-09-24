@@ -38,7 +38,7 @@
     sqShowTyping();
     setTimeout(()=>{
       sqHideTyping();
-      sqAddMsg("Hey! I'm **Ace**, Squadron's AI assistant. I answer questions about Squadron's pricing, setup, agents and channels.",'agent');
+      sqAddMsg("I'm **Ace**, Squadron's AI assistant. I can answer questions about pricing, setup, agents and channels.",'agent');
     },800);
   }
 

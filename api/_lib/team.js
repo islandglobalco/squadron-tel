@@ -40,7 +40,7 @@ Rules:
 2. Add a specialist only when the profile shows a need for it. Examples: a scheduling agent when the business takes appointments or reservations; a billing agent when there are prices, plans, invoices or payments; a returns agent when there are return, refund or shipping policies; a technical agent when the business sells software, an app, or equipment that needs troubleshooting; a sales agent when there are products or services to compare and buy; an emergency dispatch agent when the business handles urgent situations (repairs, medical, security, outages). Do not add an agent for a need the profile does not show.
 3. Each agent's scope must be drawn from the profile. Do not invent products, policies or capabilities.
 4. Escalation rules must be concrete: what triggers a transfer to a person, what the agent does when it does not have the answer (it says so and takes a message), and what it never does (for example it never quotes a price that is not in the profile).
-5. Greetings must identify the agent by name, state plainly that it is an AI agent for the business, and offer help, in one or two complete sentences.
+5. Greetings must identify the agent by name, state plainly that it is an AI agent for the business, and offer help, in one or two calm, plain complete sentences with no exclamation marks.
 6. Personas: pick from this library, matching the tone to the role, and never reuse a persona within the team. Library: ${PERSONAS.map((p) => `${p.name} (${p.tone})`).join('; ')}.
 Write every sentence as a complete sentence.`;
 

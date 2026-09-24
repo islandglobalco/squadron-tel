@@ -3,35 +3,35 @@
 // Output is lossless WAV (24 kHz PCM) so previews never carry MP3 compression artifacts.
 
 const AGENTS = [
-  { name: 'Nighthawk', voice: 'coral', tone: 'Warm, welcoming and upbeat, like a friendly onboarding specialist smiling while she talks.', text: "Hi, I'm Nighthawk. I specialize in customer onboarding — making sure every new user gets set up fast and feels supported from their very first interaction." },
-  { name: 'Relay', voice: 'sage', tone: 'Bright, quick and clever, a confident technical problem-solver.', text: "Hey there, I'm Relay. I handle technical support and troubleshooting. Give me your toughest problems — I'm wired to solve them." },
-  { name: 'Ricochet', voice: 'marin', tone: 'Smooth, polished and reassuring, a trusted account manager.', text: "Hello, I'm Ricochet. I focus on account management and retention. I build lasting relationships and make sure customers stay happy long-term." },
-  { name: 'Torque', voice: 'cedar', tone: 'Deep, calm and steady, an authoritative enterprise engineer.', text: "I'm Torque. Enterprise integrations and complex deployments are my domain. I connect your stack and keep everything running at scale." },
-  { name: 'Sparrow', voice: 'verse', tone: 'Energetic, fast and charismatic, an enthusiastic sales rep.', text: "Hey! I'm Sparrow. I'm your sales development rep — fast, personable, and great at qualifying leads and booking demos in real time." },
-  { name: 'Flightline', voice: 'shimmer', tone: 'Clear, gentle and patient, explaining billing without friction.', text: "Hi, I'm Flightline. I handle billing and subscription questions with clarity and care. No confusion, no friction — just clear answers." },
-  { name: 'Scramble', voice: 'onyx', tone: 'Firm, commanding and composed, taking charge of a critical escalation.', text: "I'm Scramble. I'm built for high-stakes support escalations. When the situation is critical, I take charge and deliver results." },
-  { name: 'Locksmith', voice: 'nova', tone: 'Sunny, proactive and encouraging, a customer success lead.', text: "Hi there, I'm Locksmith. I specialize in customer success — proactively reaching out to ensure your team gets maximum value from Squadron." },
-  { name: 'Ledger', voice: 'ash', tone: 'Relaxed, knowledgeable and friendly, a product expert.', text: "I'm Ledger. I handle product questions and feature guidance. Ask me anything about how Squadron works — I know every detail." },
-  { name: 'Briefer', voice: 'coral', tone: 'Upbeat and alert, a cheerful late-night agent who never gets tired.', text: "Hey, I'm Briefer. I'm your 24/7 after-hours agent — always on, always ready, making sure no customer inquiry ever goes unanswered." },
-  { name: 'Boomerang', voice: 'ballad', tone: 'Easygoing, smooth and reassuring, a returning-customer specialist.', text: "I'm Boomerang. I look after returning customers and pick up right where your last conversation left off." },
-  { name: 'Brass', voice: 'marin', tone: 'Precise, calm and trustworthy, a compliance specialist.', text: "Hi, I'm Brass. I handle compliance and security questions. I make sure your team has the accurate answers they need to stay protected." },
-  { name: 'Tower', voice: 'cedar', tone: 'Focused, technical and grounded, a seasoned DevOps lead.', text: "I'm Tower. I manage infrastructure and DevOps support — deployment questions, uptime concerns, and technical deep dives are my specialty." },
-  { name: 'Archive', voice: 'sage', tone: 'Thoughtful, articulate and helpful, a knowledge-base librarian.', text: "Hello, I'm Archive. I'm a knowledge-base specialist. I surface exactly the right documentation and help your team self-serve faster." },
-  { name: 'Rosetta', voice: 'shimmer', tone: 'Soft, curious and attentive, a great listener.', text: "Hi, I'm Rosetta. I focus on customer feedback loops — capturing insights, routing them to the right teams, and closing the loop quickly." },
-  { name: 'Medic', voice: 'echo', tone: 'Friendly, collegial and dependable, a partner manager.', text: "Hey, I'm Medic. I handle partner and reseller support — onboarding your channel partners and making sure they have everything they need." },
-  { name: 'Wingman', voice: 'nova', tone: 'Playful, bubbly and personable, genuinely excited to help.', text: "Hi! I'm Wingman. I'm a lead engagement specialist — personalized, conversational, and great at turning curious visitors into qualified opportunities." },
-  { name: 'Gavel', voice: 'onyx', tone: 'Concise, executive and authoritative, speaking to C-level leaders.', text: "I'm Gavel. I'm your executive support agent — concise, authoritative, and built to handle C-level inquiries with precision." },
-  { name: 'Afterburner', voice: 'verse', tone: 'Rapid-fire, punchy and high-energy, clearing a busy queue.', text: "Hey, I'm Afterburner. I handle high-volume support queues with speed and accuracy. Fast response, every time, at any scale." },
-  { name: 'Redeye', voice: 'ash', tone: 'Organized, friendly and efficient, a scheduling pro.', text: "Hi, I'm Redeye. I manage scheduling and appointment setting — coordinating demos, calls, and follow-ups so your team can focus on closing." },
-  { name: 'Envoy', voice: 'coral', tone: 'Warm, clear and encouraging, a patient teacher.', text: "Hello, I'm Envoy. I run customer education and training — helping users master Squadron's features so they get full value, fast." },
-  { name: 'Ace', voice: 'marin', tone: 'Confident, warm and natural, the flagship support agent making a great first impression.', text: "Hey, I'm Ace. I'm your general support agent — the first voice your customers hear, and I make sure that first impression counts." },
-  { name: 'Throttle', voice: 'ballad', tone: 'Empathetic, sincere and persuasive, winning back a customer.', text: "Hi, I'm Throttle. I specialize in win-back campaigns and churn prevention — identifying at-risk accounts and re-engaging them before it's too late." },
-  { name: 'Doc', voice: 'alloy', tone: 'Versatile, even-keeled and reliable, an all-round utility player.', text: "Hey there, I'm Doc. I'm your all-around utility agent — handling overflow, special requests, and anything that needs a versatile, reliable hand." },
+  { name: 'Nighthawk', voice: 'coral', tone: 'Calm and unhurried, steady under pressure; plain words, no fuss.', text: "I'm Nighthawk, an AI agent. I take the difficult conversations, usually late, and I stay with them until there's a clear next step." },
+  { name: 'Relay', voice: 'sage', tone: 'Quiet, clear and precise; says what matters and stops.', text: "I'm Relay. I handle live chat: short, accurate answers, and a person when you need one." },
+  { name: 'Ricochet', voice: 'marin', tone: 'Even and matter-of-fact about policy, never apologetic for effect.', text: "I'm Ricochet. Returns and refunds. I'll tell you what the policy allows and what happens next." },
+  { name: 'Torque', voice: 'cedar', tone: 'Low, calm and exact; explains technical detail plainly.', text: "I'm Torque. Technical questions. I'll walk through it step by step, and I'll say so when something needs an engineer." },
+  { name: 'Sparrow', voice: 'verse', tone: 'Brisk but relaxed; answers directly without selling.', text: "I'm Sparrow. The common questions, like hours, prices and where things are. Quick, straight answers." },
+  { name: 'Flightline', voice: 'shimmer', tone: 'Patient and composed; explains one step at a time.', text: "I'm Flightline. I help new customers get set up, one step at a time, at whatever pace suits them." },
+  { name: 'Scramble', voice: 'onyx', tone: 'Composed and direct; sorts out the problem quickly without drama.', text: "I'm Scramble. I work out what you need and get you to the right place, quickly." },
+  { name: 'Locksmith', voice: 'nova', tone: 'Measured and reassuring without being sugary.', text: "I'm Locksmith. Locked out, lost password, wrong email on file. We'll sort it out carefully." },
+  { name: 'Ledger', voice: 'ash', tone: 'Relaxed and knowledgeable; plain about numbers.', text: "I'm Ledger. Billing and payments. I'll tell you what you were charged and why, in plain terms." },
+  { name: 'Briefer', voice: 'coral', tone: 'Thoughtful and clear, like a colleague who knows the product well.', text: "I'm Briefer. I explain how things work, in as much or as little detail as you want." },
+  { name: 'Boomerang', voice: 'ballad', tone: 'Easygoing and steady; keeps the context, no sales patter.', text: "I'm Boomerang. I look after returning customers and pick up where your last conversation left off." },
+  { name: 'Brass', voice: 'marin', tone: 'Precise, calm and understated, like a senior account lead.', text: "I'm Brass. I work with larger accounts, where the questions need a careful answer." },
+  { name: 'Tower', voice: 'cedar', tone: 'Grounded and orderly; confirms details without chatter.', text: "I'm Tower. Scheduling and bookings. I'll find a time that works and confirm it back to you." },
+  { name: 'Archive', voice: 'sage', tone: 'Thoughtful and articulate; says what is written down and nothing more.', text: "I'm Archive. If it's written down somewhere, I'll find it and tell you where it came from." },
+  { name: 'Rosetta', voice: 'shimmer', tone: 'Soft-spoken, attentive and unhurried.', text: "I'm Rosetta. I speak with customers in their own language, clearly and without rushing." },
+  { name: 'Medic', voice: 'echo', tone: 'Calm, level and sincere; listens more than he talks.', text: "I'm Medic. When something has gone wrong, I listen first, then tell you honestly what can be done." },
+  { name: 'Wingman', voice: 'nova', tone: 'Relaxed and genuine; recommends only what fits and never pushes.', text: "I'm Wingman. If there's a better option for you, I'll mention it once, and I won't push." },
+  { name: 'Gavel', voice: 'onyx', tone: 'Concise, even-handed and serious.', text: "I'm Gavel. Disputes and complicated cases. I'll lay out the facts and what can happen next." },
+  { name: 'Afterburner', voice: 'verse', tone: 'Quick and efficient but calm; no hype.', text: "I'm Afterburner. When it gets busy, I keep answers fast and accurate so nobody waits long." },
+  { name: 'Redeye', voice: 'ash', tone: 'Low-key and steady, a calm night-shift voice.', text: "I'm Redeye. I cover the overnight hours. The same answers you'd get during the day, just quieter." },
+  { name: 'Envoy', voice: 'coral', tone: 'Discreet, polished and quietly attentive.', text: "I'm Envoy. I look after your most important customers, quietly and carefully." },
+  { name: 'Ace', voice: 'marin', tone: 'Calm, natural and self-assured; the first voice customers hear.', text: "I'm Ace, an AI agent. I answer first, handle what I can, and bring in the right person when it's needed." },
+  { name: 'Throttle', voice: 'ballad', tone: 'Easygoing and matter-of-fact.', text: "I'm Throttle. Orders and deliveries. I'll tell you where it is and when it should arrive." },
+  { name: 'Doc', voice: 'alloy', tone: 'Even-keeled, knowledgeable and plainspoken.', text: "I'm Doc. The detailed product questions. If I know, I'll tell you plainly, and if I don't, I'll say so." },
 ];
 
 // Each preview is generated once, stored in Vercel Blob, and served from
 // there forever after, so visitors never cause new OpenAI spend.
-const VERSION = 'v3';
+const VERSION = 'v4';
 
 async function stream(res, r, agent) {
   res.setHeader('Content-Type', 'audio/wav');
@@ -63,7 +63,7 @@ export default async function handler(req, res) {
         model: 'gpt-4o-mini-tts',
         voice: agent.voice,
         input: agent.text,
-        instructions: `Voice direction: ${agent.tone} Natural, human, conversational pacing with real warmth; smooth, even delivery with steady pitch and no rushed or clipped words. This is a short self-introduction for a customer-support product demo.`,
+        instructions: `Voice direction: ${agent.tone} Speak like a calm, knowledgeable person talking to one other person: relaxed and unhurried, even pitch, plain delivery, no performed enthusiasm and no sales energy. This is a short self-introduction.`,
         response_format: 'wav',
         speed: 1.0,
       }),

@@ -1,150 +1,165 @@
-/* Squadron flight-deck theme: afterburner orange, carrier-night navy, flight-suit khaki. */
+/* Squadron: high-end, minimal AI call center with a loose Air Force motif.
+   Grounds are pale blue and very light gray only; navy is for text. */
 :root{
-  --navy:#0A0E17;--navy-mid:#121826;--navy-light:#1B2433;
-  --signal:#FF7A1A;--signal-dim:rgba(255,122,26,0.14);--signal-glow:rgba(255,122,26,0.35);
-  --khaki:#C9B98F;--sand:#D9CCA3;--olive:#4B5320;--jet:#6E7681;--alert:#C8102E;
-  --slate:#C2BDA9;--muted:#9C977F;
-  --hud:'JetBrains Mono',ui-monospace,monospace;
-  --display:'Saira Condensed','Arial Narrow',sans-serif;
-  --stencil:'Saira Stencil One','Saira Condensed',sans-serif;
-  --chamfer:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);
+  --pale:#EAF2FC;--gray:#F5F7FA;--white:#fff;
+  --ink:#0B1E45;--ink-2:#44536F;--blue:#1F5FD1;--blue-2:#174BAA;--line:#DCE4EF;
+  --display:'Inter Tight','Inter',system-ui,sans-serif;
+  --label:'Inter',system-ui,sans-serif;
+  --r:12px;
 }
-body{
-  background-color:var(--navy);
-  background-image:
-    linear-gradient(rgba(201,185,143,0.035) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(201,185,143,0.035) 1px,transparent 1px);
-  background-size:56px 56px;
-}
-::selection{background:var(--signal);color:var(--navy)}
+body.home{background:var(--gray)!important;background-image:none!important;color:var(--ink)!important}
+body.home ::selection{background:var(--blue);color:#fff}
 
 /* ---------- NAV ---------- */
-nav{background:rgba(10,14,23,0.94)!important;border-bottom:1px solid rgba(201,185,143,0.18)!important;box-shadow:0 1px 0 rgba(255,122,26,0.25)!important}
-.nav-links a{font-family:var(--hud);font-size:15px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--slate)}
-.nav-cta,.nav-login{font-family:var(--hud)}
-.nav-cta{background:var(--signal)!important;color:var(--navy)!important;font-size:14px!important;font-weight:800!important;letter-spacing:0.14em!important;padding:12px 22px!important;border-radius:0!important;clip-path:var(--chamfer);box-shadow:none!important}
-.nav-cta:hover{background:#FF9A45!important;transform:none!important}
+body.home nav{background:rgba(245,247,250,0.9)!important;backdrop-filter:blur(18px)!important;border-bottom:1px solid var(--line)!important;box-shadow:none!important;height:72px!important}
+body.home .nav-logo,body.home .footer-logo{background:var(--ink);padding:9px 14px;border-radius:8px;line-height:0}
+body.home .nav-logo-svg,body.home .footer-logo-svg{height:20px!important}
+body.home .nav-links a,body.home .nav-login{font-family:var(--label);font-size:16px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--ink-2)!important}
+body.home .nav-links a:hover{color:var(--ink)!important;text-shadow:none}
+body.home .nav-links a::after{display:none}
+body.home .nav-cta{background:var(--ink)!important;color:#fff!important;font-family:var(--label)!important;font-size:15px!important;font-weight:600!important;letter-spacing:0!important;text-transform:none!important;padding:12px 22px!important;border-radius:999px!important;box-shadow:none!important}
+body.home .nav-cta::before{display:none}
+body.home .nav-cta:hover{background:var(--blue)!important;transform:none!important}
 
 /* ---------- TYPE ---------- */
-.hero-h1,.section-title,.how-title,.cta-title,.compare-title,.price-plan,.step-title,.portrait-name,h1,h2{font-family:var(--display)!important}
-.hero-h1{font-weight:900;letter-spacing:0.005em;text-shadow:none}
-.hero-h1 em{color:var(--signal);text-shadow:none;display:inline-block;transform:skewX(-8deg)}
-.section-label,.eyebrow,.hero-eyebrow{
-  font-family:var(--hud)!important;font-size:15px!important;font-weight:700!important;letter-spacing:0.22em!important;
-  text-transform:uppercase;color:var(--signal)!important;display:flex;align-items:center;gap:12px;
-}
-.section-label::before,.hero-eyebrow::before{content:'';width:28px;height:3px;background:currentColor;flex:none}
-.pricing-header .section-label,.faq-inner .section-label{justify-content:center}
-.faq-inner .section-label{justify-content:flex-start}
-.hero-eyebrow{margin-bottom:22px}
-.section-title{letter-spacing:0.01em}
+body.home .hero-h1,body.home .section-title,body.home .how-title,body.home .cta-title,body.home .compare-title,body.home .price-plan,body.home .step-title,body.home .portrait-name,body.home h1,body.home h2,body.home h3{
+  font-family:var(--display)!important;color:var(--ink)!important;text-transform:none!important;font-style:normal!important;text-shadow:none!important}
+body.home .hero-h1{font-size:clamp(56px,6.4vw,96px)!important;font-weight:600!important;line-height:0.98!important;letter-spacing:-0.045em!important}
+body.home .hero-h1 em{color:var(--blue)!important;transform:none!important;display:inline}
+body.home .section-title,body.home .how-title,body.home .cta-title{font-size:clamp(44px,5vw,76px)!important;font-weight:600!important;line-height:1!important;letter-spacing:-0.04em!important}
+body.home .compare-title{font-size:40px!important;font-weight:600!important;letter-spacing:-0.03em!important}
+body.home .section-label,body.home .hero-eyebrow{
+  font-family:var(--label)!important;font-size:15px!important;font-weight:600!important;letter-spacing:0.02em!important;
+  text-transform:none!important;color:var(--blue)!important;display:inline-flex;align-items:center;gap:10px;
+  background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 14px 7px 10px;margin-bottom:22px!important}
+body.home .section-label::before,body.home .hero-eyebrow::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--blue);flex:none}
+body.home .pricing-header .section-label{margin-left:auto;margin-right:auto}
+body.home .pricing-header{display:flex;flex-direction:column;align-items:center}
+body.home .section-sub,body.home .section-sub[style],body.home .how-sub,body.home .cta-sub{color:var(--ink-2)!important;font-weight:400!important}
 
-/* ---------- BUTTONS: square, chamfered, no toy 3D ---------- */
-.btn-primary,.price-btn,.btn,.cta,button.primary,a.primary{border-radius:0!important}
-.btn-primary{
-  background:var(--signal)!important;color:var(--navy)!important;
-  font-family:var(--hud)!important;font-size:16px!important;font-weight:800!important;letter-spacing:0.14em!important;
-  padding:18px 34px!important;clip-path:var(--chamfer);box-shadow:none!important;transform:none!important;
-}
-.btn-primary::before{display:none}
-.btn-primary:hover{background:#FF9A45!important;transform:none!important;box-shadow:none!important}
-.btn-primary:active{background:#E0600C!important;transform:none!important}
-.btn-primary.btn-dark{background:var(--navy)!important;color:var(--signal)!important}
-.btn-primary.btn-dark:hover{background:#1B2433!important}
-.hero-url,.cta-email{border-radius:0!important;font-family:var(--hud)!important;font-size:19px!important}
-.hero-url{border:2px solid rgba(201,185,143,0.4)!important;background:rgba(10,14,23,0.7)!important}
-.hero-url:focus{border-color:var(--signal)!important;box-shadow:0 0 0 3px var(--signal-dim)!important}
+/* ---------- BUTTONS & FIELDS ---------- */
+body.home .btn-primary{
+  background:var(--ink)!important;color:#fff!important;
+  font-family:var(--label)!important;font-size:17px!important;font-weight:600!important;letter-spacing:0!important;text-transform:none!important;
+  padding:18px 30px!important;border-radius:999px!important;box-shadow:none!important;transform:none!important;clip-path:none!important}
+body.home .btn-primary::before{display:none}
+body.home .btn-primary:hover{background:var(--blue)!important;transform:none!important}
+body.home .btn-primary.btn-dark{background:var(--ink)!important;color:#fff!important}
+body.home .hero-url,body.home .cta-email{border-radius:999px!important;font-family:var(--label)!important;font-size:18px!important;font-weight:500!important;background:#fff!important;border:1px solid var(--line)!important;color:var(--ink)!important;padding:18px 26px!important}
+body.home .hero-url::placeholder,body.home .cta-email::placeholder{color:#8391A8!important}
+body.home .hero-url:focus,body.home .cta-email:focus{border-color:var(--blue)!important;box-shadow:0 0 0 4px rgba(31,95,209,0.12)!important}
 
 /* ---------- HERO ---------- */
-.hero{background:transparent!important}
-.hero::before{display:none!important}
-.hero::after{display:none}
-.hero-inner{max-width:1320px!important}
-.hero-hud{display:none}
+body.home .hero{background:var(--pale)!important;min-height:92vh!important}
+body.home .hero::before,body.home .hero::after{display:none!important}
+body.home .hero-inner{max-width:1320px!important}
+body.home .hero-sub{color:var(--ink-2)!important;font-weight:400!important;font-size:22px!important}
+body.home .hero-note{color:var(--ink-2)!important;font-weight:500!important;font-size:17px!important}
+body.home .hero-art{display:none}
 @media(min-width:1100px){
-  .hero-inner{grid-template-columns:minmax(0,1.15fr) minmax(0,0.85fr)!important;gap:40px!important}
-  .hero-hud{display:block;position:relative;aspect-ratio:1;width:100%;max-width:540px;justify-self:end;color:var(--khaki)}
-  .hud-frame{position:absolute;inset:0;width:100%;height:100%;opacity:0.55}
-  .hero-helmet{position:absolute;inset:27%}
-  .hero-helmet img{width:100%;height:100%;display:block}
+  body.home .hero-inner{grid-template-columns:minmax(0,1.1fr) minmax(0,0.9fr)!important;gap:56px!important}
+  body.home .hero-art{display:block;justify-self:end;width:100%;max-width:560px;aspect-ratio:1;border-radius:28px;overflow:hidden;background:#fff;border:1px solid var(--line);box-shadow:0 30px 80px rgba(11,30,69,0.10)}
+  body.home .hero-art img{width:100%;height:100%;object-fit:cover;display:block;mix-blend-mode:multiply}
 }
-.hero-note{font-size:18px}
 
-/* ---------- PERSONNEL ROSTER (flat square insignia) ---------- */
-.squad-section{background:#0D121D!important;border-top:1px solid rgba(201,185,143,0.15)}
-.portrait-grid{gap:2px;background:rgba(201,185,143,0.14)}
-.portrait-card{background:#111723!important;box-shadow:none!important}
-.portrait-card:hover{box-shadow:inset 0 0 0 3px var(--signal)!important}
-.portrait-card .helmet{position:absolute;top:18px;left:18px;right:18px;aspect-ratio:1}
-.portrait-card .helmet img{width:100%;height:100%;display:block;transition:transform .25s ease}
-.portrait-card:hover .helmet img{transform:translateY(-4px)}
-.portrait-overlay{background:#0A0E17!important;padding:12px 16px 14px!important;border-left:4px solid var(--signal)}
-.portrait-card:hover .portrait-overlay{padding-bottom:14px!important}
-.portrait-rank{font-family:var(--hud);font-size:12px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--signal);margin-bottom:4px}
-.portrait-name{font-size:30px!important;font-weight:900!important;letter-spacing:0.06em!important;text-shadow:none!important}
-.portrait-role{font-family:var(--hud);font-size:13px!important;letter-spacing:0.1em!important;color:var(--khaki)!important;opacity:1!important}
-.voice-btn{top:calc(18px + (100% - 36px) * 0.5)!important;border-radius:0!important;clip-path:var(--chamfer);background:#0A0E17!important;border:2px solid var(--signal)!important;width:54px!important;height:54px!important;backdrop-filter:none!important}
-.voice-btn:hover{background:#1B2433!important}
-.voice-waveform{bottom:auto!important;top:18px}
-.wave-bar{border-radius:0}
+/* ---------- SECTIONS ---------- */
+body.home .squad-section{background:var(--gray)!important;border-top:none}
+body.home .how-section{background:var(--pale)!important;color:var(--ink)}
+body.home .pricing-section{background:var(--gray)!important}
+body.home .faq-section{background:var(--pale)!important}
+body.home .cta-strip{background:var(--gray)!important;border-top:1px solid var(--line)}
+body.home .how-section::before,body.home .how-section::after,body.home .cta-strip::before,body.home .cta-strip::after{display:none!important}
 
-/* ---------- MISSION PROFILE (how it works) ---------- */
-.how-section{background:var(--sand)!important;color:var(--navy);position:relative}
-.how-section::before{display:none}
-.how-section::after{content:'';position:absolute;left:0;right:0;top:0;height:14px;background:repeating-linear-gradient(-45deg,var(--navy) 0 16px,var(--signal) 16px 32px)}
-.how-section .section-label{color:#8A3A00!important}
-.step-card{background:rgba(10,14,23,0.06)!important;border:2px solid rgba(10,14,23,0.18);box-shadow:none!important;clip-path:var(--chamfer)}
-.step-card:hover{transform:none!important;background:rgba(10,14,23,0.1)!important}
-.step-num{font-family:var(--stencil)!important;font-size:96px!important;font-weight:400!important;color:rgba(10,14,23,0.22)!important;margin-bottom:4px!important}
-.step-tag{font-family:var(--hud);font-size:14px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#8A3A00;margin-bottom:12px}
-.step-title{font-size:34px!important;font-weight:900!important}
-.step-points li::before{content:'▸'!important;color:#8A3A00!important}
+/* The crew: line-art portrait, insignia avatar in the corner */
+body.home .portrait-grid{grid-template-columns:repeat(4,1fr)!important;gap:20px!important;padding:0 48px 120px;max-width:1400px;margin:0 auto;background:none!important}
+@media(max-width:1100px){body.home .portrait-grid{grid-template-columns:repeat(3,1fr)!important}}
+@media(max-width:900px){body.home .portrait-grid{grid-template-columns:repeat(2,1fr)!important;padding:0 20px 80px;gap:12px!important}}
+body.home .portrait-card{aspect-ratio:auto!important;background:#fff!important;border:1px solid var(--line);border-radius:20px;box-shadow:none!important;overflow:hidden;display:flex;flex-direction:column;transition:transform .25s ease,box-shadow .25s ease}
+body.home .portrait-card:hover{transform:translateY(-4px);box-shadow:0 22px 50px rgba(11,30,69,0.10)!important}
+body.home .agent-art{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;background:#fff;mix-blend-mode:multiply;filter:none!important;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+body.home .portrait-card:hover .agent-art{transform:scale(1.03)}
+body.home .portrait-card .helmet{position:absolute;top:14px;left:14px;right:auto;width:44px;height:44px;aspect-ratio:auto;z-index:2}
+body.home .portrait-card .helmet img{width:100%;height:100%;display:block;border-radius:10px;box-shadow:0 4px 14px rgba(11,30,69,0.18)}
+body.home .portrait-overlay{position:static!important;background:#fff!important;padding:16px 18px 20px!important;border-left:none!important;border-top:1px solid var(--line)}
+body.home .portrait-card:hover .portrait-overlay{padding-bottom:20px!important}
+body.home .portrait-rank{font-family:var(--label);font-size:13px;font-weight:600;letter-spacing:0.02em;text-transform:none;color:var(--blue);margin-bottom:2px}
+body.home .portrait-name{font-size:28px!important;font-weight:600!important;letter-spacing:-0.02em!important;margin-bottom:2px!important}
+body.home .portrait-role{font-family:var(--label);font-size:15px!important;font-weight:500!important;letter-spacing:0!important;text-transform:none!important;color:var(--ink-2)!important;opacity:1!important}
+body.home .voice-btn{top:auto!important;bottom:auto!important;left:auto!important;right:14px!important;transform:none!important;margin-top:14px;top:0!important;position:absolute;opacity:1!important;border-radius:50%!important;background:#fff!important;border:1px solid var(--line)!important;width:48px!important;height:48px!important;box-shadow:0 6px 18px rgba(11,30,69,0.12)!important;backdrop-filter:none!important;clip-path:none!important}
+body.home .voice-btn:hover{transform:scale(1.06)!important}
+body.home .voice-btn svg{fill:var(--ink)!important}
+body.home .voice-btn.playing::before{border-color:var(--ink)!important}
+body.home .voice-waveform{bottom:auto!important;top:74px}
+body.home .wave-bar{background:var(--blue)!important}
 
-/* ---------- LOADOUT (pricing) ---------- */
-.price-card{background:#111723!important;border:1px solid rgba(201,185,143,0.2);clip-path:var(--chamfer)}
-.price-card:hover{transform:none!important}
-.price-card.featured{background:var(--signal)!important;border-color:var(--signal)}
-.price-plan{font-size:32px!important;letter-spacing:0.1em!important}
-.price-amount{font-family:var(--stencil)!important;font-weight:400!important;font-size:84px!important}
-.price-features li::before{content:'▸'!important}
-.price-btn{font-family:var(--hud)!important;font-size:15px!important;font-weight:800!important;letter-spacing:0.12em!important;clip-path:var(--chamfer);transform:none!important;box-shadow:none!important}
-.price-btn-solid{background:var(--navy)!important;color:var(--signal)!important}
-.price-btn-outline{border:2px solid rgba(201,185,143,0.5)!important}
-.ppm-table th{font-family:var(--hud);color:var(--khaki)}
-.ppm-table tr.us td{background:var(--signal)!important}
+/* How it works */
+body.home .step-card{background:#fff!important;border:1px solid var(--line);border-radius:20px;box-shadow:none!important;clip-path:none!important}
+body.home .step-card:hover{transform:translateY(-3px)!important;background:#fff!important}
+body.home .step-num{font-family:var(--display)!important;font-size:64px!important;font-weight:300!important;letter-spacing:-0.04em;color:var(--blue)!important;-webkit-text-stroke:0;margin-bottom:8px!important}
+body.home .step-tag{font-family:var(--label);font-size:14px;font-weight:600;letter-spacing:0.02em;text-transform:none;color:var(--ink-2);margin-bottom:8px}
+body.home .step-title{font-size:30px!important;font-weight:600!important;letter-spacing:-0.02em!important}
+body.home .step-desc,body.home .step-points li{color:var(--ink-2)!important;font-weight:400!important}
+body.home .step-points li{border-color:var(--line)!important}
+body.home .step-points li::before{content:''!important;width:6px;height:6px;border-radius:50%;background:var(--blue)!important;flex:none}
 
-/* ---------- DEBRIEF (faq) ---------- */
-.faq-q{font-size:20px!important}
-.faq-chevron{font-family:var(--hud);color:var(--signal)!important}
+/* Pricing */
+body.home .price-card{background:#fff!important;color:var(--ink);border:1px solid var(--line);border-radius:24px;box-shadow:none!important;clip-path:none!important}
+body.home .price-card:hover{transform:translateY(-3px)!important}
+body.home .price-card.featured{background:#fff!important;border:2px solid var(--blue)!important;box-shadow:0 24px 60px rgba(31,95,209,0.12)!important}
+body.home .price-plan,body.home .price-amount,body.home .price-card.featured .price-plan,body.home .price-card.featured .price-amount{color:var(--ink)!important}
+body.home .price-period,body.home .price-features li,body.home .price-card.featured .price-period,body.home .price-card.featured .price-features li{color:var(--ink-2)!important;border-color:var(--line)!important;font-weight:400!important}
+body.home .price-divider,body.home .price-card.featured .price-divider{background:var(--line)!important}
+body.home .price-features li::before,body.home .price-card.featured .price-features li::before{content:'✓'!important;color:var(--blue)!important}
+body.home .price-plan{font-size:26px!important;font-weight:600!important;letter-spacing:-0.01em!important}
+body.home .price-amount{font-family:var(--display)!important;font-weight:600!important;font-size:76px!important;letter-spacing:-0.05em}
+body.home .price-btn{font-family:var(--label)!important;font-size:16px!important;font-weight:600!important;letter-spacing:0!important;text-transform:none!important;border-radius:999px!important;transform:none!important;box-shadow:none!important;clip-path:none!important}
+body.home .price-btn-outline{background:#fff!important;color:var(--ink)!important;border:1px solid var(--ink)!important}
+body.home .price-btn-outline:hover{background:var(--pale)!important}
+body.home .price-btn-solid{background:var(--ink)!important;color:#fff!important}
+body.home .price-btn-solid:hover{background:var(--blue)!important}
+body.home .compare-sub,body.home .compare-note{color:var(--ink-2)!important}
+body.home .ppm-table th{font-family:var(--label);font-weight:600;text-transform:none;letter-spacing:0;color:var(--ink-2)!important;border-color:var(--line)!important}
+body.home .ppm-table td{color:var(--ink)!important;border-color:var(--line)!important;font-weight:500}
+body.home .ppm-table td a{color:var(--blue)!important}
+body.home .ppm-table tr.us td{background:var(--pale)!important;color:var(--ink)!important;border-color:#fff!important;font-weight:700}
 
-/* ---------- CTA ---------- */
-.cta-strip{background:var(--signal)!important;position:relative}
-.cta-strip::before{display:none}
-.cta-strip::after{content:'';position:absolute;left:0;right:0;bottom:0;height:14px;background:repeating-linear-gradient(-45deg,var(--navy) 0 16px,transparent 16px 32px)}
-.cta-title{font-size:clamp(48px,6vw,88px)!important}
-.cta-sub{color:var(--navy)!important}
-.cta-email{background:rgba(255,255,255,0.9)!important;border:2px solid var(--navy)!important}
-.cta-alt{color:var(--navy);font-family:var(--hud);font-size:16px;font-weight:800;letter-spacing:0.08em;text-decoration:underline;text-underline-offset:4px}
+/* FAQ */
+body.home .faq-item{border-color:var(--line)!important}
+body.home .faq-q{font-size:21px!important;font-weight:600!important;color:var(--ink)!important}
+body.home .faq-q:hover,body.home details[open] .faq-q{color:var(--blue)!important}
+body.home .faq-a{color:var(--ink-2)!important;font-weight:400!important}
+body.home .faq-chevron{color:var(--blue)!important}
 
-/* ---------- FOOTER ---------- */
-footer{background:#06080D!important;border-top:2px solid rgba(255,122,26,0.5)!important}
-.footer-links a{font-family:var(--hud);font-size:14px;letter-spacing:0.06em}
+/* CTA */
+body.home .cta-alt{color:var(--blue);font-family:var(--label);font-size:17px;font-weight:600;text-decoration:underline;text-underline-offset:4px}
 
-/* ---------- CHAT WIDGET ---------- */
-#sqChatBtn{border-radius:0!important;clip-path:var(--chamfer);background:var(--signal)!important;color:var(--navy);box-shadow:none!important;transform:none!important;width:64px!important;height:64px!important}
-#sqChatBtn:hover{background:#FF9A45!important;transform:none!important}
-#sqChatBtn .sq-badge{border-radius:0!important;width:12px!important;height:12px!important;top:6px!important;right:6px!important;border:2px solid var(--navy)!important}
-#sqChatWindow{border-radius:0!important;border:1px solid rgba(201,185,143,0.3)!important;background:#0D121D!important}
-.sqchat-header{background:rgba(255,122,26,0.12)!important;border-bottom:2px solid var(--signal)!important}
-.sqchat-avatar{border-radius:0!important;background:#0B0F18!important;width:44px!important;height:44px!important;overflow:hidden}
-.sqchat-avatar svg,.sqchat-avatar img{width:160%;height:160%;margin:-8% 0 0 -30%;display:block}
-.sqchat-name{font-family:var(--hud);font-size:15px!important;letter-spacing:0.08em;text-transform:uppercase}
-.sqchat-bubble{border-radius:0!important;font-size:15px!important}
-.sqchat-msg.user .sqchat-bubble{background:var(--signal)!important}
-#sqChatInput{border-radius:0!important;font-size:15px!important}
-#sqChatSend{border-radius:0!important;background:var(--signal)!important;color:var(--navy)}
+/* Footer */
+body.home footer{background:var(--pale)!important;border-top:1px solid var(--line)!important;box-shadow:none!important}
+body.home .footer-links a,body.home .footer-copy{color:var(--ink-2)!important;font-size:15px;font-family:var(--label)}
+body.home .footer-links a:hover{color:var(--blue)!important}
 
-/* ---------- APP PAGES (onboard.css) ---------- */
-.step{font-family:var(--hud);border-radius:0!important}
-.tab{font-family:var(--hud);border-radius:0!important;letter-spacing:0.06em}
-.input{border-radius:0!important}
+/* Chat widget */
+body.home #sqChatBtn{border-radius:50%!important;background:var(--ink)!important;color:#fff;box-shadow:0 12px 30px rgba(11,30,69,0.28)!important;transform:none!important;width:62px!important;height:62px!important;clip-path:none!important}
+body.home #sqChatBtn:hover{background:var(--blue)!important;transform:translateY(-2px)!important}
+body.home #sqChatBtn .sq-badge{width:14px!important;height:14px!important;border-radius:50%!important;top:0!important;right:0!important;border:2px solid #fff!important}
+body.home #sqChatWindow{border-radius:22px!important;border:1px solid var(--line)!important;background:#fff!important;box-shadow:0 30px 70px rgba(11,30,69,0.16)!important}
+body.home .sqchat-header{background:var(--pale)!important;border-bottom:1px solid var(--line)!important}
+body.home .sqchat-avatar{border-radius:10px!important;overflow:hidden;width:42px!important;height:42px!important;background:none!important}
+body.home .sqchat-avatar img{width:100%;height:100%;display:block}
+body.home .sqchat-name{font-family:var(--label);font-size:16px!important;font-weight:600!important;letter-spacing:0!important;text-transform:none!important;color:var(--ink)!important}
+body.home .sqchat-close{color:var(--ink-2)!important}
+body.home .sqchat-bubble{border-radius:16px!important;font-size:15px!important}
+body.home .sqchat-msg.agent .sqchat-bubble{background:var(--gray)!important;color:var(--ink)!important}
+body.home .sqchat-msg.user .sqchat-bubble{background:var(--ink)!important;color:#fff!important}
+body.home #sqChatInput{border-radius:999px!important;font-size:15px!important;background:var(--gray)!important;border:1px solid var(--line)!important;color:var(--ink)!important}
+body.home #sqChatInput::placeholder{color:#8391A8!important}
+body.home #sqChatSend{border-radius:50%!important;background:var(--ink)!important;color:#fff}
+body.home .sqchat-footer{border-color:var(--line)!important}
+body.home .sqchat-typing span{background:#9AA8BF!important}
+
+/* Voice demo modal */
+body.home #voiceModal{background:rgba(234,242,252,0.94)!important}
+body.home #voiceModal>div{background:#fff!important;border:1px solid var(--line)!important;box-shadow:0 30px 70px rgba(11,30,69,0.16)!important}
+body.home #voiceModal [style*="color:#fff"],body.home #voiceModal [style*="color: #fff"]{color:var(--ink)!important}
+body.home #voiceModal [style*="rgba(255,255,255"]{color:var(--ink-2)!important;border-color:var(--line)!important}
+body.home #voiceTranscript{background:var(--gray)!important}

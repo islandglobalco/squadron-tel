@@ -1,6 +1,6 @@
 // ── CONFETTI ──────────────────────────────────────────────────────────────────
 (function(){
-  const COLORS=['#FF9A45','#FFD700','#FFF0A0','#FF7A1A','#ffffff','#E0600C','#ffe066'];
+  const COLORS=['#FFD460','#FFD700','#FFF0A0','#FFC62E','#ffffff','#E5AC12','#ffe066'];
   let particles=[], raf=null, canvas, ctx, running=false;
 
   function initCanvas(){

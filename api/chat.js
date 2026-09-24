@@ -16,7 +16,7 @@ const KB = [
   { match: /trial|free|demo|try|test/, reply: `There is no free trial. Squadron is prepaid instead, with no contract: pay for 30 days from $39, test your team by chat and voice, and simply do not renew if it is not for you.` },
   { match: /secure|gdpr|soc|compliance|data|privacy/, reply: `Every Squadron agent identifies itself as an AI at the start of every conversation, every call begins with an audible recording notice, and Squadron answers inbound conversations only. For anything else about data handling, email info@squadron.tel.` },
 ];
-const GREETING = `Hey! I'm **Ace**, Squadron's AI assistant. I answer questions about Squadron's pricing, setup, agents and channels.`;
+const GREETING = `I'm **Ace**, Squadron's AI assistant. I can answer questions about pricing, setup, agents and channels.`;
 const FALLBACK = { reply: `I don't have a specific answer to that. Here is what Squadron is: it builds an AI customer-service team for your business from your website, answers your customers by web chat today with phone lines opening soon, and costs from $39 for 30 days, prepaid. For anything else, email info@squadron.tel and a person will reply.`, followUp: `You can ask me about pricing, setup, the agents or phone lines.` };
 export default function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
