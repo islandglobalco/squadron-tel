@@ -1352,27 +1352,9 @@ function playChime(){
   }catch(e){}
 }
 
-// Confetti sound (logo hover): the jackpot win from 7-7-7.world and @less,
-// the "win" hit followed by the coin cascade, at a gentler level.
-const JACKPOT={raw:{},buf:{}};
-['win','money'].forEach(n=>{fetch('/sfx/'+n+'.mp3').then(r=>r.ok?r.arrayBuffer():null).then(a=>{if(a)JACKPOT.raw[n]=a}).catch(()=>{})});
-async function jackpotBuf(ctx,n){
-  if(JACKPOT.buf[n]) return JACKPOT.buf[n];
-  let a=JACKPOT.raw[n]; if(!a){a=await fetch('/sfx/'+n+'.mp3').then(r=>r.arrayBuffer());}
-  JACKPOT.buf[n]=await ctx.decodeAudioData(a.slice(0)); return JACKPOT.buf[n];
-}
+// Confetti sound (logo hover): a plane flyby (see sfx.js).
 function playConfettiSound(){
-  try{
-    const ctx=getAudio(); if(ctx.state==='suspended') ctx.resume();
-    [['win',0,0.55],['money',0.35,0.45]].forEach(([n,at,vol])=>{
-      jackpotBuf(ctx,n).then(b=>{
-        const src=ctx.createBufferSource(); src.buffer=b;
-        const g=ctx.createGain(); g.gain.value=vol;
-        src.connect(g); g.connect(ctx.destination);
-        src.start(ctx.currentTime+at);
-      }).catch(()=>{});
-    });
-  }catch(e){}
+  try{ if(window.sqSfx && window.sqSfx.flyby) window.sqSfx.flyby(); }catch(e){}
 }
 
 // Keyboard click (terminal typing)
