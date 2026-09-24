@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="/onboard.css">
+<script src="/smart-inputs.js"></script>
 <style>
 .planpick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .planopt{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:22px;border-radius:12px;border:2px solid rgba(11,30,69,0.2);background:#fff;color:var(--white);cursor:pointer;font-family:inherit}
@@ -52,19 +53,19 @@
 </nav>
 <main>
   <div class="steps" id="steps">
-    <span class="step on" data-s="1">1 · Enter your business</span>
-    <span class="step" data-s="2">2 · Analyze</span>
-    <span class="step" data-s="3">3 · Review profile</span>
-    <span class="step" data-s="4">4 · Build the team</span>
-    <span class="step" data-s="5">5 · Test</span>
-    <span class="step" data-s="6">6 · Deploy</span>
+    <span class="step on" data-s="1">1 · Your business</span>
+    <span class="step" data-s="2">2 · Reading it</span>
+    <span class="step" data-s="3">3 · Check the facts</span>
+    <span class="step" data-s="4">4 · Meet your team</span>
+    <span class="step" data-s="5">5 · Try it</span>
+    <span class="step" data-s="6">6 · Go live</span>
   </div>
 
   <!-- Screen 1 -->
   <section id="s1">
     <p class="eyebrow">Step 1</p>
     <h1>Enter your <em>business.</em></h1>
-    <p class="lead">Give Squadron your website, your App Store listing, or your documents. It reads what you publish and nothing else.</p>
+    <p class="lead">Type your website. Squadron reads it and builds your team in about a minute. Building and testing are free; you pay only when you go live.</p>
     <div class="tabs">
       <button class="tab on" data-kind="url" onclick="setKind('url',this)">Website</button>
       <button class="tab" data-kind="appstore" onclick="setKind('appstore',this)">iOS App Store</button>
@@ -72,14 +73,14 @@
     </div>
     <div id="kind-url">
       <div class="field">
-        <input class="input" id="urlInput" type="url" placeholder="https://yourbusiness.com" autocomplete="url" autofocus onkeydown="if(event.key==='Enter')startUrl()">
-        <button class="btn" id="goUrl" onclick="startUrl()">Analyze my business →</button>
+        <input class="input" id="urlInput" type="text" data-smart="url" placeholder="yourbusiness.com" autocomplete="url" autofocus onkeydown="if(event.key==='Enter')startUrl()" aria-label="Your website">
+        <button class="btn" id="goUrl" onclick="startUrl()">Build my team →</button>
       </div>
-      <p class="hint">Squadron reads up to ten pages of your site, starting with pricing, FAQ, contact, hours and policies.</p>
+      <p class="hint">No need for https:// or www. Squadron reads up to ten pages, starting with pricing, FAQ, contact, hours and policies.</p>
     </div>
     <div id="kind-appstore" class="hidden">
       <div class="field">
-        <input class="input" id="appInput" type="url" placeholder="https://apps.apple.com/us/app/your-app/id123456789" onkeydown="if(event.key==='Enter')startApp()">
+        <input class="input" id="appInput" type="text" data-smart="url" placeholder="apps.apple.com/us/app/your-app/id123456789" onkeydown="if(event.key==='Enter')startApp()" aria-label="Your App Store link">
         <button class="btn" onclick="startApp()">Analyze my app →</button>
       </div>
       <p class="hint">Squadron reads the listing, then the support and seller sites the listing points to.</p>
@@ -110,7 +111,8 @@
   <section id="s3" class="hidden">
     <p class="eyebrow">Step 3</p>
     <h1>Your Business <em>Profile.</em></h1>
-    <p class="lead">Every field shows its source. Correct anything that is wrong, and fill in what your sources do not say. Your team answers only from this profile.</p>
+    <p class="lead">This is everything your team will know, with the source for each fact. Fix anything wrong now, or skip ahead; you can edit it any time.</p>
+    <div style="margin:4px 0 24px"><button class="btn" onclick="goTeam()">Looks right, meet my team →</button></div>
     <div id="gaps"></div>
     <div id="profile"></div>
     <div class="bar">
@@ -159,8 +161,9 @@ async function api(path, body, method) {
 }
 function remember(t) { token = t; try { localStorage.setItem('sqToken', t); } catch (e) {} history.replaceState(null, '', '/start?t=' + encodeURIComponent(t)); }
 
-async function startUrl() { const url = $('urlInput').value.trim(); if (!url) return err('err1', 'Enter your website address.'); await create({ kind: 'url', url }); }
-async function startApp() { const url = $('appInput').value.trim(); if (!url) return err('err1', 'Enter your App Store link.'); await create({ kind: 'url', url }); }
+function cleanUrl(id) { const raw = $(id).value.trim(); return raw ? ((window.smart && smart.url(raw)) || raw) : ''; }
+async function startUrl() { const url = cleanUrl('urlInput'); if (!url) return err('err1', 'Type your website, like yourbusiness.com'); await create({ kind: 'url', url }); }
+async function startApp() { const url = cleanUrl('appInput'); if (!url) return err('err1', 'Paste your App Store link.'); await create({ kind: 'url', url }); }
 async function startDocs() {
   const pasted = $('pasteInput').value.trim();
   const list = docs.slice();
@@ -203,8 +206,8 @@ async function analyze(skipCrawl) {
       logLine('Documents received');
     }
     const xr = await fetch('/api/ingest/extract', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token }) });
-    if (xr.status === 402) { logLine('Your site is read. Your plan comes next.'); return payGate(); }
     const x = await xr.json().catch(() => ({}));
+    if (xr.status === 402) { logLine('Your site is read.'); return limitReached(x.error); }
     if (!xr.ok) throw new Error(x.error || ('HTTP ' + xr.status));
     logLine('Built your Business Profile with a source on every field');
     logLine('Profile ready');
@@ -215,50 +218,11 @@ async function analyze(skipCrawl) {
     $('retryBox').classList.remove('hidden');
   }
 }
-// Squadron is prepaid, so the profile and team are built after the plan is
-// paid. Reading the site costs nothing and happens first.
-const PLAN_CHOICES = [['basic', 'Basic', '$39', '250 voice minutes'], ['pro', 'Pro', '$79', '650 voice minutes'], ['center', 'Command Center', '$199', '2,000 voice minutes'], ['battalion', 'Battalion', '$999', '10,000 voice minutes']];
-async function payGate() {
+// Setup is free, so nothing here asks for payment; the plan is chosen on the
+// Go live screen. A 402 here only means the free setup allowance ran out.
+function limitReached(msg) {
   const box = $('payBox'); box.classList.remove('hidden');
-  $('s2lead').textContent = 'Your site is read. Squadron is prepaid, so your profile and team are built as soon as your first 30 days are paid.';
-  const me = await api('/api/auth').catch(() => ({ account: null }));
-  if (!me.account) {
-    box.innerHTML = `<div class="card" style="padding:24px;border-radius:12px;background:#fff;border:2px solid rgba(11,30,69,0.12)"><p style="font-size:20px;font-weight:700;color:var(--white);margin-bottom:12px">Create your account to choose a plan.</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><input class="input" id="p_email" type="email" placeholder="Email" autocomplete="email"><input class="input" id="p_pass" type="password" placeholder="Password (8+ characters)" autocomplete="new-password"></div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><button class="btn" onclick="payAuth('signup')">Create account</button><button class="btn ghost" onclick="payAuth('login')">I have an account, log in</button></div>
-      <label style="display:flex;gap:12px;align-items:flex-start;margin-top:16px;font-size:17px;line-height:1.5;color:#3D4C68;font-weight:500;cursor:pointer"><input type="checkbox" id="p_terms" style="width:22px;height:22px;margin-top:2px;flex:none;accent-color:#FFC62E">I agree to the <a href="/terms" target="_blank" style="color:var(--signal);font-weight:700">Terms of Service</a> and the <a href="/privacy" target="_blank" style="color:var(--signal);font-weight:700">Privacy Policy</a>, and I will follow the call-recording and consumer laws that apply to my business.</label></div>`;
-    return;
-  }
-  await api('/api/auth', { action: 'claim', token }).catch((e) => err('err2', e.message));
-  const active = me.account.active;
-  if (active) { box.innerHTML = ''; box.classList.add('hidden'); return reanalyze(); }
-  box.innerHTML = `<p style="font-size:22px;font-weight:800;color:var(--white);margin-bottom:16px">Choose your plan. Every plan has unlimited web chat, and nothing renews automatically.</p>
-    <div class="planpick">${PLAN_CHOICES.map(([k, n, p, m]) => `<button class="planopt" onclick="choosePlan('${k}')"><span class="pn">${n}</span><span class="pp">${p}</span><span class="pm">30 days · ${m}</span></button>`).join('')}</div>
-    <p style="font-size:18px;color:#3D4C68;margin-top:14px">Pick a plan to pay by card, and your team is built the moment the payment goes through. To pay by bank transfer instead, use <a href="/billing" style="color:var(--signal);font-weight:700">Billing</a>, then come back and press the button below when the transfer lands.</p>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="btn ghost" onclick="paidRetry(this)">My bank transfer has landed, build my team</button></div>`;
-}
-async function payAuth(action) {
-  err('err2', '');
-  if (action === 'signup' && !$('p_terms').checked) return err('err2', 'Please agree to the Terms of Service and Privacy Policy to create your account.');
-  try { await api('/api/auth', { action, email: $('p_email').value.trim(), password: $('p_pass').value, token, terms: action === 'signup' ? true : undefined }); await payGate(); }
-  catch (e) { err('err2', e.message); }
-}
-async function choosePlan(item) {
-  err('err2', '');
-  try {
-    const j = await api('/api/billing', { action: 'card', item, returnTo: '/start?t=' + encodeURIComponent(token) });
-    location.href = j.url;
-  } catch (e) {
-    // Card payments not available: fall back to a bank-transfer invoice.
-    try { await api('/api/billing', { action: 'invoice', item }); location.href = '/billing'; } catch (e2) { err('err2', e2.message); }
-  }
-}
-async function paidRetry(b) {
-  b.disabled = true; err('err2', '');
-  try { await api('/api/billing', { action: 'check' }); } catch (e) {}
-  const me = await api('/api/auth').catch(() => ({ account: null }));
-  if (me.account && me.account.active) { $('payBox').classList.add('hidden'); $('payBox').innerHTML = ''; return reanalyze(); }
-  b.disabled = false; err('err2', 'Your payment has not arrived yet. Wires usually land the same business day; try again later.');
+  box.innerHTML = `<p style="font-size:20px;font-weight:700;color:var(--white);margin-bottom:12px">${esc(msg || 'Free setup is paused for this business.')}</p><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" onclick="location.href='/deploy?t='+encodeURIComponent(token)">Go live →</button><a class="btn ghost" href="/help">Ask for help</a></div>`;
 }
 async function load() {
   const r = await api('/api/profile?token=' + encodeURIComponent(token));
@@ -350,16 +314,11 @@ function renderProfile() {
   const params = new URLSearchParams(location.search);
   const t = params.get('t');
   const u = params.get('url');
-  if (u) { $('urlInput').value = u; }
+  if (u) { $('urlInput').value = (window.smart && smart.shortUrl(u)) || u; }
   const cs = params.get('stripe_session');
-  if (t && cs) {
-    token = t; history.replaceState(null, '', '/start?t=' + encodeURIComponent(t));
-    show(2); $('log').innerHTML = ''; logLine('Confirming your card payment', true);
-    try { await api('/api/billing', { action: 'confirm', session: cs }); } catch (e) {}
-    const me = await api('/api/auth').catch(() => ({ account: null }));
-    if (me.account && me.account.active) { logLine('Payment received. Building your team now.'); return analyze(false); }
-    return payGate();
-  }
+  const plan = params.get('plan');
+  if (plan) { try { localStorage.setItem('sqPlan', plan); } catch (e) {} }
+  if (t && cs) { location.replace('/deploy?t=' + encodeURIComponent(t) + '&stripe_session=' + encodeURIComponent(cs)); return; }
   if (t) {
     token = t;
     try {

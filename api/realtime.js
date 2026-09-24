@@ -1,7 +1,7 @@
 // /api/realtime — opens a WebRTC voice session with a business's team for the
 // browser test harness. The browser POSTs its SDP offer; the key stays here.
-// Prepaid only: the session needs an active paid plan, a hold for its worst
-// case is placed first, and Squadron hangs the call up itself at the time
+// Free during setup up to a per-business allowance, then the prepaid plan
+// pays. A hold for the worst case is placed first, and Squadron hangs the call up itself at the time
 // limit. { action: 'end', callId } ends it early and settles the hold on
 // server-measured time.
 import { ensureSchema, loadBusiness, loadProfile, loadTeam, readJson, bad } from './_lib/db.js';
@@ -10,7 +10,8 @@ import { apiKey } from './_lib/openai.js';
 import { voiceSession } from './_lib/voice.js';
 import { waitUntil } from '@vercel/functions';
 import { sql } from './_lib/db.js';
-import { requireFunds, placeHold, settleHold, maxVoiceSeconds, ledgerStatus, HOLD, PaymentRequired } from './_lib/ledger.js';
+import { placeHold, settleHold, maxVoiceSeconds, ledgerStatus, HOLD, PaymentRequired } from './_lib/ledger.js';
+import { fundSetup } from './_lib/setup.js';
 
 const TEST_CAP_SECONDS = 240;
 
@@ -41,9 +42,12 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true });
     }
     if (!sdp || !sdp.startsWith('v=')) return bad(res, 400, 'sdp offer required');
-    const st = await requireFunds(biz.account_id, HOLD.voicePerMinute, 'This account');
-    const limit = maxVoiceSeconds(st, { capSeconds: TEST_CAP_SECONDS, countsMinutes: false });
-    if (limit < 30) return res.status(402).json({ error: 'Your prepaid balance for this period is too low for a test call. Add a top-up in Billing.', code: 'payment_required' });
+    // Free during setup (capped per business); the plan pays once there is one.
+    const funding = await fundSetup({ biz, kind: 'voice-test', cents: HOLD.voicePerMinute, req });
+    const limit = funding.paid
+      ? maxVoiceSeconds(funding.status, { capSeconds: TEST_CAP_SECONDS, countsMinutes: false })
+      : Math.min(TEST_CAP_SECONDS, funding.voiceSecondsLeft);
+    if (limit < (funding.paid ? 30 : 20)) return res.status(402).json({ error: 'Your prepaid balance for this period is too low for a test call. Add a top-up in Billing.', code: 'payment_required' });
     const [prow, team] = await Promise.all([loadProfile(biz.id), loadTeam(biz.id)]);
     if (!prow || !team) return bad(res, 400, 'Build the profile and the team first.');
     const profile = applyCorrections(prow.profile, prow.corrections);
@@ -65,10 +69,10 @@ export default async function handler(req, res) {
     if (!callId) { console.error('[realtime] no call id in Location header'); return bad(res, 502, 'Voice session could not be metered, so it was not started.'); }
     const ref = `rt:${callId}`;
     const startedAt = Date.now();
-    await placeHold({ accountId: biz.account_id, businessId: biz.id, kind: 'voice-test', maxSeconds: limit, countsMinutes: false, ref });
+    await placeHold({ accountId: funding.accountId, businessId: biz.id, kind: 'voice-test', maxSeconds: limit, countsMinutes: false, ref });
     // A second session started at the same moment must not overdraw the budget.
-    const after = await ledgerStatus(biz.account_id);
-    if (after.spentCents > after.budgetCents) { await finish(ref, callId, startedAt); return res.status(402).json({ error: 'Your prepaid balance is fully reserved by calls in progress.', code: 'payment_required' }); }
+    const after = funding.paid ? await ledgerStatus(biz.account_id) : null;
+    if (after && after.spentCents > after.budgetCents) { await finish(ref, callId, startedAt); return res.status(402).json({ error: 'Your prepaid balance is fully reserved by calls in progress.', code: 'payment_required' }); }
     waitUntil(new Promise((ok) => setTimeout(ok, limit * 1000)).then(async () => {
       const open = await sql().query('SELECT 1 FROM spend WHERE ref = $1 AND settled = false', [ref]);
       if (open.length) await finish(ref, callId, startedAt);

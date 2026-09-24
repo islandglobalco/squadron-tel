@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deploy your team — Squadron</title>
+<title>Go live — Squadron</title>
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="/onboard.css">
+<script src="/smart-inputs.js"></script>
 <style>
 .card{border-radius:12px;background:#fff;border:2px solid rgba(11,30,69,0.1);padding:26px 28px;margin-bottom:18px}
 .card h2{margin-bottom:8px}
@@ -26,6 +27,14 @@
 .field input:focus{border-color:var(--signal)}
 .ok{color:var(--green);font-weight:700;font-size:17px;margin-top:10px}
 .acct{font-size:16px;color:var(--slate);font-weight:600}
+.planpick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+.planopt{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:20px;border-radius:12px;border:2px solid rgba(11,30,69,0.2);background:#fff;color:var(--white);cursor:pointer;font-family:inherit}
+.planopt:hover,.planopt.pick{border-color:var(--signal);box-shadow:0 0 0 3px rgba(31,95,209,0.12)}
+.planopt .pn{font-family:'Inter Tight',sans-serif;font-weight:700;font-size:24px;line-height:1}
+.planopt .pp{font-family:'Inter Tight',sans-serif;font-weight:700;font-size:38px;line-height:1;color:var(--signal)}
+.planopt .pm{font-size:16px;font-weight:600;color:#3D4C68}
+.golive{border-color:var(--signal)}
+@media (max-width:720px){.planpick{grid-template-columns:1fr}}
 @media (max-width:720px){.chan,.row2{grid-template-columns:1fr}}
 .hm{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;border-radius:12px;border:1px solid var(--line,#DCE4EF);background:#fff;margin-bottom:10px;cursor:pointer;text-transform:none;letter-spacing:0;color:inherit}
 .hm.on{border-color:#1F5FD1;box-shadow:0 0 0 3px rgba(31,95,209,0.14)}
@@ -67,20 +76,20 @@
 </nav>
 <main>
   <div class="steps">
-    <span class="step done">1 · Enter your business</span>
-    <span class="step done">2 · Analyze</span>
-    <span class="step done">3 · Review profile</span>
-    <span class="step done">4 · Build the team</span>
-    <span class="step done">5 · Test</span>
-    <span class="step on">6 · Deploy</span>
+    <span class="step done">1 · Your business</span>
+    <span class="step done">2 · Reading it</span>
+    <span class="step done">3 · Check the facts</span>
+    <span class="step done">4 · Meet your team</span>
+    <span class="step done">5 · Try it</span>
+    <span class="step on">6 · Go live</span>
   </div>
   <p class="eyebrow">Step 6</p>
-  <h1>Deploy your <em>team.</em></h1>
-  <p class="lead">One screen, every channel, with the true status of each. Nothing is switched on until you switch it on.</p>
+  <h1>Go <em>live.</em></h1>
+  <p class="lead">Your team is built and tested. Choose a plan, and it starts answering your customers. Prepaid for 30 days, no contract, nothing renews on its own.</p>
   <div class="error" id="err"></div>
 
-  <div class="card" id="acctCard">
-    <h2>Your account</h2>
+  <div class="card golive" id="acctCard">
+    <h2 id="acctTitle">Your account</h2>
     <div id="acctBody"></div>
   </div>
 
@@ -94,8 +103,8 @@
     <p class="detail">When a customer asks for a person, is upset, or hits something the profile does not cover, the team transfers or takes a message for the on-call contact.</p>
     <div class="row2 field">
       <div><label>On-call name</label><input id="s_name" placeholder="Who takes escalations"></div>
-      <div><label>On-call phone</label><input id="s_phone" placeholder="+1 555 555 5555"></div>
-      <div><label>Email for person requests and messages</label><input id="s_email" placeholder="you@yourbusiness.com"></div>
+      <div><label>On-call phone</label><input id="s_phone" data-smart="phone" placeholder="(555) 555-0123" autocomplete="tel"></div>
+      <div><label>Email for person requests and messages</label><input id="s_email" data-smart="email" placeholder="you@yourbusiness.com" autocomplete="email"></div>
       <div><label>Business hours (as customers should hear them)</label><input id="s_hours" placeholder="Monday to Friday, 9am to 5pm Central"></div>
     </div>
     <div class="field"><label>Outside business hours</label><select id="s_after"><option value="answer">Answer questions and take messages</option><option value="message">Take messages only</option></select></div>
@@ -123,46 +132,72 @@ async function api(path, body, method) {
   if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
   return j;
 }
+const PLAN_CHOICES = [['basic', 'Basic', '$39', '250 voice minutes'], ['pro', 'Pro', '$79', '650 voice minutes'], ['center', 'Command Center', '$199', '2,000 voice minutes'], ['battalion', 'Battalion', '$999', '10,000 voice minutes']];
+let wanted = null; try { wanted = localStorage.getItem('sqPlan'); } catch (e) {}
+const TERMS = `<label style="display:flex;gap:12px;align-items:flex-start;margin-top:16px;font-size:17px;line-height:1.5;color:#3D4C68;font-weight:500;cursor:pointer"><input type="checkbox" id="a_terms" checked style="width:22px;height:22px;margin-top:2px;flex:none;accent-color:#FFC62E">I agree to the <a href="/terms" target="_blank" style="color:var(--signal);font-weight:700">Terms of Service</a> and the <a href="/privacy" target="_blank" style="color:var(--signal);font-weight:700">Privacy Policy</a>, and I will follow the call-recording and consumer laws that apply to my business.</label>`;
+function plans() {
+  return `<div class="planpick">${PLAN_CHOICES.map(([k, n, p, m]) => `<button class="planopt ${k === wanted ? 'pick' : ''}" onclick="choosePlan('${k}', this)"><span class="pn">${n}</span><span class="pp">${p}</span><span class="pm">30 days · ${m} · unlimited web chat</span></button>`).join('')}</div>
+    <p class="detail">Pay by card and your team is live in seconds. Prefer a bank transfer? <a href="/billing" style="color:var(--signal);font-weight:700">Get an invoice in Billing</a>, and your team switches on when it lands.</p>`;
+}
 function renderAccount() {
-  if (account) {
-    const planText = account.active ? `${esc(account.planInfo.name)}, paid through ${new Date(account.paidThrough).toLocaleDateString()}` : 'No paid plan yet, so your team cannot go live';
-    $('acctBody').innerHTML = `<div class="acct">Signed in as <b style="color:var(--white)">${esc(account.email)}</b> · ${planText} · <a href="/billing" style="color:var(--signal)">Billing</a> · <a href="#" onclick="logout();return false" style="color:var(--signal)">Log out</a></div>`;
+  if (account && account.active) {
+    $('acctTitle').textContent = 'You are live';
+    $('acctBody').innerHTML = `<div class="acct">${esc(account.planInfo.name)}, paid through ${new Date(account.paidThrough).toLocaleDateString()} · ${esc(account.email)} · <a href="/billing" style="color:var(--signal)">Billing</a> · <a href="#" onclick="logout();return false" style="color:var(--signal)">Log out</a></div>`;
     return;
   }
-  $('acctBody').innerHTML = `<p class="detail">Create your account to deploy. Squadron is prepaid: plans start at $39 for 30 days.</p>
-    <div class="row2 field"><div><label>Email</label><input id="a_email" type="email" autocomplete="email"></div><div><label>Password (8+ characters)</label><input id="a_pass" type="password" autocomplete="new-password"></div></div>
-    <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn small" onclick="auth('signup')">Create account</button><button class="btn small ghost" onclick="auth('login')">I already have one, log in</button></div>
-    <label style="display:flex;gap:12px;align-items:flex-start;margin-top:16px;font-size:17px;line-height:1.5;color:#3D4C68;font-weight:500;cursor:pointer"><input type="checkbox" id="a_terms" style="width:22px;height:22px;margin-top:2px;flex:none;accent-color:#FFC62E">I agree to the <a href="/terms" target="_blank" style="color:var(--signal);font-weight:700">Terms of Service</a> and the <a href="/privacy" target="_blank" style="color:var(--signal);font-weight:700">Privacy Policy</a>, and I will follow the call-recording and consumer laws that apply to my business.</label>`;
+  if (account) {
+    $('acctTitle').textContent = 'Choose your plan';
+    $('acctBody').innerHTML = `<p class="detail">Signed in as <b>${esc(account.email)}</b>. Pick a plan and your team goes live on your website right after payment.</p>${plans()}`;
+    return;
+  }
+  $('acctTitle').textContent = 'Create your account and go live';
+  $('acctBody').innerHTML = `<p class="detail">Your email and a password, then pick a plan. Takes under a minute.</p>
+    <div class="row2 field"><div><label>Email</label><input id="a_email" data-smart="email" autocomplete="email" placeholder="you@yourbusiness.com"></div><div><label>Password (8+ characters)</label><input id="a_pass" type="password" autocomplete="new-password" onkeydown="if(event.key==='Enter')auth('signup')"></div></div>
+    <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn" onclick="auth('signup')">Continue →</button><button class="btn ghost" onclick="auth('login')">I have an account, log in</button></div>${TERMS}`;
 }
 async function auth(action) {
   err('');
   if (action === 'signup' && !$('a_terms').checked) return err('Please agree to the Terms of Service and Privacy Policy to create your account.');
-  try { await api('/api/auth', { action, email: $('a_email').value.trim(), password: $('a_pass').value, token, terms: action === 'signup' ? true : undefined }); await load(); }
-  catch (e) { err(e.message); }
+  const raw = $('a_email').value.trim();
+  const email = (window.smart && smart.email(raw)) || raw;
+  try { await api('/api/auth', { action, email, password: $('a_pass').value, token, terms: action === 'signup' ? true : undefined }); await load(); }
+  catch (e) {
+    if (action === 'signup' && /already exists/.test(e.message)) { try { await api('/api/auth', { action: 'login', email, password: $('a_pass').value, token }); return load(); } catch (_) {} }
+    err(e.message);
+  }
+}
+async function choosePlan(item, btn) {
+  err(''); if (btn) btn.disabled = true;
+  try { await api('/api/auth', { action: 'claim', token }).catch(() => {}); const j = await api('/api/billing', { action: 'card', item, returnTo: '/deploy?t=' + encodeURIComponent(token) }); location.href = j.url; }
+  catch (e) {
+    try { await api('/api/billing', { action: 'invoice', item }); location.href = '/billing'; } catch (e2) { err(e2.message); if (btn) btn.disabled = false; }
+  }
 }
 async function logout() { await api('/api/auth', { action: 'logout' }); location.reload(); }
 function chanCard(key, title, st) {
   const cls = st.state === 'live' ? 'live' : st.state === 'ready' ? 'ready' : st.state === 'pending' ? 'pending' : 'unavailable';
   const enabled = data.channels[key] && data.channels[key].enabled;
   let action = '';
-  if (key === 'chat') action = account ? `<button class="btn small ${enabled ? 'ghost' : ''}" onclick="toggle('chat', ${!enabled})">${enabled ? 'Turn chat off' : 'Turn chat on'}</button>` : `<span class="detail">Create your account to turn chat on.</span>`;
+  if (key === 'chat') action = account && account.active ? `<button class="btn small ${enabled ? 'ghost' : ''}" onclick="toggle('chat', ${!enabled})">${enabled ? 'Turn chat off' : 'Turn chat on'}</button>` : `<span class="detail">Switches on as soon as you choose a plan above.</span>`;
   return `<div class="card"><div class="chan"><div><h2>${esc(title)}</h2><div class="detail">${esc(st.detail)}</div>${st.snippet ? `<div class="snippet">${esc(st.snippet)}</div>` : ''}${action ? `<div style="margin-top:14px">${action}</div>` : ''}</div><span class="state ${cls}">${esc(st.label)}</span></div></div>`;
 }
 function render() {
   const s = data.status;
   $('channels').innerHTML = chanCard('phone', 'Phone', s.phone) + chanCard('chat', 'Chat', s.chat) + chanCard('email', 'Email', s.email) + chanCard('sms', 'SMS', s.sms);
   const st = data.settings || {};
-  $('s_name').value = st.on_call_name || ''; $('s_phone').value = st.on_call_phone || ''; $('s_email').value = st.notify_email || ''; $('s_hours').value = st.hours || ''; $('s_after').value = st.after_hours || 'answer';
+  $('s_name').value = st.on_call_name || ''; $('s_phone').value = window.smart ? smart.prettyPhone(st.on_call_phone || '') : (st.on_call_phone || ''); $('s_email').value = st.notify_email || ''; $('s_hours').value = st.hours || ''; $('s_after').value = st.after_hours || 'answer';
   renderHuman(data.humanModes || {}, st.human_mode || 'ai_first');
 }
 async function toggle(key, enabled) {
   err('');
-  try { data = await api('/api/settings', { token, channels: { [key]: { enabled } } }); render(); } catch (e) { err(e.message); }
+  try { data = await api('/api/settings', { token, channels: { [key]: { enabled } } }); render(); }
+  catch (e) { err(e.message); $('acctCard').scrollIntoView({ behavior: 'smooth' }); }
 }
 async function saveSettings() {
   $('saved').textContent = 'Saving…';
   try {
-    data = await api('/api/settings', { token, settings: { on_call_name: $('s_name').value, on_call_phone: $('s_phone').value, notify_email: $('s_email').value, hours: $('s_hours').value, after_hours: $('s_after').value, human_mode: (document.querySelector('input[name=human]:checked') || {}).value || 'ai_first' } });
+    const ph = $('s_phone').value.trim(), em = $('s_email').value.trim();
+    data = await api('/api/settings', { token, settings: { on_call_name: $('s_name').value, on_call_phone: (window.smart && smart.phone(ph)) || ph, notify_email: (window.smart && smart.email(em)) || em, hours: $('s_hours').value, after_hours: $('s_after').value, human_mode: (document.querySelector('input[name=human]:checked') || {}).value || 'ai_first' } });
     $('saved').textContent = 'Saved.'; setTimeout(() => ($('saved').textContent = ''), 2500);
   } catch (e) { $('saved').textContent = 'Could not save: ' + e.message; }
 }
@@ -175,7 +210,16 @@ async function load() {
 }
 (async () => {
   if (!token) { location.href = '/start'; return; }
-  try { await load(); } catch (e) { err(e.message); }
+  const cs = new URLSearchParams(location.search).get('stripe_session');
+  try {
+    if (cs) {
+      history.replaceState(null, '', '/deploy?t=' + encodeURIComponent(token));
+      await api('/api/billing', { action: 'confirm', session: cs }).catch(() => {});
+    }
+    await load();
+    // Paying is the decision to go live, so web chat switches on right away.
+    if (cs && account && account.active && !(data.channels.chat && data.channels.chat.enabled)) await toggle('chat', true);
+  } catch (e) { err(e.message); }
 })();
 function renderHuman(modes, cur) {
   const el = document.getElementById('humanModes'); if (!el) return;

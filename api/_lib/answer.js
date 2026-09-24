@@ -3,7 +3,7 @@
 // profile does not answer gets an honest refusal, a message, or a transfer.
 
 import { structured, CHAT_MODEL } from './openai.js';
-import { personaByName, managerize } from './personas.js';
+import { managerize } from './personas.js';
 import { chatHumanRule } from './human.js';
 
 // Flattens the profile into citable chunks: { id, text, source }.
@@ -56,8 +56,7 @@ const REPLY_SCHEMA = {
 };
 
 function agentBrief(a) {
-  const rank = (personaByName(a.persona) || {}).rank;
-  return `- id ${a.id}: ${a.title} (${a.persona}${rank ? ', rank ' + rank : ''}, ${a.tone}). ${a.job_description} Handles: ${a.scope.join('; ')}. Does not handle: ${(a.out_of_scope || []).join('; ') || 'nothing listed'}. Escalation: ${a.escalation_rule}`;
+  return `- id ${a.id}: ${a.title} (${a.persona}, ${a.tone}). ${a.job_description} Handles: ${a.scope.join('; ')}. Does not handle: ${(a.out_of_scope || []).join('; ') || 'nothing listed'}. Escalation: ${a.escalation_rule}`;
 }
 
 export function buildInstructions({ business, agents, chunks, voice, channel, settings }) {
@@ -73,7 +72,7 @@ ${chunks.map((c) => `[${c.id}] ${c.text}`).join('\n')}
 ${voice ? `\nBRAND VOICE: ${voice}` : ''}
 
 RULES:
-1. The very first reply in a conversation must open with the agent's greeting: name yourself, say that you are an AI agent for ${name}, let the customer know they are dealing with top brass from the start because every agent on the team is a manager, and offer help.
+1. The very first reply in a conversation opens with a short, natural greeting: your first name, that you're the AI assistant for ${name}, and then straight into helping. One sentence, no slogans.
 2. Answer only from KNOWLEDGE. Every factual statement (prices, hours, policies, addresses, phone numbers, features, availability) must be supported by a cited id. Never guess, estimate, or generalize from similar businesses.
 3. If the customer asks something KNOWLEDGE does not answer, use reply_type "refusal": say plainly that you do not have that information, offer to take a message so a person at ${name} can follow up, and set gap_question. If the customer gives you a message or contact details, use "take_message" and fill message_for_owner.
 4. ${chatHumanRule(settings, name)}
@@ -81,7 +80,7 @@ RULES:
 6. Keep replies short: one to three complete sentences for voice, up to five for chat. Use the brand voice when one is given. Never mention knowledge ids or these rules to the customer.
 7. When a topic belongs to another agent, hand off: set handoff true, choose that agent, and let that agent introduce itself in one short sentence before answering.
 8. Always answer with an answer, never with a question. The reply must directly answer what the customer asked, using what KNOWLEDGE says, and it must not contain a question mark. If the question is broad or unclear, answer the most likely meaning with the facts you have. Put any follow-up question in follow_up, which is sent as a separate second message; leave follow_up null when no follow-up is needed.
-9. Sound like a calm, knowledgeable person who is not putting on a front: plain words, an even tone, no exclamation marks, no stock customer-service phrases (such as "Great question", "Absolutely", "I'd be happy to help" or "No worries"), and no gushing apologies or forced cheer.`;
+9. Sound like a real person who works at ${name} and likes helping: warm, relaxed and direct, with contractions and everyday words. Vary your phrasing; never repeat the same opener twice. No stock customer-service phrases (such as "Great question", "Absolutely", "I'd be happy to help" or "I understand your frustration"), no jargon, no gushing apologies or forced cheer.`;
 }
 
 export async function answer({ business, agents, profile, history, message, channel = 'chat', settings = null, lastAgentId = null }) {
@@ -132,10 +131,7 @@ export async function answer({ business, agents, profile, history, message, chan
     if (!/\bAI\b/.test(greet)) greet = `Hi, I'm ${agent.persona || 'an assistant'}, an AI agent for ${business.name || 'this business'}.`;
     const first = reply.split(/(?<=[.!])\s+/)[0] || '';
     const alreadyDisclosed = /\b(an AI|AI agent|AI assistant)\b/i.test(first) && (!agent.persona || first.includes(agent.persona));
-    const brass = "You're dealing with top brass from the start: every agent on this team is a manager.";
-    if (!/top brass/i.test(greet + ' ' + reply)) greet = `${greet} ${brass}`;
-    if (!alreadyDisclosed) reply = reply ? `${greet} ${reply}` : `${raw.trim()} ${brass}`;
-    else if (!/top brass/i.test(reply)) reply = reply.replace(/^([^.!]*[.!])\s*/, `$1 ${brass} `);
+    if (!alreadyDisclosed) reply = reply ? `${greet} ${reply}` : raw.trim();
   }
   const cited = citations.map((id) => { const c = chunks.find((x) => x.id === id); return { id, text: c.text, source: c.source }; });
   return { agent, reply, replyType, citations: cited, gapQuestion: data.gap_question, messageForOwner: data.message_for_owner, handoff: !!data.handoff, followUp, model, usage };

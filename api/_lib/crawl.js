@@ -13,13 +13,22 @@ const PRIORITY = [
   'shipping', 'terms', 'booking', 'appointments', 'schedule', 'reservations',
 ];
 
+// Accepts what people actually type: "acme.com", "www.acme.com", " Acme.com/ ",
+// "http//acme.com", "htps://acme.com", "hello@acme.com", or a pasted sentence
+// containing the address. Returns a full URL, or null when there is no domain.
 export function normalizeUrl(input) {
   let s = String(input || '').trim();
   if (!s) return null;
-  if (!/^https?:\/\//i.test(s)) s = 'https://' + s;
+  if (/\s/.test(s)) s = (s.match(/\S*[a-z0-9-]\.[a-z]{2,}\S*/i) || [''])[0];
+  s = s.replace(/^[<("'[]+|[>)"'\].,;:!?]+$/g, '');
+  if (/^[^@/:]+@[^@/]+\.[a-z]{2,}$/i.test(s)) s = s.split('@')[1];
+  const http = /^http:\/\//i.test(s);
+  s = s.replace(/^h?t+p+s?(:\/*|\/+)/i, '').replace(/^\/+/, '');
+  if (!s) return null;
   try {
-    const u = new URL(s);
-    if (!u.hostname.includes('.')) return null;
+    const u = new URL((http ? 'http://' : 'https://') + s);
+    u.hostname = u.hostname.toLowerCase().replace(/\.+$/, '');
+    if (!/^([a-z0-9-]+\.)+([a-z]{2,}|xn--[a-z0-9-]+)$/.test(u.hostname)) return null;
     u.hash = '';
     return u.toString();
   } catch { return null; }

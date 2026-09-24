@@ -64,15 +64,14 @@ export default {
       const headers = { 'Content-Type': 'text/xml' };
       if (!ctx || !ctx.ok) {
         const why = ctx && ctx.reason === 'paused' ? 'This business has reached its plan allowance, so its assistant is paused right now. Please try again later.' : 'This number is not assigned to a business right now. Goodbye.';
-        return new Response(`<?xml version="1.0" encoding="UTF-8"?><Response><Say>${xml(why)}</Say><Hangup/></Response>`, { headers });
+        return new Response(`<?xml version="1.0" encoding="UTF-8"?><Response><Say voice="Polly.Joanna-Generative">${xml(why)}</Say><Hangup/></Response>`, { headers });
       }
       const demoFlag = ctx.demo ? '1' : '0';
       const exp = String(Date.now() + 5 * 60 * 1000);
       const limit = String(Math.max(0, Math.floor(Number(ctx.limitSeconds) || 0)));
       const hold = String(ctx.holdRef || '');
       const tk = await ticket(env, ctx.businessId, callSid, demoFlag, exp, limit, hold);
-      const notice = `This call is answered by an A I agent for ${ctx.businessName}. It is recorded for quality.`;
-      return new Response(`<?xml version="1.0" encoding="UTF-8"?><Response><Say>${xml(notice)}</Say><Connect><Stream url="wss://${url.host}/media"><Parameter name="businessId" value="${xml(ctx.businessId)}"/><Parameter name="callSid" value="${xml(callSid)}"/><Parameter name="from" value="${xml(from)}"/><Parameter name="to" value="${xml(to)}"/><Parameter name="demo" value="${demoFlag}"/><Parameter name="exp" value="${exp}"/><Parameter name="limit" value="${limit}"/><Parameter name="hold" value="${xml(hold)}"/><Parameter name="ticket" value="${xml(tk)}"/></Stream></Connect></Response>`, { headers });
+      return new Response(`<?xml version="1.0" encoding="UTF-8"?><Response><Connect><Stream url="wss://${url.host}/media"><Parameter name="businessId" value="${xml(ctx.businessId)}"/><Parameter name="callSid" value="${xml(callSid)}"/><Parameter name="from" value="${xml(from)}"/><Parameter name="to" value="${xml(to)}"/><Parameter name="demo" value="${demoFlag}"/><Parameter name="exp" value="${exp}"/><Parameter name="limit" value="${limit}"/><Parameter name="hold" value="${xml(hold)}"/><Parameter name="ticket" value="${xml(tk)}"/></Stream></Connect></Response>`, { headers });
     }
     if (url.pathname === '/media') {
       if (request.headers.get('Upgrade') !== 'websocket') return new Response('Expected a WebSocket', { status: 426 });
@@ -98,7 +97,7 @@ export class CallSession {
     const env = this.env;
     const usage = { input_token_details: { text_tokens: 0, audio_tokens: 0, cached_tokens: 0, cached_tokens_details: { text_tokens: 0, audio_tokens: 0 } }, output_token_details: { text_tokens: 0, audio_tokens: 0 } };
     const addUsage = (u) => { if (!u) return; const i = u.input_token_details || {}, o = u.output_token_details || {}, c = i.cached_tokens_details || {}; usage.input_token_details.text_tokens += i.text_tokens || 0; usage.input_token_details.audio_tokens += i.audio_tokens || 0; usage.input_token_details.cached_tokens += i.cached_tokens || 0; usage.input_token_details.cached_tokens_details.text_tokens += c.text_tokens || 0; usage.input_token_details.cached_tokens_details.audio_tokens += c.audio_tokens || 0; usage.output_token_details.text_tokens += o.text_tokens || 0; usage.output_token_details.audio_tokens += o.audio_tokens || 0; };
-    let verified = false, holdRef = null, limitMs = 0, limitTimer = null, model = env.REALTIME_MODEL || 'gpt-realtime-2.1-mini', streamSid = null, callSid = null, businessId = null, demo = false, ctx = null, oai = null, oaiReady = false, closed = false;
+    let verified = false, holdRef = null, limitMs = 0, limitTimer = null, model = env.REALTIME_MODEL || 'gpt-realtime-2.1', streamSid = null, callSid = null, businessId = null, demo = false, ctx = null, oai = null, oaiReady = false, closed = false;
     const transcript = [], gaps = [], messages = [];
     let transferRequested = false;
     const startedAt = Date.now();
@@ -122,12 +121,12 @@ export class CallSession {
       if (old) { try { old.close(); } catch {} }
       if (ctx) { next.from = ctx.from; next.to = ctx.to; }
       ctx = next;
-      sendOai({ type: 'session.update', session: { type: 'realtime', instructions: ctx.session.instructions, tools: ctx.session.tools, tool_choice: 'auto', audio: { input: { format: { type: 'audio/pcmu' }, transcription: { model: 'gpt-4o-mini-transcribe' }, turn_detection: { type: 'semantic_vad', eagerness: 'auto', interrupt_response: true } }, output: { format: { type: 'audio/pcmu' }, voice: ctx.session.audio.output.voice } } } });
+      sendOai({ type: 'session.update', session: { type: 'realtime', instructions: ctx.session.instructions, tools: ctx.session.tools, tool_choice: 'auto', audio: { input: { format: { type: 'audio/pcmu' }, transcription: { model: 'gpt-4o-mini-transcribe' }, noise_reduction: { type: 'near_field' }, turn_detection: { type: 'semantic_vad', eagerness: 'auto', interrupt_response: true } }, output: { format: { type: 'audio/pcmu' }, voice: ctx.session.audio.output.voice } } } });
       if (handoff) {
         const history = transcript.slice(-16).map((t) => `${t.role === 'customer' ? 'Caller' : (t.agent_name || 'Agent')}: ${t.text}`).join('\n');
         sendOai({ type: 'conversation.item.create', item: { type: 'message', role: 'system', content: [{ type: 'input_text', text: `Escalation to you, Overwatch. Reason: ${handoff}\nThe call so far:\n${history || '(no transcript yet)'}` }] } });
       }
-      sendOai({ type: 'response.create' });
+      sendOai(handoff ? { type: 'response.create' } : { type: 'response.create', response: { instructions: `Start the call now. Say this warmly and naturally, like a friendly person picking up the phone, then wait for the caller: "${ctx.opening || 'Hi, thanks for calling. This is the AI assistant, and calls are recorded for quality. How can I help?'}"` } });
       sock.addEventListener('message', (m) => {
         if (sock !== oai) return; // a replaced session stays silent
         let ev; try { ev = JSON.parse(typeof m.data === 'string' ? m.data : new TextDecoder().decode(m.data)); } catch { return; }
@@ -185,7 +184,7 @@ export class CallSession {
         const target = ctx.settings && ctx.settings.on_call_phone;
         if (target && !demo) {
           output = { ok: true, note: 'Say one short sentence that you are transferring now, then stop speaking.' };
-          setTimeout(() => twilio(env, `/Calls/${callSid}.json`, { Twiml: `<?xml version="1.0" encoding="UTF-8"?><Response><Say>Connecting you now.</Say><Dial>${xml(target)}</Dial></Response>` }).catch((e) => console.log('transfer failed', e.message)), 4000);
+          setTimeout(() => twilio(env, `/Calls/${callSid}.json`, { Twiml: `<?xml version="1.0" encoding="UTF-8"?><Response><Say voice="Polly.Joanna-Generative">Connecting you now.</Say><Dial>${xml(target)}</Dial></Response>` }).catch((e) => console.log('transfer failed', e.message)), 4000);
         } else {
           output = { ok: false, note: demo ? 'This is a demo call, so no transfer is possible. Say so and offer to take a message.' : 'No on-call number is set for this business. Say that no one is available to transfer to right now and offer to take a message.' };
         }
@@ -196,7 +195,7 @@ export class CallSession {
 
     const endForLimit = async () => {
       if (closed || !callSid) return;
-      try { await twilio(env, `/Calls/${callSid}.json`, { Twiml: '<?xml version="1.0" encoding="UTF-8"?><Response><Say>This call has reached its time limit. Goodbye.</Say><Hangup/></Response>' }); }
+      try { await twilio(env, `/Calls/${callSid}.json`, { Twiml: '<?xml version="1.0" encoding="UTF-8"?><Response><Say voice="Polly.Joanna-Generative">This call has reached its time limit. Goodbye.</Say><Hangup/></Response>' }); }
       catch (e) { console.log('limit hangup failed', e.message); try { await twilio(env, `/Calls/${callSid}.json`, { Status: 'completed' }); } catch {} }
       setTimeout(() => this.state.waitUntil(finish()), 12000);
     };

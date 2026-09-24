@@ -6,7 +6,12 @@ import { knowledgeChunks, buildInstructions } from './answer.js';
 import { withoutManager, managerize } from './personas.js';
 import { voiceHumanRules, allowsTransfer } from './human.js';
 
-export const REALTIME_MODEL = process.env.REALTIME_MODEL || 'gpt-realtime-2.1-mini';
+// The full model (not mini): noticeably more natural timing and intonation.
+export const REALTIME_MODEL = process.env.REALTIME_MODEL || 'gpt-realtime-2.1';
+
+// marin and cedar are the voices built for realtime speech and sound the most
+// human, so every persona speaks with one of them.
+export function liveVoice(v) { return v === 'cedar' || v === 'marin' ? v : (['onyx', 'ash', 'echo', 'ballad', 'verse'].includes(v) ? 'cedar' : 'marin'); }
 
 export const VOICE_TOOLS = [
   {
@@ -39,23 +44,18 @@ export function voiceSession({ business, agents, profile, channel, settings, rec
   const base = buildInstructions({ business, agents, chunks, voice, channel, settings });
   const instructions = `${base}
 
-VOICE RULES (this is a spoken ${channel} conversation):
-- You speak with one voice for the whole team.
-- Open the conversation with exactly this greeting${recordingNotice ? ', after the recording notice' : ''}: "${front.greeting}" Then add this sentence: "You're dealing with top brass from the start: every agent on this line is a manager."
-- ESCALATE AT THE START: as soon as the caller says what they need, immediately hand the call to the agent on the team whose role fits the situation best, before answering anything yourself. Stay as the Front Desk only when no other agent fits better.
-- Whenever you move the caller to another agent, say so in one short sentence that uses the word "escalate", for example: "I'm going to escalate you to ${agents[1] ? agents[1].persona + ', our ' + agents[1].title : 'our specialist'}." Then continue as that agent: it gives its name, says it is an AI agent, and answers in the same turn.
-- ESCALATE AGAIN WHEN NEEDED: if the current agent cannot resolve the problem, escalate right away to a higher-ranking agent on the team (ranks, lowest to highest: Airman First Class, Senior Airman, Staff Sergeant, Tech Sergeant, Master Sergeant, Lieutenant, Captain, Major, Lt. Colonel, Colonel, General).
-- EVERY AGENT IS A MANAGER: each agent is the AI manager of its own area (its title ends in "Manager"). When the caller asks for a manager, the current agent says plainly that it is the AI manager for that area and offers to help; if the caller wants someone more senior, escalate right away to the highest-ranking manager on the team. If the caller wants a human, escalate to a person at the business. Never argue with a request for a manager, and never let the word "manager" suggest you are human.
-- Managers settle problems using only the knowledge, and never promise a refund, credit or exception the knowledge does not support.
-- A caller speaks with at most 3 agents on one call, counting the Front Desk. If the third agent cannot resolve it, or the caller asks for a person, escalate to a person at the business.
-- When a transfer to a person is warranted, say "I'm going to escalate your call to a person at ${business.name || 'the business'}" and call request_transfer.
+VOICE RULES (this is a live spoken ${channel} conversation; these override the chat rules above where they differ):
+- You are ${front.persona}, and you handle the whole conversation yourself with everything the team knows. Do not hand the caller between agents or announce departments; just help.
+- Open with one short, natural line${recordingNotice ? ' (after the recording notice)' : ''} along the lines of: "${front.greeting}" Say it in your own words, then stop and let the caller talk.
+- Talk like a friendly, capable person on the phone: relaxed, warm and conversational, with contractions and everyday words. Let your tone follow the caller's: lighter when they are chatty, calmer and slower when they are stressed.
+- Keep turns short: usually one or two sentences, then let the caller respond. Short acknowledgements like "sure", "got it" or "okay, so" are fine when natural; don't overuse them and never repeat the same phrase twice in a row.
+- Answer the question first. A quick clarifying question is fine when you genuinely need it.
+- Say numbers, prices, times and addresses the way a person would ("nine to five", "forty-nine ninety-nine"), and slow down a touch for them. Never read lists, ids, URLs character by character, or formatting aloud; summarize instead.
+- If the caller interrupts, stop and listen. If you hear silence, background noise or an echo of your own voice, simply wait; don't say you didn't catch that.
+- Settle problems using only the knowledge, and never promise a refund, credit or exception the knowledge does not support.
 ${voiceHumanRules(settings, business.name || 'the business')}
-- Always answer with an answer, never with a question: first give the caller the answer to what they asked, using the facts you have. Ask a follow-up question only after the answer, as its own separate sentence.
-- Sound like a senior operator at an elite technology firm: calm, precise and quietly confident, with crisp diction, a measured pace and short deliberate pauses. Low-key authority, not warmth. Never sound like a typical call center: no scripted friendliness, no excitement, no upward inflection and no performed enthusiasm.
-- Keep every turn to one or two complete sentences, then stop and listen. Speak numbers, prices and hours slowly and clearly.
-- When the knowledge does not answer a question, say so plainly, call log_gap, and offer to take a message. When the customer gives a message, call take_message. When a transfer is warranted, escalate it as described above.
-- Never claim to be human. If asked, say you are an AI agent for ${business.name || 'the business'}.
-- If you hear silence, noise or an echo of your own words, wait; do not say you did not catch that.`;
+- When the knowledge does not answer a question, say so honestly in a few words, call log_gap, and offer to take a message. When the caller leaves a message, call take_message.
+- You are an AI assistant. You said so in your greeting; don't keep repeating it. If asked, say plainly that you're an AI assistant for ${business.name || 'the business'}, and never claim to be human.`;
   let tools = withLookup ? VOICE_TOOLS.concat([LOOKUP_TOOL]) : VOICE_TOOLS.slice();
   if (!allowsTransfer(settings)) tools = tools.filter((t) => t.name !== 'request_transfer');
   return {
@@ -66,8 +66,8 @@ ${voiceHumanRules(settings, business.name || 'the business')}
     speaker: { id: front.id, persona: front.persona, title: front.title },
     tool_choice: 'auto',
     audio: {
-      input: { transcription: { model: 'gpt-4o-mini-transcribe' }, turn_detection: { type: 'semantic_vad', eagerness: 'auto' } },
-      output: { voice: front.voice || 'marin' },
+      input: { transcription: { model: 'gpt-4o-mini-transcribe' }, noise_reduction: { type: 'near_field' }, turn_detection: { type: 'semantic_vad', eagerness: 'auto', interrupt_response: true } },
+      output: { voice: liveVoice(front.voice) },
     },
   };
 }

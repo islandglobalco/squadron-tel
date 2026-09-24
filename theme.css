@@ -7,6 +7,9 @@
   --label:'Inter',system-ui,sans-serif;
   --r:12px;
 }
+/* App pages (onboard.css) use --white as their main text colour; keep it ink
+   there so typed text and labels stay visible on white fields. */
+body:not(.home){--white:#0B1E45}
 body.home{background:var(--gray)!important;background-image:none!important;color:var(--ink)!important}
 body.home ::selection{background:var(--blue);color:#fff}
 

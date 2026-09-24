@@ -57,11 +57,10 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/xml' });
     if (!ctx || !ctx.ok) {
       const why = ctx && ctx.reason === 'paused' ? 'This business has reached its plan allowance, so its assistant is paused right now. Please try again later.' : 'This number is not assigned to a business right now. Goodbye.';
-      return res.end(`<?xml version="1.0" encoding="UTF-8"?><Response><Say>${xml(why)}</Say><Hangup/></Response>`);
+      return res.end(`<?xml version="1.0" encoding="UTF-8"?><Response><Say voice="Polly.Joanna-Generative">${xml(why)}</Say><Hangup/></Response>`);
     }
     const host = PUBLIC_HOST || req.headers.host;
-    const notice = `This call is answered by an A I agent for ${ctx.businessName}. It is recorded for quality.`;
-    return res.end(`<?xml version="1.0" encoding="UTF-8"?><Response><Say>${xml(notice)}</Say><Connect><Stream url="wss://${host}/media"><Parameter name="businessId" value="${xml(ctx.businessId)}"/><Parameter name="callSid" value="${xml(callSid)}"/><Parameter name="from" value="${xml(from)}"/><Parameter name="to" value="${xml(to)}"/><Parameter name="demo" value="${ctx.demo ? '1' : '0'}"/></Stream></Connect></Response>`);
+    return res.end(`<?xml version="1.0" encoding="UTF-8"?><Response><Connect><Stream url="wss://${host}/media"><Parameter name="businessId" value="${xml(ctx.businessId)}"/><Parameter name="callSid" value="${xml(callSid)}"/><Parameter name="from" value="${xml(from)}"/><Parameter name="to" value="${xml(to)}"/><Parameter name="demo" value="${ctx.demo ? '1' : '0'}"/></Stream></Connect></Response>`);
   }
   if (url.pathname === '/twilio/status' && req.method === 'POST') { await readBody(req); res.writeHead(200); return res.end(); }
   res.writeHead(404); res.end('Not found');
@@ -94,13 +93,13 @@ wss.on('connection', (tw) => {
           tools: ctx.session.tools,
           tool_choice: 'auto',
           audio: {
-            input: { format: { type: 'audio/pcmu' }, transcription: { model: 'gpt-4o-mini-transcribe' }, turn_detection: { type: 'semantic_vad', eagerness: 'auto', interrupt_response: true } },
+            input: { format: { type: 'audio/pcmu' }, transcription: { model: 'gpt-4o-mini-transcribe' }, noise_reduction: { type: 'near_field' }, turn_detection: { type: 'semantic_vad', eagerness: 'auto', interrupt_response: true } },
             output: { format: { type: 'audio/pcmu' }, voice: ctx.session.audio.output.voice },
           },
         },
       });
       oaiReady = true;
-      sendOai({ type: 'response.create' });
+      sendOai({ type: 'response.create', response: { instructions: `Start the call now. Say this warmly and naturally, like a friendly person picking up the phone, then wait for the caller: "${ctx.opening || 'Hi, thanks for calling. This is the AI assistant, and calls are recorded for quality. How can I help?'}"` } });
       log('openai session up', callSid, businessId);
     });
     oai.on('message', (raw) => {
@@ -166,7 +165,7 @@ wss.on('connection', (tw) => {
   }
 
   async function transfer(target) {
-    const twiml = `<?xml version="1.0" encoding="UTF-8"?><Response><Say>Connecting you now.</Say><Dial callerId="${xml(ctx.to || '')}">${xml(target)}</Dial></Response>`;
+    const twiml = `<?xml version="1.0" encoding="UTF-8"?><Response><Say voice="Polly.Joanna-Generative">Connecting you now.</Say><Dial callerId="${xml(ctx.to || '')}">${xml(target)}</Dial></Response>`;
     await twilio(`/Calls/${callSid}.json`, { Twiml: twiml });
     log('transferred', callSid, 'to', target);
   }

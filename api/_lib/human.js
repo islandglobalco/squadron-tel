@@ -58,12 +58,12 @@ export function voiceHumanRules(settings, name) {
     return `- HUMAN LAYER, AI ONLY: no person is available live on this line. Never call request_transfer. If the caller asks for a person, say plainly that no one at ${name} is available live on this line and offer to take a message with take_message. For an emergency, tell the caller to hang up and call emergency services.`;
   }
   if (mode === 'person_first') {
-    return `- HUMAN LAYER, PERSON FIRST: you are the AI receptionist. After the greeting, say you will connect the caller to ${who}, then ask for their name and what the call is about. As soon as they answer, say "I'm going to escalate your call to ${who} now" and call request_transfer with their name and reason. ${noLine} Answer a question yourself only when the caller asks you to.`;
+    return `- HUMAN LAYER, PERSON FIRST: you are the AI receptionist. After the greeting, say you will connect the caller to ${who}, then ask for their name and what the call is about. As soon as they answer, tell them in your own words that you're putting them through to ${who}, and call request_transfer with their name and reason. ${noLine} Answer a question yourself only when the caller asks you to.`;
   }
   if (mode === 'choice') {
-    return `- HUMAN LAYER, CALLER CHOOSES: right after the greeting, say: "You can talk with ${who}, or stay with our AI team. Say 'person' or tell me what you need." If the caller chooses a person at any point, say "I'm going to escalate your call to ${who}" and call request_transfer. ${noLine}`;
+    return `- HUMAN LAYER, CALLER CHOOSES: right after the greeting, let the caller know in one easy sentence that they can speak with ${who} or you can help them right now. If they choose a person at any point, tell them you're putting them through and call request_transfer. ${noLine}`;
   }
-  return `- HUMAN LAYER, AI FIRST: when the caller asks for a person, is upset, describes an emergency, or has been through three agents, say "I'm going to escalate your call to ${who}" and call request_transfer. ${canTransfer ? '' : 'No on-call number is set, so take a message with take_message instead of transferring. '}${noLine}`;
+  return `- HUMAN LAYER, AI FIRST: when the caller asks for a person, is upset, or describes an emergency, tell them you're putting them through to ${who} and call request_transfer. ${canTransfer ? '' : 'No on-call number is set, so take a message with take_message instead of transferring. '}${noLine}`;
 }
 
 export function allowsTransfer(settings) { return humanMode(settings) !== 'ai_only'; }

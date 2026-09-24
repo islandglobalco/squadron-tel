@@ -3,7 +3,8 @@
 import { ensureSchema, sql, loadBusiness, loadProfile, loadTeam, readJson, bad } from './_lib/db.js';
 import { applyCorrections } from './_lib/profile.js';
 import { generateTeam } from './_lib/team.js';
-import { requireFunds, recordSpend, textCostCents, HOLD, PaymentRequired } from './_lib/ledger.js';
+import { textCostCents, HOLD, PaymentRequired } from './_lib/ledger.js';
+import { fundSetup, recordSetupSpend } from './_lib/setup.js';
 
 const EDITABLE = ['title', 'job_description', 'scope', 'out_of_scope', 'escalation_rule', 'greeting', 'enabled'];
 
@@ -20,9 +21,9 @@ export default async function handler(req, res) {
       const row = await loadProfile(biz.id);
       if (!row) return bad(res, 400, 'Build the Business Profile first.');
       const profile = applyCorrections(row.profile, row.corrections);
-      await requireFunds(biz.account_id, HOLD.team, 'This account');
+      const funding = await fundSetup({ biz, kind: 'team', cents: HOLD.team, req });
       const { agents, routing_notes, model, usage } = await generateTeam(profile);
-      await recordSpend({ accountId: biz.account_id, businessId: biz.id, kind: 'team', cents: textCostCents(model, usage) });
+      await recordSetupSpend(funding, { biz, kind: 'team', cents: textCostCents(model, usage) });
       await sql().query(
         `INSERT INTO teams (business_id, agents, model) VALUES ($1, $2, $3)
          ON CONFLICT (business_id) DO UPDATE SET agents = EXCLUDED.agents, model = EXCLUDED.model, updated_at = now()`,

@@ -84,16 +84,16 @@
 </nav>
 <main>
   <div class="steps">
-    <span class="step done">1 · Enter your business</span>
-    <span class="step done">2 · Analyze</span>
-    <span class="step done">3 · Review profile</span>
-    <span class="step done">4 · Build the team</span>
-    <span class="step on">5 · Test</span>
-    <span class="step">6 · Deploy</span>
+    <span class="step done">1 · Your business</span>
+    <span class="step done">2 · Reading it</span>
+    <span class="step done">3 · Check the facts</span>
+    <span class="step done">4 · Meet your team</span>
+    <span class="step on">5 · Try it</span>
+    <span class="step">6 · Go live</span>
   </div>
-  <p class="eyebrow">Step 5</p>
-  <h1>Test your <em>team.</em></h1>
-  <p class="lead">Ask what your customers ask. Every answer shows the source it came from, and anything your profile does not cover is refused honestly and added to your knowledge queue.</p>
+  <p class="eyebrow">Step 5 · free</p>
+  <h1>Talk to your <em>team.</em></h1>
+  <p class="lead">Ask what your customers ask, by chat or out loud. Every answer shows where it came from, and anything your site does not cover goes to your to-do list instead of being made up. Testing is free.</p>
   <div class="modes">
     <button class="mode on" id="modeChat" onclick="setMode('chat')">Chat</button>
     <button class="mode" id="modeVoice" onclick="setMode('voice')">Voice</button>
@@ -112,7 +112,7 @@
         </div>
       </div>
       <div class="msgs" id="vmsgs"></div>
-      <div class="vnote">The team speaks with the Front Desk voice for the whole call and says out loud when it hands off. Messages, transfer requests and unanswered questions are recorded when you end the call.</div>
+      <div class="vnote">Talk naturally and interrupt any time. Messages, transfer requests and unanswered questions are saved when you end the call.</div>
     </div>
     <div class="chat hidden" id="phonePanel">
       <div class="vhead"><div class="vstatus" id="pStatus">Get a real phone number for fifteen minutes and call your team from any phone.</div><div class="vacts"><button class="btn" id="pGet" onclick="getNumber()">Get a demo number</button></div></div>
@@ -133,7 +133,7 @@
     <span class="saved"></span>
     <div style="display:flex;gap:12px;flex-wrap:wrap">
       <button class="btn ghost" onclick="location.href='/team?t='+encodeURIComponent(token)">Edit the team</button>
-      <button class="btn" onclick="location.href='/deploy?t='+encodeURIComponent(token)">Deploy →</button>
+      <button class="btn" onclick="location.href='/deploy?t='+encodeURIComponent(token)">Happy with it? Go live →</button>
     </div>
   </div>
 </main>
@@ -211,7 +211,22 @@ function vLine(role, text, agentName) {
 }
 function vTool(text) { const d = document.createElement('div'); d.className = 'm tool'; d.innerHTML = `<div class="b">${esc(text)}</div>`; $('vmsgs').appendChild(d); $('vmsgs').scrollTop = 1e9; }
 function agentDelta(delta) { if (!delta) return; vUserLine = null; if (!vAgentLine) { vAgentLine = vLine('agent', ''); vTranscript.push({ role: 'agent', text: '', agent_id: vAgent && vAgent.id, agent_name: vAgent && (vAgent.persona + ' · ' + vAgent.title), at: new Date().toISOString() }); } vAgentLine.querySelector('.t').textContent += delta; vTranscript[vTranscript.length - 1].text += delta; $('vmsgs').scrollTop = 1e9; }
-function duck(on) { if (!micGain) return; clearTimeout(duckTimer); const set = (v) => { try { micGain.gain.setTargetAtTime(v, micGain.context.currentTime, on ? 0.015 : 0.04); } catch (_) { micGain.gain.value = v; } }; if (on) { set(0.12); duckTimer = setTimeout(() => set(1), 8000); } else duckTimer = setTimeout(() => set(1), 350); }
+function duck(on) { if (!micGain) return; clearTimeout(duckTimer); const set = (v) => { try { micGain.gain.setTargetAtTime(v, micGain.context.currentTime, on ? 0.015 : 0.04); } catch (_) { micGain.gain.value = v; } }; if (on) { set(0.35); duckTimer = setTimeout(() => set(1), 8000); } else duckTimer = setTimeout(() => set(1), 350); }
+// Full-band Opus both ways: the agent's voice arrives at up to 128 kbps with
+// in-band error correction instead of the browser's ~32 kbps default.
+const OPUS_RECV = { stereo: 0, 'sprop-stereo': 0, useinbandfec: 1, usedtx: 0, maxaveragebitrate: 128000, maxplaybackrate: 48000 };
+const OPUS_SEND = { useinbandfec: 1, usedtx: 0, maxaveragebitrate: 64000 };
+function tuneOpus(sdp, params) {
+  try {
+    const m = sdp.match(/a=rtpmap:(\d+) opus\/48000/i); if (!m) return sdp;
+    const pt = m[1], re = new RegExp('a=fmtp:' + pt + ' ([^\\r\\n]*)');
+    const cur = {}; const f = sdp.match(re);
+    if (f) f[1].split(';').forEach((kv) => { const [k, v] = kv.split('='); if (k && k.trim()) cur[k.trim()] = v; });
+    Object.assign(cur, params);
+    const line = 'a=fmtp:' + pt + ' ' + Object.entries(cur).map(([k, v]) => k + '=' + v).join(';');
+    return f ? sdp.replace(re, line) : sdp.replace(m[0], m[0] + '\r\n' + line);
+  } catch (_) { return sdp; }
+}
 function rtcSend(evt) { if (rtcDc && rtcDc.readyState === 'open') rtcDc.send(JSON.stringify(evt)); else rtcQueue.push(evt); }
 function onRtc(e) {
   let ev; try { ev = JSON.parse(e.data); } catch (_) { return; }
@@ -252,15 +267,18 @@ async function startVoice() {
     sendStream.getAudioTracks().forEach((t) => pc.addTrack(t, sendStream));
     duck(true);
     const dc = pc.createDataChannel('oai-events'); rtcDc = dc; dc.onmessage = onRtc; dc.onopen = () => { const q = rtcQueue; rtcQueue = []; q.forEach(rtcSend); };
-    const offer = await pc.createOffer(); await pc.setLocalDescription(offer);
+    const offer = await pc.createOffer();
+    offer.sdp = tuneOpus(offer.sdp, OPUS_RECV);
+    await pc.setLocalDescription(offer);
     const r = await fetch('/api/realtime', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token, sdp: offer.sdp }) });
     const data = await r.json().catch(() => ({}));
     if (!r.ok || !data.sdp) throw new Error(data.error || ('HTTP ' + r.status));
     if (rtc !== pc) return;
     vCallId = data.callId || null;
     vAgent = data.agent; vAgents = data.agents || []; roster(vAgent.id);
-    if (data.limitSeconds) vStatus('Connected. Test calls end automatically after ' + Math.round(data.limitSeconds / 60) + ' minutes, and they use your prepaid balance.');
-    await pc.setRemoteDescription({ type: 'answer', sdp: data.sdp });
+    if (data.limitSeconds) vStatus('Connected. Say hello. This test call ends by itself after ' + Math.max(1, Math.round(data.limitSeconds / 60)) + ' minute' + (Math.round(data.limitSeconds / 60) === 1 ? '' : 's') + '.', true);
+    await pc.setRemoteDescription({ type: 'answer', sdp: tuneOpus(data.sdp, OPUS_SEND) });
+    try { pc.getReceivers().forEach((rc) => { if (rc.track && rc.track.kind === 'audio' && 'jitterBufferTarget' in rc) rc.jitterBufferTarget = 80; }); } catch (_) {}
     $('vMute').disabled = false; $('vStop').disabled = false;
   } catch (e) { console.error(e); vStatus('Could not start the call: ' + e.message); stopVoice(false); }
 }

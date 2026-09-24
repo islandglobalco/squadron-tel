@@ -89,7 +89,7 @@ const slug = (location.pathname.split('/demo/')[1] || new URLSearchParams(locati
 let playing = null;
 function play(idx, btn) {
   if (playing) { playing.a.pause(); playing.b.textContent = 'Hear the voice'; if (playing.b === btn) { playing = null; return; } }
-  const a = new Audio('/api/tts?agent=' + idx + '&v=v5');
+  const a = new Audio('/api/tts?agent=' + idx + '&v=v6');
   btn.textContent = 'Stop';
   a.onended = () => { btn.textContent = 'Hear the voice'; playing = null; };
   a.play().catch(() => { btn.textContent = 'Hear the voice'; });

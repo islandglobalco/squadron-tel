@@ -7,6 +7,7 @@ import crypto from 'node:crypto';
 import { ADMIN_EMAILS, ensureAuthSchema, createAccount, findAccount, verifyPassword, hashPassword, sessionCookie, clearCookie, currentAccount } from './_lib/auth.js';
 import { ledgerStatus } from './_lib/ledger.js';
 import { sendEmail } from './_lib/email.js';
+import { normalizeEmail } from './_lib/inputs.js';
 
 const sha = (t) => crypto.createHash('sha256').update(t).digest('hex');
 
@@ -94,7 +95,9 @@ export default async function handler(req, res) {
       res.setHeader('Set-Cookie', sessionCookie(rows[0].account_id));
       return res.status(200).json({ ok: true });
     }
-    const email = String(body.email || '').trim().toLowerCase();
+    // Forgiving about spaces, capitals, "mailto:" and common domain typos.
+    const typed = String(body.email || '').trim().toLowerCase();
+    const email = normalizeEmail(typed) || typed;
     const password = String(body.password || '');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return bad(res, 400, 'Enter a valid email address.');
     if (action === 'admin_link') {
@@ -137,7 +140,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, accountId: id });
     }
     if (action === 'login') {
-      const acc = await findAccount(email);
+      const acc = (await findAccount(email)) || (typed !== email ? await findAccount(typed) : null);
       if (!acc || !verifyPassword(password, acc.pass_hash)) return bad(res, 401, 'That email and password do not match.');
       if (body.token) { const biz = await loadBusiness(body.token); if (biz && !biz.account_id) await sql().query('UPDATE businesses SET account_id = $2 WHERE id = $1', [biz.id, acc.id]); }
       res.setHeader('Set-Cookie', sessionCookie(acc.id));

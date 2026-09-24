@@ -1,7 +1,8 @@
 // /api/ingest/extract — turns the stored sources into the Business Profile.
 import { ensureSchema, sql, loadBusiness, readJson, bad } from '../_lib/db.js';
 import { buildProfile } from '../_lib/profile.js';
-import { requireFunds, recordSpend, textCostCents, HOLD, PaymentRequired } from '../_lib/ledger.js';
+import { textCostCents, HOLD, PaymentRequired } from '../_lib/ledger.js';
+import { fundSetup, recordSetupSpend } from '../_lib/setup.js';
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
@@ -14,10 +15,10 @@ export default async function handler(req, res) {
     if (!biz) return bad(res, 404, 'Unknown business');
     const docs = await sql().query('SELECT kind, url, title, content FROM sources WHERE business_id = $1 ORDER BY id', [biz.id]);
     if (!docs.length) return bad(res, 400, 'No sources to read yet.');
-    // Prepaid only: the profile is built after the plan is paid.
-    await requireFunds(biz.account_id, HOLD.profile, 'This account');
+    // Free during setup (capped); a paid plan covers it once the team is live.
+    const funding = await fundSetup({ biz, kind: 'profile', cents: HOLD.profile, req });
     const { profile, model, usage } = await buildProfile(docs);
-    await recordSpend({ accountId: biz.account_id, businessId: biz.id, kind: 'profile', cents: textCostCents(model, usage) });
+    await recordSetupSpend(funding, { biz, kind: 'profile', cents: textCostCents(model, usage), req });
     await sql().query(
       `INSERT INTO profiles (business_id, profile, model) VALUES ($1, $2, $3)
        ON CONFLICT (business_id) DO UPDATE SET profile = EXCLUDED.profile, model = EXCLUDED.model, updated_at = now()`,

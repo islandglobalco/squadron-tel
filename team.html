@@ -68,12 +68,12 @@
 </nav>
 <main>
   <div class="steps">
-    <span class="step done">1 · Enter your business</span>
-    <span class="step done">2 · Analyze</span>
-    <span class="step done">3 · Review profile</span>
-    <span class="step on">4 · Build the team</span>
-    <span class="step">5 · Test</span>
-    <span class="step">6 · Deploy</span>
+    <span class="step done">1 · Your business</span>
+    <span class="step done">2 · Reading it</span>
+    <span class="step done">3 · Check the facts</span>
+    <span class="step on">4 · Meet your team</span>
+    <span class="step">5 · Try it</span>
+    <span class="step">6 · Go live</span>
   </div>
   <section id="gen">
     <p class="eyebrow">Step 4</p>
@@ -92,7 +92,7 @@
       <span class="saved" id="savedMsg"></span>
       <div style="display:flex;gap:12px;flex-wrap:wrap">
         <button class="btn ghost" onclick="regenerate()">Rebuild the team</button>
-        <button class="btn" onclick="location.href='/test?t='+encodeURIComponent(token)">Test my team →</button>
+        <button class="btn" onclick="location.href='/test?t='+encodeURIComponent(token)">Talk to my team →</button>
       </div>
     </div>
   </section>
@@ -158,7 +158,7 @@ async function patchAgent(patch) {
 async function play(idx, btn) {
   if (audio) { audio.pause(); audio = null; if (playingBtn) playingBtn.classList.remove('on'); if (playingBtn === btn) { playingBtn = null; return; } }
   playingBtn = btn; btn.classList.add('on');
-  audio = new Audio('/api/tts?agent=' + idx);
+  audio = new Audio('/api/tts?agent=' + idx + '&v=v6');
   audio.onended = () => { btn.classList.remove('on'); audio = null; playingBtn = null; };
   audio.play().catch(() => { btn.classList.remove('on'); });
 }

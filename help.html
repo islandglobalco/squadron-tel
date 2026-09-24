@@ -268,9 +268,10 @@ function chips(list) {
   msgs.appendChild(w); msgs.scrollTop = msgs.scrollHeight;
 }
 async function ask(text) {
+  const history = transcript.slice(-10);
   add(text, 'u');
   try {
-    const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: text, sessionId: sid }) });
+    const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: text, sessionId: sid, history }) });
     const d = await r.json(); sid = d.sessionId;
     add(d.reply, 'a', d);
     if (d.followUp) setTimeout(() => add(d.followUp, 'a'), 500);

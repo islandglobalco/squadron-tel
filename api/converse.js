@@ -6,6 +6,7 @@ import { applyCorrections } from './_lib/profile.js';
 import { answer } from './_lib/answer.js';
 import { notifyOwner } from './_lib/email.js';
 import { requireFunds, recordSpend, textCostCents, HOLD, PaymentRequired } from './_lib/ledger.js';
+import { fundSetup } from './_lib/setup.js';
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
@@ -36,10 +37,13 @@ export default async function handler(req, res) {
     const agents = team.agents.agents.filter((a) => a.enabled !== false);
     if (!agents.length) return bad(res, 400, 'Every agent is turned off.');
     const business = { name: profile.company?.name?.value || biz.input_value };
-    // Prepaid only: every turn, test or live, needs an active paid plan with
-    // budget left. Chat has no conversation limit beyond the prepaid budget.
-    try { await requireFunds(biz.account_id, HOLD.chatTurn, business.name); }
-    catch (e) {
+    // Live chat needs an active paid plan with budget left. Owner test chats
+    // are free during setup (capped), and use the plan once there is one.
+    let spendAccount = biz.account_id;
+    try {
+      if (test) spendAccount = (await fundSetup({ biz, kind: 'chat-test', cents: HOLD.chatTurn, req })).accountId;
+      else await requireFunds(biz.account_id, HOLD.chatTurn, business.name);
+    } catch (e) {
       if (!(e instanceof PaymentRequired)) throw e;
       return res.status(402).json({ error: test ? e.message : `${business.name} cannot take chat messages right now. Please contact the business directly.`, code: e.code });
     }
@@ -58,7 +62,7 @@ export default async function handler(req, res) {
     const lastAgentId = [...history].reverse().find((h) => h.role === 'agent')?.agent_id || null;
     const out = await answer({ business, agents, profile, history, message: message.slice(0, 2000), channel, lastAgentId, settings: biz.settings || null });
 
-    await recordSpend({ accountId: biz.account_id, businessId: biz.id, kind: test ? 'chat-test' : 'chat', cents: textCostCents(out.model, out.usage), ref: convo.id });
+    await recordSpend({ accountId: spendAccount, businessId: biz.id, kind: test ? 'chat-test' : 'chat', cents: textCostCents(out.model, out.usage), ref: convo.id });
     const now = new Date().toISOString();
     history.push({ role: 'customer', text: message.slice(0, 2000), at: now });
     history.push({ role: 'agent', agent_id: out.agent.id, agent_name: `${out.agent.persona} · ${out.agent.title}`, text: out.reply, type: out.replyType, citations: out.citations.map((c) => c.id), at: now });
