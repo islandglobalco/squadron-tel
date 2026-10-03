@@ -6,7 +6,7 @@ export default function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   const b = req.body || {};
-  if (b.terms !== true || b.cert !== true || b.termsVersion !== '2026-10-03') return res.status(400).json({ error: 'Please tick both boxes to agree to the Terms of Use and Privacy Policy and to confirm your consents.' });
+  if (b.terms !== true || b.cert !== true || b.termsVersion !== '2026-10-03') return res.status(400).json({ error: 'Please tick both boxes to agree to the Terms of Use and Privacy Policy and to confirm your consents.', code: 'terms_required' });
   const { firstName, lastName, email, company, callVolume, useCase, plan, ts } = req.body || {};
   console.log('[SIGNUP]', JSON.stringify({ name: `${firstName} ${lastName}`, email, company, callVolume, useCase, plan, ts,
     acceptance: { version: '2026-10-03', at: new Date().toISOString(), ip: String(req.headers['x-forwarded-for'] || '').split(',')[0].trim(), ua: String(req.headers['user-agent'] || '').slice(0, 300), terms: true, cert: true,

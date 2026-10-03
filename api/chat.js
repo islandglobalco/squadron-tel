@@ -10,7 +10,7 @@ const KB = [
   { match: /integrat|crm|salesforce|hubspot|zapier|webhook|api/, reply: `Squadron integrates out of the box with **Salesforce, HubSpot, Zendesk, Intercom**, and **Zapier**. Full REST API + webhooks on Commander and above.` },
   { match: /latency|fast|slow|lag|delay|response time/, reply: `Our average response latency is **0.4 seconds** end-to-end. We run on Vercel Edge close to your callers.` },
   { match: /trial|free|demo|try|test/, reply: `The **Scout plan ships with 250 free voice minutes** — enough to handle real calls. No credit card required to start.` },
-  { match: /secure|gdpr|soc|compliance|data|privacy/, reply: `Squadron is **SOC 2 Type II** compliant and GDPR-ready. All calls are encrypted in transit and at rest.` },
+  { match: /secure|gdpr|soc|compliance|data|privacy/, reply: `Squadron has not completed a SOC 2 audit. Traffic is encrypted in transit, and our Privacy Policy at /privacy explains how data is handled.` },
 ];
 const GREETING = `Hey! I'm **Alex**, your Squadron AI assistant. I can help with pricing, setup, agent voices, integrations, and anything else about Squadron. What's on your mind?`;
 const FALLBACK_REPLIES = [

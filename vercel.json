@@ -1,21 +1,83 @@
 {
   "functions": {
-    "api/voice.js": {"maxDuration": 10},
-    "api/gather.js": {"maxDuration": 10},
-    "api/chat.js": {"maxDuration": 15},
-    "api/signup.js": {"maxDuration": 10},
-    "api/tts.js": {"maxDuration": 30},
-    "api/session.js": {"maxDuration": 30}
+    "api/voice.js": {
+      "maxDuration": 10
+    },
+    "api/gather.js": {
+      "maxDuration": 10
+    },
+    "api/chat.js": {
+      "maxDuration": 15
+    },
+    "api/signup.js": {
+      "maxDuration": 10
+    },
+    "api/tts.js": {
+      "maxDuration": 30
+    },
+    "api/session.js": {
+      "maxDuration": 30
+    }
   },
   "routes": [
-    {"src": "/", "dest": "/index.html"},
-    {"src": "/deploy", "dest": "/deploy.html"},
-    {"src": "/api/voice", "dest": "/api/voice.js"},
-    {"src": "/api/gather", "dest": "/api/gather.js"},
-    {"src": "/api/chat", "dest": "/api/chat.js"},
-    {"src": "/api/signup", "dest": "/api/signup.js"},
-    {"src": "/api/tts", "dest": "/api/tts.js"},
-    {"src": "/api/session", "dest": "/api/session.js"},
-    {"src": "/(.*)", "dest": "/$1"}
+    {
+      "src": "/",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/deploy",
+      "dest": "/deploy.html"
+    },
+    {
+      "src": "/api/voice",
+      "dest": "/api/voice.js"
+    },
+    {
+      "src": "/api/gather",
+      "dest": "/api/gather.js"
+    },
+    {
+      "src": "/api/chat",
+      "dest": "/api/chat.js"
+    },
+    {
+      "src": "/api/signup",
+      "dest": "/api/signup.js"
+    },
+    {
+      "src": "/api/tts",
+      "dest": "/api/tts.js"
+    },
+    {
+      "src": "/api/session",
+      "dest": "/api/session.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), geolocation=(), payment=(), microphone=(self)"
+        }
+      ]
+    }
   ]
 }
